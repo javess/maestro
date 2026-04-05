@@ -142,3 +142,10 @@
 - Updated `tests/test_preview.py` to assert preview CLI output and artifact persistence use the
   repo-local workspace.
 - Reran targeted storage, engine, and preview tests plus the full backend test suite.
+
+## STEP-013H Note
+
+- Added `tests/test_workspace.py` for repo snapshot building and file-operation application.
+- Updated `tests/test_engine.py` to assert the engine writes coder-produced files into the target
+  repo during execution.
+- Reran targeted workspace/engine tests plus the full backend test suite.

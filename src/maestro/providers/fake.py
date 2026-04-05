@@ -202,6 +202,7 @@ class FakeProvider(LlmProvider):
                     ticket_id=ticket_id,
                     summary="Fake implementation completed",
                     changed_files=[],
+                    file_operations=[],
                     commands=["pytest"],
                     tests_added=["tests/test_fake_flow.py"],
                     notes=[],

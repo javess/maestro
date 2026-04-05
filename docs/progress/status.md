@@ -27,11 +27,17 @@
 | STEP-013E | Maximum verbosity provider request logging | done | 2026-04-05 23:08 UTC | [STEP-013E](steps/STEP-013E.md) | `c99bf93` | targeted logging/OpenAI tests pass; `ruff` pass; `ty` pass | `STEP-013F` |
 | STEP-013F | OpenAI native parsed-model logging fix | done | 2026-04-06 00:20 UTC | [STEP-013F](steps/STEP-013F.md) | pending post-commit recording | `test_openai_adapter`/`test_logging` pass; live `maestro -vv plan ...` progressed past `ProductSpec` logging crash; `ruff` pass; `git diff --check` pass | `STEP-013G` |
 | STEP-013G | Repo-local `.maestro` workspace storage | done | 2026-04-06 00:35 UTC | [STEP-013G](steps/STEP-013G.md) | pending post-commit recording | targeted storage/engine/preview tests pass; `ruff` pass; `ty` pass; `pytest` pass; live OXO repo writes under `.maestro/`; `status --repo` pass | `STEP-014` |
-| STEP-014 | Migration planner | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-013E |
+| STEP-013H | Repo mutation execution path | done | 2026-04-06 01:05 UTC | [STEP-013H](steps/STEP-013H.md) | pending post-commit recording | targeted workspace/engine pass; `ruff` pass; `ty` pass; `pytest` pass; live OXO repo mutated successfully | `STEP-013I` |
+| STEP-013I | Worktree isolation and parallel ticket execution | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013H` |
+| STEP-013J | Multi-provider runtime adapters | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013I` |
+| STEP-014 | Migration planner | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013J` |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |
 | STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |
 | STEP-017 | Scenario eval library expansion | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-016 |
 | STEP-018 | Local SQL persistence backend | planned | 2026-04-05 11:22 UTC | - | - | - | Wait for STEP-017 completion |
+| STEP-018A | Secure credential storage | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018` |
+| STEP-019 | Prompt refinement and role guidance | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018A` |
+| STEP-020 | Documentation publishing and onboarding polish | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-019` |
 
 ## Baseline
 

@@ -119,3 +119,10 @@
 - No eval scenario set changes were required in STEP-013G because repo-local `.maestro/` storage
   changes runtime persistence location, not deterministic orchestration outcomes.
 - Existing eval runs remain intentionally framework-local and isolated from target repos.
+
+## STEP-013H Note
+
+- No new eval scenario was required for STEP-013H because repo mutation is covered by integration
+  tests with deterministic fake providers and does not alter the orchestrator state machine shape.
+- Existing deterministic scenarios were preserved while the runtime execution path began applying
+  file operations to target repos.

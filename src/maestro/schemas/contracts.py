@@ -110,10 +110,28 @@ class CodeChange(BaseModel):
     summary: str
 
 
+class FileOperation(BaseModel):
+    path: str
+    action: Literal["write", "delete"]
+    content: str | None = None
+    executable: bool = False
+
+
+class RepoContextFile(BaseModel):
+    path: str
+    content: str
+
+
+class RepoContextSnapshot(BaseModel):
+    files: list[RepoContextFile] = Field(default_factory=list)
+    truncated: bool = False
+
+
 class CodeResult(BaseModel):
     ticket_id: str
     summary: str
     changed_files: list[CodeChange] = Field(default_factory=list)
+    file_operations: list[FileOperation] = Field(default_factory=list)
     commands: list[str] = Field(default_factory=list)
     tests_added: list[str] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)

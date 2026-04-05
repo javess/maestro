@@ -142,3 +142,12 @@
 
 - Decision: keep `status` and `resume` backward-compatible by falling back to the legacy central state store for older run ids.
 - Rationale: existing run ids should remain inspectable without forcing a migration step during this storage-path change.
+
+- Decision: extend `CodeResult` with concrete `file_operations` rather than introducing a second
+  execution artifact type.
+- Rationale: the coder contract already represents implementation output, so adding file writes and
+  deletes there is the smallest way to move from planning-only execution into actual repo mutation.
+
+- Decision: build coder repo context from the impact-analysis context slice plus file contents.
+- Rationale: the live execution path needs nearby source content without scanning entire repos or
+  passing hidden global state into prompts.

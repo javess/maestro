@@ -1082,3 +1082,44 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-014`
 - Next recommended step: `STEP-014`
+
+## 2026-04-06 01:05 UTC
+
+- Session goal: make the coder path apply concrete file operations into target repos
+- Selected step: `STEP-013H`
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/repo/context.py`
+  - `src/maestro/core/workspace.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/providers/fake.py`
+  - `prompts/coder.md`
+  - `tests/test_workspace.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013H.md`
+- Commands run:
+  - `uv run pytest tests/test_workspace.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/repo/context.py src/maestro/core/workspace.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/providers/fake.py prompts/coder.md tests/test_workspace.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `maestro -v plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+- Tests run:
+  - `uv run pytest tests/test_workspace.py tests/test_engine.py` passed
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/repo/context.py src/maestro/core/workspace.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/providers/fake.py prompts/coder.md tests/test_workspace.py tests/test_engine.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - None. Repo mutation is covered by deterministic integration tests and does not change the
+    orchestrator state machine shape.
+- Outcome: completed `STEP-013H`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-013I`

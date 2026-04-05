@@ -37,11 +37,17 @@
 | STEP-013E | Maximum verbosity provider request logging | done | User-requested `-vv` request/response logging and repo guidance update |
 | STEP-013F | OpenAI native parsed-model logging fix | done | Tiny prerequisite bugfix discovered during live `-vv` OpenAI verification; serializes parsed Pydantic models safely in debug logs |
 | STEP-013G | Repo-local `.maestro` workspace storage | done | User-requested move of runtime state and artifacts into the target repo workspace |
+| STEP-013H | Repo mutation execution path | planned | Apply coder-produced file operations into target repos with validation-ready context |
+| STEP-013I | Worktree isolation and parallel ticket execution | planned | Isolate ticket execution in worktrees and allow bounded parallel execution for independent tickets |
+| STEP-013J | Multi-provider runtime adapters | planned | Wire Gemini and Claude runtime adapters with the same structured/fallback contract style as OpenAI |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |
 | STEP-017 | Scenario eval library expansion | planned | Expand eval matrix for new roadmap coverage |
 | STEP-018 | Local SQL persistence backend | planned | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
+| STEP-018A | Secure credential storage | planned | Add keyring-backed provider credentials alongside env-file support |
+| STEP-019 | Prompt refinement and role guidance | planned | Strengthen agent prompts and skills with design, implementation, and review guidance |
+| STEP-020 | Documentation publishing and onboarding polish | planned | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
 
 ## Step Sequencing
 

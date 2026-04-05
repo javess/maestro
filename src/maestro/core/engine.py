@@ -27,9 +27,11 @@ from maestro.core.run_graph_runtime import (
     determine_resume_node_id,
     initialize_run_graph,
 )
+from maestro.core.workspace import apply_code_result
 from maestro.providers.base import LlmProvider
 from maestro.providers.factory import build_provider
 from maestro.providers.router import ProviderRouter
+from maestro.repo.context import build_repo_snapshot
 from maestro.repo.discovery import discover_repo
 from maestro.repo.impact import analyze_backlog_impact
 from maestro.schemas.contracts import (
@@ -243,6 +245,7 @@ class OrchestratorEngine:
         logger.debug("implement_start run_id=%s ticket=%s", state.run_id, ticket.id)
         agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
         impact_analysis = state.backlog.impact_analyses.get(ticket.id)
+        repo_snapshot = build_repo_snapshot(state.repo_path, impact_analysis)
         result = agent.run_code(
             {
                 "ticket_id": ticket.id,
@@ -252,9 +255,11 @@ class OrchestratorEngine:
                     "impact_analysis": impact_analysis.model_dump(mode="json")
                     if impact_analysis is not None
                     else None,
+                    "repo_snapshot": repo_snapshot.model_dump(mode="json"),
                 },
             }
         )
+        result = apply_code_result(state.repo_path, result)
         self.deps.artifact_store.write_json(
             state.artifacts,
             f"{ticket.id}_coder_attempt_{state.review_cycles + 1}",
@@ -263,7 +268,12 @@ class OrchestratorEngine:
         self._append_event(state, OrchestratorState.IMPLEMENT, ticket.id)
         return result
 
-    def validate(self, state: RunState, repo_commands: list[str]) -> list[CheckResult]:
+    def validate(
+        self,
+        state: RunState,
+        repo_commands: list[str],
+        code_result: CodeResult,
+    ) -> list[CheckResult]:
         logger.debug(
             "validate_start run_id=%s ticket=%s commands=%s",
             state.run_id,
@@ -271,7 +281,7 @@ class OrchestratorEngine:
             len(repo_commands),
         )
         checks: list[CheckResult] = []
-        for command in repo_commands:
+        for command in _unique_commands([*repo_commands, *code_result.commands]):
             result = self.deps.shell.run(command, state.repo_path)
             checks.append(
                 CheckResult(
@@ -431,7 +441,7 @@ class OrchestratorEngine:
             )
             code_result = self.implement(state, ticket, repo.model_dump(mode="json"))
             commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
-            checks = self.validate(state, commands)
+            checks = self.validate(state, commands, code_result)
             review = self.review(state, ticket, code_result, checks)
             violations, approval_request = self.write_evidence_bundle(
                 state,
@@ -474,3 +484,13 @@ class OrchestratorEngine:
             state.current_state,
         )
         return state
+
+
+def _unique_commands(commands: list[str]) -> list[str]:
+    ordered: list[str] = []
+    seen: set[str] = set()
+    for command in commands:
+        if command not in seen:
+            seen.add(command)
+            ordered.append(command)
+    return ordered

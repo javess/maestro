@@ -143,7 +143,7 @@ def run_ticket(ticket_id: str, config: Path | None = None, repo: Path = Path("."
     ticket.status = TicketStatus.in_progress
     code_result = engine.implement(state, ticket, discovery.model_dump(mode="json"))
     commands = discovery.repo_info.lint_commands + discovery.repo_info.test_commands
-    checks = engine.validate(state, commands)
+    checks = engine.validate(state, commands, code_result)
     review = engine.review(state, ticket, code_result, checks)
     violations, approval_request = engine.write_evidence_bundle(
         state,

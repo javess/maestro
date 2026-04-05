@@ -6,7 +6,7 @@ from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.core.models import OrchestratorState
 from maestro.evals.harness import EvalScenario, build_eval_engine
 from maestro.providers.fake import FakeProvider
-from maestro.schemas.contracts import Backlog, Ticket
+from maestro.schemas.contracts import Backlog, CodeResult, FileOperation, ReviewResult, Ticket
 
 
 def test_run_plan_completes(tmp_path: Path) -> None:
@@ -185,3 +185,54 @@ def test_run_plan_attaches_impact_analysis_to_execution_context() -> None:
     assert "TICKET-1" in state.backlog.impact_analyses
     artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
     assert "impact_analysis" in artifact_names
+
+
+def test_run_plan_applies_file_operations_to_repo(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+
+    scenario = EvalScenario(
+        name="repo-mutation",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="Create app",
+                            description="Create the first app file",
+                            acceptance_criteria=["app exists"],
+                        )
+                    ]
+                ),
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Create app file",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="write",
+                            content="def main() -> None:\n    print('ok')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=["tests/test_app.py"],
+                ),
+                "ReviewResult": ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "done"
+    assert (repo / "src" / "app.py").read_text() == "def main() -> None:\n    print('ok')\n"

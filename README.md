@@ -16,6 +16,7 @@ machine. The baseline includes:
 - provider abstraction with fake and real provider adapters
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
 - provider fallback routing and structured output repair paths
+- repo mutation through coder-produced file operations applied into the target repo workspace
 
 ## Quick start
 
@@ -171,8 +172,9 @@ maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.
 
 ## CLI Game Example
 
-The current baseline is best used to plan, inspect, and preview work rather than fully author a
-production repo from scratch. A practical simple target is a CLI noughts-and-crosses game with:
+The current baseline can now materialize repo changes through coder-produced file operations,
+though prompt quality and execution isolation continue to improve in later steps. A practical
+simple target is a CLI noughts-and-crosses game with:
 
 - player names
 - score keeping across rounds
@@ -218,8 +220,8 @@ maestro preview --repo . --adapter local --command "python game.py --demo"
 
 This repository includes a validated minimal fixture at
 `examples/hello_world_cli_game/`. It demonstrates the current product shape: deterministic
-planning, artifact generation, and local preview execution. Fully automatic repo mutation remains a
-later roadmap capability.
+planning, artifact generation, local preview execution, and now repo mutation via generated file
+operations.
 
 For any target repo you run against, artifacts are stored locally in `.maestro/`:
 

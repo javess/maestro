@@ -1,0 +1,78 @@
+# STEP-013H
+
+- Step id: `STEP-013H`
+- Title: Repo mutation execution path
+- Status: done
+- Objective:
+  - Make the coder role produce concrete file operations and have the engine apply them to the
+    target repository.
+- Scope:
+  - Extend the coder contract with file operations.
+  - Add repo-context snapshots so the coder sees actual nearby files.
+  - Apply file operations during execution and validate the changed repo.
+  - Prove the path with tests and an OXO target-repo case study.
+- Non-goals:
+  - No worktree isolation yet.
+  - No parallel ticket execution yet.
+  - No SQL persistence changes yet.
+- Prerequisites:
+  - `STEP-013G` complete.
+- Implementation plan:
+  - Extend `CodeResult` with file operation contracts.
+  - Add a helper to build a repo snapshot from the impact-analysis context slice.
+  - Apply generated file operations in the engine before validation.
+  - Update tests, docs, and progress tracking.
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/repo/context.py`
+  - `src/maestro/core/workspace.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/providers/fake.py`
+  - `prompts/coder.md`
+  - `tests/test_workspace.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013H.md`
+- Tests added or updated:
+  - `tests/test_workspace.py`
+  - `tests/test_engine.py`
+- Evals added or updated:
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `uv run pytest tests/test_workspace.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/repo/context.py src/maestro/core/workspace.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/providers/fake.py prompts/coder.md tests/test_workspace.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `maestro -v plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+- Results:
+  - The coder contract now supports concrete file writes and deletes through `file_operations`.
+  - The engine applies file operations to the target repo before running validation commands.
+  - A live OXO run created `game.py`, `pyproject.toml`, `src/oxo/cli.py`, and `tests/test_cli.py`
+    in `/Users/javiersierra/dev/scratch/cli-oxo`.
+- Docs updated:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013H.md`
+- Decisions made:
+  - Extend `CodeResult` with `file_operations`.
+  - Use repo-snapshot context derived from impact analysis.
+- Known limitations:
+  - Worktree isolation and parallel execution remain separate follow-on steps.
+  - Validation commands emitted by the model can still be weak or environment-specific until later
+    prompt and provider improvements land.
+- Next recommended step:
+  - `STEP-013I`
+- Commit hash:
+  - pending

@@ -27,6 +27,9 @@ In the highest-verbosity modes, `maestro` logs:
 - shell command execution
 - preview command execution
 
+When the coder role emits `file_operations`, `maestro` now applies them directly into the target
+repo before validation commands run.
+
 ## Preview a local target repo
 
 ```bash
