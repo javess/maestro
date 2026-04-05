@@ -30,6 +30,7 @@ from maestro.providers.base import LlmProvider
 from maestro.providers.factory import build_provider
 from maestro.providers.router import ProviderRouter
 from maestro.repo.discovery import discover_repo
+from maestro.repo.impact import analyze_backlog_impact
 from maestro.schemas.contracts import (
     ApprovalRequest,
     CheckResult,
@@ -156,10 +157,19 @@ class OrchestratorEngine:
         )
         backlog.architecture_artifacts = backlog.architecture_artifacts or architecture
         backlog.execution_graph = backlog.execution_graph or build_backlog_graph(backlog)
+        backlog.impact_analyses = analyze_backlog_impact(backlog, repo)
         self.deps.artifact_store.write_json(
             state.artifacts,
             "architecture_synthesizer",
             architecture.model_dump(mode="json"),
+        )
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            "impact_analysis",
+            {
+                ticket_id: analysis.model_dump(mode="json")
+                for ticket_id, analysis in backlog.impact_analyses.items()
+            },
         )
         state.backlog = backlog
         self.deps.artifact_store.write_json(
@@ -183,11 +193,17 @@ class OrchestratorEngine:
 
     def implement(self, state: RunState, ticket: Ticket, repo_context: dict) -> CodeResult:
         agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
+        impact_analysis = state.backlog.impact_analyses.get(ticket.id)
         result = agent.run_code(
             {
                 "ticket_id": ticket.id,
                 "ticket": ticket.model_dump(),
-                "repo_context": repo_context,
+                "repo_context": {
+                    **repo_context,
+                    "impact_analysis": impact_analysis.model_dump(mode="json")
+                    if impact_analysis is not None
+                    else None,
+                },
             }
         )
         self.deps.artifact_store.write_json(

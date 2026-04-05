@@ -98,3 +98,11 @@
 - Added `tests/test_backlog_graph.py` for graph validation, ordering, and next-ticket selection.
 - Updated `tests/test_engine.py` to cover graph-driven multi-ticket execution ordering.
 - Full backend test baseline and UI build were rerun after backlog graph integration.
+
+## STEP-012 Note
+
+- Added `tests/test_impact_analysis.py` for deterministic fixture-based repo impact analysis across
+  supported repo types.
+- Updated `tests/test_engine.py` to assert ticket-specific impact analysis is persisted and passed
+  into execution context.
+- Full backend test baseline and UI build were rerun after impact-analysis integration.

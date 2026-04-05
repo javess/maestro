@@ -80,3 +80,10 @@
   planning graph.
 - Existing scenarios continue to validate the current completion, escalation, approval-hold, and
   fallback behaviors alongside the graph-aware ticket selection path.
+
+## STEP-012 Note
+
+- No scenario set changes were required in STEP-012 because impact analysis enriches planning and
+  execution context without changing the current orchestration state machine.
+- Existing scenarios were rerun to confirm repo-aware context slicing preserves deterministic
+  completion, escalation, approval-hold, and graph-ordering behavior.

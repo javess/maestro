@@ -82,3 +82,9 @@
 
 - Decision: keep the backlog graph additive to `Backlog` instead of replacing the ticket list.
 - Rationale: existing planning and execution code still needs the flat ticket collection, while the graph makes ordering and dependencies explicit for later steps.
+
+- Decision: keep repo-aware impact analysis deterministic and filesystem-driven for the first implementation.
+- Rationale: STEP-012 needs fixture-level reproducibility across repo types before introducing deeper semantic analysis.
+
+- Decision: after STEP-012, the next bounded step should start exposing a user-testable product path.
+- Rationale: this was recorded earlier as a roadmap note, and the approved batch now reaches that threshold.

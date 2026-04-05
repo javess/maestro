@@ -10,6 +10,7 @@ Planned additions include:
 - architecture artifact contracts
 - architecture synthesis
 - backlog graph
+- repo-aware impact analysis
 - synthesis and planning notes
 
 Add one focused note per roadmap step or substep when architecture changes.

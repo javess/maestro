@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.backlog_graph import BacklogGraph
+from maestro.schemas.impact import ImpactAnalysis
 from maestro.schemas.run_graph import RunGraph
 
 
@@ -101,6 +102,7 @@ class Backlog(BaseModel):
     unresolved_questions: list[str] = Field(default_factory=list)
     architecture_artifacts: ArchitectureArtifacts | None = None
     execution_graph: BacklogGraph | None = None
+    impact_analyses: dict[str, ImpactAnalysis] = Field(default_factory=dict)
 
 
 class CodeChange(BaseModel):

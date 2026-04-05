@@ -26,7 +26,7 @@
 | STEP-009 | Architecture artifact model | done | Typed architecture contracts |
 | STEP-010 | Architecture synthesizer | done | Artifact synthesis from product model and repo discovery |
 | STEP-011 | Backlog graph | done | Dependency-aware execution graph |
-| STEP-012 | Repo-aware impact analysis | planned | Deterministic repo-local context slicing |
+| STEP-012 | Repo-aware impact analysis | done | Deterministic repo-local context slicing |
 | STEP-013 | Preview environment abstraction | planned | Generic preview surface with local/noop adapter |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |

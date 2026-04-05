@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import cast
 
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.core.models import OrchestratorState
@@ -139,3 +140,42 @@ def test_run_plan_uses_backlog_graph_ordering() -> None:
     ]
     assert pick_events == ["TICKET-1", "TICKET-2"]
     assert state.backlog.execution_graph is not None
+
+
+def test_run_plan_attaches_impact_analysis_to_execution_context() -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    class CapturingFakeProvider(FakeProvider):
+        def __init__(self) -> None:
+            super().__init__()
+            self.captured_repo_context: dict[str, object] | None = None
+
+        def generate_structured(self, *, prompt: str, model: str, schema, metadata=None):
+            if schema.__name__ == "CodeResult":
+                assert metadata is not None
+                repo_context = metadata["repo_context"]
+                assert isinstance(repo_context, dict)
+                self.captured_repo_context = repo_context
+            return super().generate_structured(
+                prompt=prompt,
+                model=model,
+                schema=schema,
+                metadata=metadata,
+            )
+
+    provider = CapturingFakeProvider()
+
+    scenario = EvalScenario(
+        name="impact-analysis",
+        provider=provider,
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    assert provider.captured_repo_context is not None
+    impact_analysis = cast(dict[str, object], provider.captured_repo_context["impact_analysis"])
+    assert impact_analysis["ticket_id"] == "TICKET-1"
+    assert "TICKET-1" in state.backlog.impact_analyses
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "impact_analysis" in artifact_names

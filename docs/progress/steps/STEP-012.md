@@ -1,0 +1,85 @@
+# STEP-012
+
+- Step id: `STEP-012`
+- Title: Repo-aware impact analysis
+- Status: done
+- Objective:
+  - Improve implementation planning with repo-local context.
+- Scope:
+  - Add typed impact-analysis contracts.
+  - Compute deterministic per-ticket impact analysis from repo discovery and filesystem heuristics.
+  - Attach impact analysis to planning outputs and execution context.
+  - Add fixture-based tests across supported repo types.
+- Non-goals:
+  - No semantic code graph analysis.
+  - No concurrent execution.
+  - No preview environment yet.
+- Prerequisites:
+  - STEP-011 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add impact-analysis schema and deterministic analyzer.
+  - Persist per-ticket analyses after planning.
+  - Pass ticket-specific impact analysis into coder repo context.
+  - Add fixture-based tests, rerun the baseline, and commit.
+- Files changed:
+  - `src/maestro/schemas/impact.py`
+  - `src/maestro/repo/impact.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/schemas/contracts.py`
+  - `tests/test_impact_analysis.py`
+  - `tests/test_engine.py`
+  - `docs/architecture/README.md`
+  - `docs/architecture/impact_analysis.md`
+  - `docs/runbooks/impact_analysis.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-012.md`
+- Tests added or updated:
+  - `tests/test_impact_analysis.py`
+  - `tests/test_engine.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun because impact analysis enriches
+    context without changing the orchestrator state flow.
+- Commands run:
+  - `sed -n '1,260p' src/maestro/core/engine.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `sed -n '1,260p' src/maestro/providers/base.py`
+  - `uv run pytest tests/test_impact_analysis.py tests/test_engine.py tests/test_fixture_adapters.py tests/test_repo_discovery.py`
+  - `uv run ruff check src/maestro/schemas/impact.py src/maestro/repo/impact.py src/maestro/core/engine.py src/maestro/schemas/contracts.py tests/test_impact_analysis.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added deterministic per-ticket repo impact analysis.
+  - Persisted `impact_analysis` artifacts for each run.
+  - Passed ticket-specific impact analysis into coder execution context.
+  - Reached the roadmap threshold after which the next step should begin exposing a user-testable
+    product path.
+- Docs updated:
+  - `docs/architecture/README.md`
+  - `docs/architecture/impact_analysis.md`
+  - `docs/runbooks/impact_analysis.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-012.md`
+- Decisions made:
+  - Use filesystem and adapter heuristics for the first repo-aware context slice.
+  - Keep impact analysis attached to `Backlog` so later planning and execution steps can consume it
+    without another schema migration.
+- Known limitations:
+  - Analysis is still path-based rather than semantic.
+  - Large repos may still require more selective indexing later.
+- Next recommended step:
+  - Start `STEP-013` and begin exposing a user-testable product path.
+- Commit hash:
+  - pending post-commit recording
