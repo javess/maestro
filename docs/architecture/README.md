@@ -9,6 +9,7 @@ Planned additions include:
 - evidence bundle model
 - architecture artifact contracts
 - architecture synthesis
+- backlog graph
 - synthesis and planning notes
 
 Add one focused note per roadmap step or substep when architecture changes.

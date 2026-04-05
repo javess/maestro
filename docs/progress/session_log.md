@@ -605,3 +605,50 @@
 - Commit hash: none yet
 - Stop reason: step complete inside approved batch; continue with `STEP-011`
 - Next recommended step: `STEP-011`
+
+## 2026-04-05 21:48 UTC
+
+- Session goal: execute the second step of the approved batch by adding a dependency-aware backlog
+  graph and graph-driven ticket selection
+- Selected step: `STEP-011`
+- Files changed:
+  - `src/maestro/schemas/backlog_graph.py`
+  - `src/maestro/core/backlog_graph.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/providers/fake.py`
+  - `src/maestro/evals/harness.py`
+  - `src/maestro/schemas/contracts.py`
+  - `tests/test_backlog_graph.py`
+  - `tests/test_engine.py`
+  - `docs/architecture/README.md`
+  - `docs/architecture/backlog_graph.md`
+  - `docs/runbooks/backlog_graph.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-011.md`
+- Commands run:
+  - `git rev-parse --short HEAD`
+  - `git status --short --branch`
+  - `sed -n '1,240p' src/maestro/core/models.py`
+  - `sed -n '1,220p' tests/test_run_graph.py`
+  - `uv run pytest tests/test_backlog_graph.py tests/test_engine.py tests/test_schemas.py tests/test_architecture_synthesizer.py`
+  - `uv run ruff check src/maestro/schemas/backlog_graph.py src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/providers/fake.py src/maestro/evals/harness.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_backlog_graph.py tests/test_engine.py tests/test_schemas.py tests/test_architecture_synthesizer.py` passed
+  - `uv run ruff check src/maestro/schemas/backlog_graph.py src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/providers/fake.py src/maestro/evals/harness.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-011`
+- Commit hash: none yet
+- Stop reason: step complete inside approved batch; continue with `STEP-012`
+- Next recommended step: `STEP-012`

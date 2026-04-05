@@ -5,6 +5,7 @@ from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.core.models import OrchestratorState
 from maestro.evals.harness import EvalScenario, build_eval_engine
 from maestro.providers.fake import FakeProvider
+from maestro.schemas.contracts import Backlog, Ticket
 
 
 def test_run_plan_completes(tmp_path: Path) -> None:
@@ -98,3 +99,43 @@ def test_run_plan_persists_architecture_artifact(tmp_path: Path) -> None:
     artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
     assert "architecture_synthesizer" in artifact_names
     assert state.backlog.architecture_artifacts is not None
+
+
+def test_run_plan_uses_backlog_graph_ordering() -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    scenario = EvalScenario(
+        name="backlog-graph-ordering",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="First",
+                            description="first",
+                            acceptance_criteria=["one"],
+                            priority=3,
+                        ),
+                        Ticket(
+                            id="TICKET-2",
+                            title="Second",
+                            description="second",
+                            acceptance_criteria=["two"],
+                            dependencies=["TICKET-1"],
+                            priority=2,
+                        ),
+                    ]
+                )
+            }
+        ),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    pick_events = [
+        event.detail for event in state.events if event.state == OrchestratorState.PICK_TICKET
+    ]
+    assert pick_events == ["TICKET-1", "TICKET-2"]
+    assert state.backlog.execution_graph is not None

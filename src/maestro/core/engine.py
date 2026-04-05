@@ -12,6 +12,7 @@ from maestro.agents.roles import (
 )
 from maestro.config import load_config
 from maestro.core.architecture_synthesizer import synthesize_architecture
+from maestro.core.backlog_graph import build_backlog_graph, select_next_ticket
 from maestro.core.evidence import (
     build_evidence_bundle,
     collect_policy_findings,
@@ -154,6 +155,7 @@ class OrchestratorEngine:
             }
         )
         backlog.architecture_artifacts = backlog.architecture_artifacts or architecture
+        backlog.execution_graph = backlog.execution_graph or build_backlog_graph(backlog)
         self.deps.artifact_store.write_json(
             state.artifacts,
             "architecture_synthesizer",
@@ -169,12 +171,12 @@ class OrchestratorEngine:
         return backlog
 
     def pick_ticket(self, state: RunState) -> Ticket | None:
-        for ticket in state.backlog.tickets:
-            if ticket.status is TicketStatus.pending:
-                ticket.status = TicketStatus.in_progress
-                state.current_ticket_id = ticket.id
-                self._append_event(state, OrchestratorState.PICK_TICKET, ticket.id)
-                return ticket
+        ticket = select_next_ticket(state.backlog, state.completed_tickets)
+        if ticket is not None:
+            ticket.status = TicketStatus.in_progress
+            state.current_ticket_id = ticket.id
+            self._append_event(state, OrchestratorState.PICK_TICKET, ticket.id)
+            return ticket
         self._append_event(state, OrchestratorState.DONE, "no pending tickets")
         state.status = "done"
         return None

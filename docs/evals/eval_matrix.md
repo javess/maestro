@@ -73,3 +73,10 @@
   planning artifacts without changing the current orchestration state flow.
 - Existing scenarios were rerun to confirm synthesized architecture remains attached without
   changing deterministic completion, escalation, or approval-hold outcomes.
+
+## STEP-011 Note
+
+- Added `backlog-graph-ordering` to validate deterministic multi-ticket ordering through the new
+  planning graph.
+- Existing scenarios continue to validate the current completion, escalation, approval-hold, and
+  fallback behaviors alongside the graph-aware ticket selection path.

@@ -11,11 +11,13 @@ from maestro.providers.fake import FakeProvider
 from maestro.providers.router import ProviderRouter
 from maestro.schemas.contracts import (
     ApprovalMode,
+    Backlog,
     FallbackConfig,
     MaestroConfig,
     PolicyPack,
     RiskLevel,
     RoleConfig,
+    Ticket,
 )
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.tools.shell import LocalShellRunner
@@ -125,5 +127,33 @@ def default_scenarios() -> list[EvalScenario]:
                 approval_mode=ApprovalMode.review_go,
                 approval_risk_level=RiskLevel.low,
             ),
+        ),
+        EvalScenario(
+            name="backlog-graph-ordering",
+            provider=FakeProvider(
+                {
+                    "Backlog": Backlog(
+                        tickets=[
+                            Ticket(
+                                id="TICKET-1",
+                                title="Foundations",
+                                description="Set up shared contracts",
+                                acceptance_criteria=["shared contracts exist"],
+                                priority=3,
+                            ),
+                            Ticket(
+                                id="TICKET-2",
+                                title="Dependent flow",
+                                description="Build on the shared contracts",
+                                acceptance_criteria=["flow exists"],
+                                dependencies=["TICKET-1"],
+                                priority=2,
+                            ),
+                        ]
+                    )
+                }
+            ),
+            expected_final_state=OrchestratorState.DONE,
+            expected_status="done",
         ),
     ]

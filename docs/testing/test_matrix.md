@@ -92,3 +92,9 @@
 - Updated `tests/test_engine.py` and `tests/test_schemas.py` to cover persisted planning-time
   architecture artifacts.
 - Full backend test baseline and UI build were rerun after synthesis integration.
+
+## STEP-011 Note
+
+- Added `tests/test_backlog_graph.py` for graph validation, ordering, and next-ticket selection.
+- Updated `tests/test_engine.py` to cover graph-driven multi-ticket execution ordering.
+- Full backend test baseline and UI build were rerun after backlog graph integration.

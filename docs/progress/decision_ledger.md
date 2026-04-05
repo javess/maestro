@@ -79,3 +79,6 @@
 
 - Decision: implement STEP-010 with a deterministic local synthesizer instead of another model-driven role.
 - Rationale: the first architecture synthesis path needs fixture-level determinism and provider neutrality before richer synthesis logic is introduced.
+
+- Decision: keep the backlog graph additive to `Backlog` instead of replacing the ticket list.
+- Rationale: existing planning and execution code still needs the flat ticket collection, while the graph makes ordering and dependencies explicit for later steps.

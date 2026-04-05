@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.architecture import ArchitectureArtifacts
+from maestro.schemas.backlog_graph import BacklogGraph
 from maestro.schemas.contracts import (
     AssumptionKind,
     AssumptionRecord,
@@ -117,6 +118,11 @@ class FakeProvider(LlmProvider):
                         if (
                             item := (metadata or {}).get("architecture_artifacts")
                         )
+                        else None
+                    ),
+                    execution_graph=(
+                        BacklogGraph.model_validate(item)
+                        if (item := (metadata or {}).get("execution_graph"))
                         else None
                     ),
                 ),
