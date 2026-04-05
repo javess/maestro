@@ -12,9 +12,9 @@
 | Step ID | Title | Status | Notes |
 | --- | --- | --- | --- |
 | STEP-000 | Workflow bootstrap and prompt capture | done | Durable control-plane bootstrap |
-| STEP-000A | VS Code workspace bootstrap | in_progress | User-requested prerequisite developer workflow setup before STEP-001 |
-| STEP-001 | Canonical run graph contracts | planned | Typed DAG contracts and validation |
-| STEP-002 | Run graph persistence, replay, and resume support | planned | Persist and resume canonical run graphs |
+| STEP-000A | VS Code workspace bootstrap | done | User-requested prerequisite developer workflow setup before STEP-001 |
+| STEP-001 | Canonical run graph contracts | done | Typed DAG contracts and validation |
+| STEP-002 | Run graph persistence, replay, and resume support | done | Persist and resume canonical run graphs |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | planned | Approval and audit evidence contracts |
 | STEP-004 | Evidence bundle generation in the existing flow | planned | Generate evidence bundles from the current run path |
 | STEP-005 | Risk scoring engine | planned | Deterministic policy-driven risk scoring |

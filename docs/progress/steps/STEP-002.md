@@ -1,0 +1,83 @@
+# STEP-002
+
+- Step id: `STEP-002`
+- Title: Run graph persistence, replay, and resume support
+- Status: done
+- Objective:
+  - Persist canonical run graphs with run state and support deterministic reload/resume inspection.
+- Scope:
+  - Add run graph fields to `RunState`.
+  - Initialize and advance persisted graph state during orchestrator execution.
+  - Add deterministic helpers for current-node tracking and resume-point resolution.
+  - Preserve compatibility with older saved state files that do not include run graph fields.
+- Non-goals:
+  - No full graph-driven executor.
+  - No evidence bundle attachment yet.
+  - No approval or risk behavior changes.
+- Prerequisites:
+  - STEP-001 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Inspect the current state store and run-state model.
+  - Extend `RunState` with optional graph fields for compatibility.
+  - Add runtime helpers for graph initialization, advancement, ordering, and resume-point resolution.
+  - Wire graph persistence into state creation and event transitions.
+  - Add focused persistence and compatibility tests, then rerun the full baseline.
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/run_graph_runtime.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_run_graph_runtime.py`
+  - `tests/test_storage.py`
+  - `docs/architecture/run_graph_persistence.md`
+  - `docs/runbooks/run_graph_resume.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-002.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_run_graph_runtime.py`
+  - `tests/test_storage.py`
+- Evals added or updated:
+  - None. This step persists graph state and resume metadata without changing orchestration outcomes.
+- Commands run:
+  - `sed -n '1,220p' src/maestro/storage/local.py`
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,340p' src/maestro/schemas/run_graph.py`
+  - `sed -n '1,260p' tests/test_storage.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `uv run pytest tests/test_run_graph_runtime.py tests/test_storage.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/core/run_graph_runtime.py src/maestro/schemas/contracts.py src/maestro/core/engine.py tests/test_run_graph_runtime.py tests/test_storage.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Results:
+  - `RunState` now persists the canonical run graph and current graph node id.
+  - New runs initialize with the graph entry node active.
+  - Orchestrator state transitions advance the graph deterministically.
+  - Resume helpers can identify the active or next pending node.
+  - Legacy partial state files without graph fields still load successfully.
+- Docs updated:
+  - `docs/architecture/run_graph_persistence.md`
+  - `docs/runbooks/run_graph_resume.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-002.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Persist the graph inside `RunState` rather than introducing a separate store in this step.
+  - Keep graph fields optional to preserve compatibility with older state files.
+- Known limitations:
+  - Resume still inspects the graph rather than replaying execution directly from the graph.
+  - The exact commit hash for the atomic step-closing commit cannot be embedded into the same commit without a follow-up amend; it is reported in session output instead.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-003`.
+- Commit hash:
+  - pending post-commit recording
+

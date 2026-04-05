@@ -18,3 +18,7 @@
 ## STEP-001 Note
 
 - No eval scenarios changed in STEP-001 because the new run-graph layer is contract-only and does not yet alter orchestrator execution.
+
+## STEP-002 Note
+
+- No eval scenarios changed in STEP-002 because persisted run-graph state and resume helpers do not yet change orchestration outcomes.

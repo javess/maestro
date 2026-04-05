@@ -22,3 +22,9 @@
 
 - Decision: model `STEP-001` as a bounded DAG contract rather than mirroring runtime loops directly.
 - Rationale: the roadmap explicitly calls for an execution DAG, so retry and next-ticket loops are represented as bounded unrolling or graph handoff points instead of cyclic edges.
+
+- Decision: persist the run graph directly inside `RunState` for STEP-002.
+- Rationale: this is the smallest compatible way to make saved runs resumable and inspectable without adding a second persistence surface prematurely.
+
+- Decision: keep run-graph fields optional on `RunState`.
+- Rationale: older saved state files must continue to load while the persistence surface evolves.

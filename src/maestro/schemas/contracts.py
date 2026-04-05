@@ -6,6 +6,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from maestro.schemas.run_graph import RunGraph
+
 
 class Severity(StrEnum):
     low = "low"
@@ -168,6 +170,8 @@ class RunState(BaseModel):
     current_state: str
     repo_path: Path
     brief_path: Path | None = None
+    run_graph: RunGraph | None = None
+    run_graph_current_node_id: str | None = None
     backlog: Backlog = Field(default_factory=lambda: Backlog(tickets=[]))
     current_ticket_id: str | None = None
     completed_tickets: list[str] = Field(default_factory=list)

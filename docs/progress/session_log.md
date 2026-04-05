@@ -80,6 +80,49 @@
 - Stop reason: step complete; waiting for user confirmation before `STEP-002`
 - Next recommended step: `STEP-002` after explicit user confirmation
 
+## 2026-04-05 11:14 UTC
+
+- Session goal: persist canonical run graphs with run state and add deterministic resume-point helpers
+- Selected step: `STEP-002`
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/run_graph_runtime.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_run_graph_runtime.py`
+  - `tests/test_storage.py`
+  - `docs/architecture/run_graph_persistence.md`
+  - `docs/runbooks/run_graph_resume.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-002.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,220p' src/maestro/storage/local.py`
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,340p' src/maestro/schemas/run_graph.py`
+  - `sed -n '1,260p' tests/test_storage.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `uv run pytest tests/test_run_graph_runtime.py tests/test_storage.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/core/run_graph_runtime.py src/maestro/schemas/contracts.py src/maestro/core/engine.py tests/test_run_graph_runtime.py tests/test_storage.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Tests run:
+  - `uv run pytest tests/test_run_graph_runtime.py tests/test_storage.py tests/test_engine.py` passed
+  - `uv run ruff check src/maestro/core/run_graph_runtime.py src/maestro/schemas/contracts.py src/maestro/core/engine.py tests/test_run_graph_runtime.py tests/test_storage.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-002`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-003`
+- Next recommended step: `STEP-003` after explicit user confirmation
+
 ## 2026-04-05 10:44 UTC
 
 - Session goal: restore safe repo state and add a repository-scoped VS Code workspace setup before roadmap feature work

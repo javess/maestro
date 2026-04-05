@@ -13,6 +13,11 @@ from maestro.agents.roles import (
 from maestro.config import load_config
 from maestro.core.models import OrchestratorState
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
+from maestro.core.run_graph_runtime import (
+    advance_run_graph,
+    determine_resume_node_id,
+    initialize_run_graph,
+)
 from maestro.providers.base import LlmProvider
 from maestro.providers.factory import build_provider
 from maestro.providers.router import ProviderRouter
@@ -72,11 +77,14 @@ class OrchestratorEngine:
 
     def new_state(self, repo_path: Path, brief_path: Path | None) -> RunState:
         manifest = self.deps.artifact_store.create_run()
+        run_graph, current_node_id = initialize_run_graph(self.deps.policy.max_review_cycles)
         state = RunState(
             run_id=manifest.run_id,
             current_state=OrchestratorState.DISCOVER_REPO.value,
             repo_path=repo_path,
             brief_path=brief_path,
+            run_graph=run_graph,
+            run_graph_current_node_id=current_node_id,
             artifacts=manifest,
         )
         self.deps.state_store.save(state)
@@ -85,6 +93,11 @@ class OrchestratorEngine:
     def _append_event(self, state: RunState, current: OrchestratorState, detail: str) -> None:
         state.current_state = current.value
         state.events.append(RunEvent(state=current.value, detail=detail))
+        state.run_graph, state.run_graph_current_node_id = advance_run_graph(
+            state.run_graph,
+            orchestrator_state=current,
+            current_node_id=state.run_graph_current_node_id,
+        )
         self.deps.state_store.save(state)
 
     def discover(self, state: RunState):
@@ -246,6 +259,10 @@ class OrchestratorEngine:
                     break
         state.current_state = (
             OrchestratorState.DONE.value if state.status == "done" else state.current_state
+        )
+        state.run_graph_current_node_id = determine_resume_node_id(
+            state.run_graph,
+            state.run_graph_current_node_id,
         )
         self.deps.state_store.save(state)
         return state

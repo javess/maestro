@@ -30,3 +30,9 @@
 
 - Added `tests/test_run_graph.py` for run-graph validation, invariants, and serialization.
 - Full backend test baseline and UI build were rerun after the contract layer was added.
+
+## STEP-002 Note
+
+- Added `tests/test_run_graph_runtime.py` for graph initialization, advancement, and resume-point helpers.
+- Updated `tests/test_storage.py` for graph persistence round-trip and legacy state compatibility.
+- Full backend test baseline and UI build were rerun after persistence changes.
