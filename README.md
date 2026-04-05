@@ -37,6 +37,8 @@ uv run maestro doctor
 uv run maestro ui
 ```
 
+See `docs/usage.md` for local, container, eval, UI, and binary workflows.
+
 ## Tooling
 
 - lint: `uv run ruff check .`

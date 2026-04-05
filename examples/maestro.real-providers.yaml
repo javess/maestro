@@ -1,0 +1,32 @@
+providers:
+  openai:
+    type: openai
+    api_key_env: OPENAI_API_KEY
+  gemini:
+    type: gemini
+    api_key_env: GEMINI_API_KEY
+  claude:
+    type: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+
+llm:
+  product_designer:
+    provider: gemini
+    model: gemini-2.5-pro
+  ceremony_master:
+    provider: claude
+    model: claude-opus
+  coder:
+    provider: openai
+    model: codex
+  reviewer:
+    provider: claude
+    model: claude-sonnet
+
+fallbacks:
+  reviewer:
+    - provider: openai
+      model: gpt-5
+
+policy: default
+

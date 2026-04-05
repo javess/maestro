@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -29,8 +30,16 @@ def _config_path(config: Path | None) -> Path:
 
 
 @app.command()
-def init() -> None:
-    console.print("maestro repository initialized")
+def init(config: Path = Path("maestro.yaml")) -> None:
+    root = _project_root()
+    target = config.resolve()
+    example = root / "examples" / "maestro.example.yaml"
+    created = False
+    if not target.exists():
+        shutil.copyfile(example, target)
+        created = True
+    (root / "runs" / "state").mkdir(parents=True, exist_ok=True)
+    console.print({"config": str(target), "created": created})
 
 
 @app.command()
