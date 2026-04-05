@@ -103,3 +103,9 @@
 
 - Decision: use the bundled `examples/hello_world_cli_game` fixture as the first documented user test path.
 - Rationale: the user explicitly asked for a trivially simple hello-world test run, and a tiny Python CLI game provides a stable preview target and planning example with minimal moving parts.
+
+- Decision: add a small documentation-only `STEP-013A` after preview abstraction.
+- Rationale: the user requested concrete operator examples for global CLI installation, fresh repo bootstrap, and a richer CLI game use case, and that follow-up is bounded, reviewable, and does not justify bundling into `STEP-014`.
+
+- Decision: document fresh-repo and CLI-game usage as planning-and-preview workflows, not autonomous repo authoring.
+- Rationale: the current product baseline does not yet perform general codebase mutation, so the README must stay accurate about what `maestro` can do today.

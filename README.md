@@ -49,6 +49,35 @@ Workflow control-plane and resume state live in `AGENTS.md`, `docs/codex/`,
 VS Code workspace setup lives under `.vscode/` and is described in `docs/runbooks/vscode_setup.md`.
 The first user-testable preview path is documented in `docs/runbooks/hello_world_openai.md`.
 
+## Install as a global CLI
+
+For local development, the simplest global install path is:
+
+```bash
+cd /Users/javiersierra/dev/maestro
+uv tool install --editable '.[providers]'
+maestro doctor
+```
+
+That installs `maestro` as a shell command backed by your local checkout.
+
+If you want a packaged build artifact first, create a wheel and install from it:
+
+```bash
+cd /Users/javiersierra/dev/maestro
+uv build
+uv tool install --from dist/maestro_framework-0.1.0-py3-none-any.whl maestro-framework[providers]
+maestro doctor
+```
+
+If you want a standalone binary instead of a Python-installed CLI:
+
+```bash
+cd /Users/javiersierra/dev/maestro
+uv run pyinstaller -m maestro.cli.main
+./dist/maestro
+```
+
 ## Tooling
 
 - lint: `uv run ruff check .`
@@ -102,6 +131,79 @@ uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/mae
 
 The local preview path above was validated in this repository. The OpenAI-backed plan command
 requires your API key and was documented but not executed in this session.
+
+## New Repo Example
+
+To point `maestro` at a brand-new repo anywhere on your machine:
+
+```bash
+mkdir -p ~/dev/scratch/cli-oxo
+cd ~/dev/scratch/cli-oxo
+git init
+cat > brief.md <<'EOF'
+# CLI Noughts And Crosses
+
+Build a command-line noughts-and-crosses game.
+
+Outcomes:
+- ask for player names
+- track score across multiple rounds
+- keep the game small and testable
+
+Constraints:
+- Python project
+- local CLI only
+- deterministic demo mode for preview
+EOF
+
+maestro plan brief.md --repo .
+```
+
+If you want OpenAI-backed planning for that repo, place an `.env` file next to your config with
+`OPENAI_API_KEY=...`, then run:
+
+```bash
+maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+```
+
+## CLI Game Example
+
+The current baseline is best used to plan, inspect, and preview work rather than fully author a
+production repo from scratch. A practical simple target is a CLI noughts-and-crosses game with:
+
+- player names
+- score keeping across rounds
+- deterministic demo mode
+- `pytest`, `ruff`, and `ty` checks
+
+The shortest path today is:
+
+```bash
+mkdir -p ~/dev/scratch/cli-oxo
+cd ~/dev/scratch/cli-oxo
+git init
+cp /Users/javiersierra/dev/maestro/examples/hello_world_cli_game_brief.md brief.md
+$EDITOR brief.md
+maestro plan brief.md --repo .
+```
+
+Then adapt the brief so it asks for:
+
+- a 3x3 board
+- two named players
+- score tracking between rounds
+- a deterministic `--demo` path for preview
+
+Once you have a runnable target repo, you can use the preview surface like this:
+
+```bash
+maestro preview --repo . --adapter local --command "python game.py --demo"
+```
+
+This repository includes a validated minimal fixture at
+`examples/hello_world_cli_game/`. It demonstrates the current product shape: deterministic
+planning, artifact generation, and local preview execution. Fully automatic repo mutation remains a
+later roadmap capability.
 
 ## UI
 

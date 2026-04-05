@@ -825,3 +825,29 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-014`
 - Next recommended step: `STEP-014`
+
+## 2026-04-05 22:31 UTC
+
+- Session goal: add concrete README operator examples for global install, fresh repo bootstrap,
+  and a CLI noughts-and-crosses planning flow
+- Selected step: `STEP-013A`
+- Files changed:
+  - `README.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013A.md`
+- Commands run:
+  - `git status --short --branch`
+  - `sed -n '1,260p' README.md`
+  - `sed -n '1,260p' pyproject.toml`
+  - `git diff --check`
+- Tests run:
+  - None. This was a documentation-only step.
+- Evals run:
+  - None.
+- Outcome: completed `STEP-013A`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-014`
+- Next recommended step: `STEP-014`

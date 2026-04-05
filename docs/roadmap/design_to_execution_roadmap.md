@@ -29,7 +29,8 @@
 | STEP-011 | Backlog graph | done | Dependency-aware execution graph |
 | STEP-012 | Repo-aware impact analysis | done | Deterministic repo-local context slicing |
 | STEP-012A | OpenAI provider wiring and local env loading | done | User-requested provider runtime integration before STEP-013 |
-| STEP-013 | Preview environment abstraction | planned | Generic preview surface with local/noop adapter |
+| STEP-013 | Preview environment abstraction | done | Generic preview surface with local/noop adapter |
+| STEP-013A | README operator examples | done | User-requested follow-up docs for global install, repo bootstrap, and CLI game usage |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |

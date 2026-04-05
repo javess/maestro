@@ -1,0 +1,62 @@
+# STEP-013A
+
+- Step id: `STEP-013A`
+- Title: README operator examples
+- Status: done
+- Objective:
+  - Add concrete operator-facing README examples for installing `maestro`, bootstrapping a new
+    repo, and aiming the current baseline at a simple CLI game use case.
+- Scope:
+  - Document global CLI installation from the local checkout.
+  - Document a fresh git repo bootstrap example.
+  - Document a simple noughts-and-crosses planning and preview flow.
+- Non-goals:
+  - No runtime code changes.
+  - No automatic repo authoring changes.
+  - No roadmap feature changes beyond tracking this docs step.
+- Prerequisites:
+  - `STEP-013` complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Inspect packaging metadata so install commands are accurate.
+  - Update the README with concrete examples.
+  - Record the follow-up in progress docs and commit as a docs-only step.
+- Files changed:
+  - `README.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013A.md`
+- Tests added or updated:
+  - None. This was a documentation-only step.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git status --short --branch`
+  - `sed -n '1,260p' README.md`
+  - `sed -n '1,260p' pyproject.toml`
+  - `git diff --check`
+- Results:
+  - Added a global CLI install example using `uv tool install`.
+  - Added a fresh repo bootstrap example with `git init` and a product brief.
+  - Added a simple CLI noughts-and-crosses usage example that stays accurate about the current
+    planning-and-preview product scope.
+- Docs updated:
+  - `README.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013A.md`
+- Decisions made:
+  - Track this as a small docs-only follow-up step.
+  - Keep the README examples honest about current non-authoring limitations.
+- Known limitations:
+  - The documented CLI game flow still stops at planning and preview unless the target repo already
+    contains runnable code.
+  - OpenAI-backed planning still requires a local API key and config file.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording
