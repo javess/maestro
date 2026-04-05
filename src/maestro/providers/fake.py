@@ -72,10 +72,14 @@ class FakeProvider(LlmProvider):
                 ProductSpec(
                     title="Maestro",
                     summary="Deterministic orchestration baseline",
+                    problem="Software delivery work needs deterministic orchestration.",
+                    target_users=["Platform engineers", "Software teams"],
                     outcomes=["Create baseline framework", "Validate via tests"],
                     scope=["CLI", "providers", "repo adapters", "evals"],
                     non_goals=["Full autonomous code editing"],
+                    constraints=["Deterministic execution", "Schema-validated outputs"],
                     risks=["Provider variability"],
+                    assumptions=["Repositories expose standard test commands"],
                     acceptance_criteria=["Structured output validation", "Deterministic evals"],
                 ),
             )

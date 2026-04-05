@@ -45,3 +45,10 @@
   human approval.
 - Existing scenarios continue to validate happy-path, escalation, failed-check, fallback, and now
   approval-hold behavior.
+
+## STEP-007 Note
+
+- No scenario set changes were required in STEP-007 because the brief compiler and richer product
+  schema do not change current orchestration transitions.
+- Existing scenarios were rerun to confirm product-definition normalization preserves current
+  deterministic outcomes.

@@ -19,7 +19,7 @@
 | STEP-004 | Evidence bundle generation in the existing flow | done | Generate evidence bundles from the current run path |
 | STEP-005 | Risk scoring engine | done | Deterministic policy-driven risk scoring |
 | STEP-006 | Approval gate framework | done | Deterministic approval policy modes |
-| STEP-007 | Product brief compiler | planned | Normalized product model from brief input |
+| STEP-007 | Product brief compiler | done | Normalized product model from brief input |
 | STEP-008 | Assumption tracker | planned | Persisted assumptions and unresolved questions |
 | STEP-009 | Architecture artifact model | planned | Typed architecture contracts |
 | STEP-010 | Architecture synthesizer | planned | Artifact synthesis from product model and repo discovery |

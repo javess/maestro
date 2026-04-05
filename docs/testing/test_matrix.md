@@ -64,3 +64,10 @@
 - Updated `tests/test_storage.py` to round-trip persisted approval requests in saved run state.
 - Updated `tests/test_evidence.py` with approval-request unit coverage.
 - Full backend test baseline and UI build were rerun after approval-gate changes.
+
+## STEP-007 Note
+
+- Added `tests/test_product_brief.py` for deterministic markdown and plain-text brief compilation.
+- Updated `tests/test_schemas.py` and `tests/test_fake_provider.py` for the richer product model.
+- Updated `tests/test_engine.py` to keep the product-definition path covered after compiled-brief integration.
+- Full backend test baseline and UI build were rerun after product-model changes.

@@ -39,11 +39,30 @@ class TicketStatus(StrEnum):
 class ProductSpec(BaseModel):
     title: str
     summary: str
+    problem: str
+    target_users: list[str] = Field(default_factory=list)
     outcomes: list[str]
     scope: list[str]
     non_goals: list[str] = Field(default_factory=list)
+    constraints: list[str] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
     acceptance_criteria: list[str]
+
+
+class CompiledBrief(BaseModel):
+    raw_text: str
+    title_hint: str = ""
+    summary_hint: str = ""
+    problem_points: list[str] = Field(default_factory=list)
+    target_users: list[str] = Field(default_factory=list)
+    outcomes: list[str] = Field(default_factory=list)
+    scope: list[str] = Field(default_factory=list)
+    non_goals: list[str] = Field(default_factory=list)
+    constraints: list[str] = Field(default_factory=list)
+    risks: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
+    acceptance_criteria: list[str] = Field(default_factory=list)
 
 
 class Ticket(BaseModel):

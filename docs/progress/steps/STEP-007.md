@@ -1,0 +1,89 @@
+# STEP-007
+
+- Step id: `STEP-007`
+- Title: Product brief compiler
+- Status: done
+- Objective:
+  - Compile raw design inputs into a normalized product model.
+- Scope:
+  - Add a deterministic brief compiler for markdown and plain-text brief input.
+  - Expand `ProductSpec` with problem, users, constraints, and assumptions fields.
+  - Persist the compiled brief artifact before product-designer execution.
+  - Add focused contract, compiler, fake-provider, and engine coverage.
+- Non-goals:
+  - No assumption-classification workflow yet.
+  - No architecture synthesis.
+  - No planner or backlog graph changes.
+- Prerequisites:
+  - STEP-006 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Inspect the existing product-designer schema and prompt path.
+  - Add a deterministic brief compiler and richer product contract.
+  - Pass the compiled brief to the product-designer role and persist it.
+  - Add tests, rerun validation, update docs, and commit.
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/product_brief.py`
+  - `src/maestro/providers/fake.py`
+  - `src/maestro/core/engine.py`
+  - `prompts/product_designer.md`
+  - `tests/test_product_brief.py`
+  - `tests/test_schemas.py`
+  - `tests/test_fake_provider.py`
+  - `docs/architecture/product_model.md`
+  - `docs/runbooks/product_brief_compiler.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-007.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_product_brief.py`
+  - `tests/test_schemas.py`
+  - `tests/test_fake_provider.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun to confirm the richer product
+    model does not change current orchestration outcomes.
+- Commands run:
+  - `sed -n '1,240p' src/maestro/agents/roles.py`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `sed -n '1,240p' tests/test_schemas.py`
+  - `sed -n '1,220p' prompts/product_designer.md`
+  - `uv run pytest tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/core/product_brief.py src/maestro/schemas/contracts.py src/maestro/providers/fake.py src/maestro/core/engine.py prompts/product_designer.md tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added a deterministic compiler that normalizes raw brief text into a typed `CompiledBrief`.
+  - Expanded `ProductSpec` to cover problem, users, constraints, and assumptions.
+  - Persisted compiled brief artifacts and passed normalized brief payloads to the product-designer role.
+  - Verified fake-provider stability and preserved existing orchestration outcomes.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/product_model.md`
+  - `docs/runbooks/product_brief_compiler.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-007.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Keep brief compilation deterministic and local, with the product-designer role consuming a
+    normalized payload rather than raw text alone.
+  - Expand the existing `ProductSpec` contract instead of introducing a second competing product
+    artifact for this step.
+- Known limitations:
+  - Section recognition is heading-based and intentionally narrow.
+  - The current compiler does not yet classify inferred assumptions beyond the explicit field.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-008`.
+- Commit hash:
+  - pending post-commit recording

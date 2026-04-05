@@ -1,6 +1,7 @@
 from maestro.schemas.contracts import (
     ArtifactManifest,
     Backlog,
+    CompiledBrief,
     DiffSummary,
     EvidenceBundle,
     PolicyFinding,
@@ -14,11 +15,22 @@ def test_product_spec_round_trip() -> None:
     spec = ProductSpec(
         title="x",
         summary="y",
+        problem="z",
+        target_users=["u"],
         outcomes=["a"],
         scope=["b"],
+        constraints=["c1"],
+        assumptions=["a1"],
         acceptance_criteria=["c"],
     )
     assert spec.title == "x"
+    assert spec.problem == "z"
+
+
+def test_compiled_brief_defaults() -> None:
+    brief = CompiledBrief(raw_text="Build something")
+    assert brief.title_hint == ""
+    assert brief.problem_points == []
 
 
 def test_backlog_requires_tickets() -> None:

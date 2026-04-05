@@ -13,6 +13,8 @@ def test_fake_provider_defaults() -> None:
     result = provider.generate_structured(prompt="x", model="fake", schema=ProductSpec)
     assert isinstance(result, ProductSpec)
     assert result.title == "Maestro"
+    assert result.problem
+    assert result.target_users
 
 
 def test_fake_provider_resolver() -> None:

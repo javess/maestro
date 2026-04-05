@@ -55,3 +55,9 @@
 
 - Decision: represent approval holds with `RunState.status="awaiting_approval"` plus a persisted `ApprovalRequest`.
 - Rationale: this keeps the deterministic state machine intact without inventing a new orchestration state for this bounded step.
+
+- Decision: compile raw brief text deterministically before invoking the product-designer role.
+- Rationale: STEP-007 needs a stable, resumable normalization surface that does not depend on provider behavior.
+
+- Decision: expand `ProductSpec` rather than introducing a second final product artifact.
+- Rationale: later planning and synthesis steps should consume one canonical normalized product model.

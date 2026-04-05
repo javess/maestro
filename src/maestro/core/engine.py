@@ -18,6 +18,7 @@ from maestro.core.evidence import (
 )
 from maestro.core.models import OrchestratorState
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
+from maestro.core.product_brief import compile_product_brief
 from maestro.core.run_graph_runtime import (
     advance_run_graph,
     determine_resume_node_id,
@@ -123,7 +124,13 @@ class OrchestratorEngine:
 
     def define_product(self, state: RunState, brief_text: str):
         agent = ProductDesignerAgent(self.deps.router, self.deps.prompt_root, "product_designer")
-        spec = agent.run_spec({"brief": brief_text})
+        compiled_brief = compile_product_brief(brief_text)
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            "product_brief_compiler",
+            compiled_brief.model_dump(mode="json"),
+        )
+        spec = agent.run_spec({"brief": compiled_brief.model_dump(mode="json")})
         self.deps.artifact_store.write_json(
             state.artifacts,
             "product_designer",
