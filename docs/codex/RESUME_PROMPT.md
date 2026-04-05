@@ -14,14 +14,16 @@ Before changing anything:
 
 Then:
 - determine the next bounded incomplete roadmap step
+- determine whether the user has explicitly authorized a bounded multi-step batch, such as the next
+  `N` steps or progress through a named target step
 - if needed, split it and document the split
-- implement only that one step
+- implement only the approved step range
 - add/update tests and evals
 - update docs and progress files
-- create one atomic commit if the step is complete and green
+- create one atomic commit per completed step if the work is complete and green
 - stop
-- output a concise report and request explicit user confirmation before continuing
+- output a concise report and request explicit user confirmation before continuing past the
+  approved batch boundary
 
-Never continue to a second roadmap step in the same session.
+Never continue beyond the explicit user-approved batch boundary in the same session.
 Never rely on memory outside the repository.
-

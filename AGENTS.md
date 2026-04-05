@@ -22,8 +22,10 @@ On every session, read these files in order before making changes:
 
 ## Workflow Rules
 
-- Execute one bounded roadmap step per session.
-- Do not start the next roadmap step without explicit user confirmation.
+- Default to one bounded roadmap step per session.
+- If the user explicitly requests a bounded multi-step run, execute only the requested range, such
+  as the next `N` steps or advancing through a named target step.
+- Do not continue past the user-approved batch boundary without explicit confirmation.
 - If a roadmap step is too large, split it into smaller substeps, update the roadmap,
   and record the split in the decision ledger before implementing only the first substep.
 - Keep the system deterministic, provider-neutral, repo-agnostic, policy-driven,
@@ -57,8 +59,8 @@ On every session, read these files in order before making changes:
 
 ## Stop Conditions
 
-- The current bounded step is complete.
-- User confirmation is required for the next step.
+- The current bounded step is complete and no larger user-approved batch remains.
+- The user-approved batch boundary has been reached and more work would exceed it.
 - Repository state is unsafe.
 - Tests fail unexpectedly.
 - A blocked dependency appears.

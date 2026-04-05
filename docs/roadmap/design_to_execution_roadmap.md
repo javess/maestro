@@ -2,10 +2,12 @@
 
 ## Principles
 
-- Implement one bounded step per session.
+- Default to one bounded step per session.
+- If the user explicitly requests a bounded batch, execute only that approved range and stop at the
+  batch boundary.
 - Preserve deterministic orchestration, provider neutrality, repo neutrality, policy-driven behavior, schema validation, evalability, and resumability.
 - Split oversized steps before implementation and record the split in `docs/progress/decision_ledger.md`.
-- Do not start the next step without explicit user confirmation.
+- Do not start work beyond the approved batch boundary without explicit user confirmation.
 
 ## Planned Steps
 
@@ -37,7 +39,8 @@
 1. Complete `STEP-000`, stop, and request confirmation.
 2. Complete `STEP-000A`, stop, and request confirmation.
 3. Complete `STEP-001`, stop, and request confirmation.
-4. Continue one bounded step at a time in roadmap order.
+4. Continue one bounded step at a time in roadmap order unless the user explicitly authorizes a
+   bounded batch such as the next `N` steps or progress through a target step.
 5. Reserve `STEP-018` for the end of the roadmap because the storage model is still evolving and JSON should remain the simpler source of truth until the contracts stabilize.
 
 ## Product Testability Note

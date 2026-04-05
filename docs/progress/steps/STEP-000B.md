@@ -1,0 +1,73 @@
+# STEP-000B
+
+- Step id: `STEP-000B`
+- Title: Workflow batching policy update
+- Status: done
+- Objective:
+  - Relax the repo-local execution policy so the user can authorize bounded multi-step batches.
+- Scope:
+  - Update repo-local workflow instructions to allow explicit user-directed batches.
+  - Preserve explicit stop boundaries and resumability requirements.
+  - Record the policy change in progress and prompt-change docs.
+- Non-goals:
+  - No product runtime changes.
+  - No roadmap feature implementation.
+  - No change to the historical preserved master prompt contents.
+- Prerequisites:
+  - STEP-009 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Update `AGENTS.md` with the new batch-execution policy.
+  - Update the resume prompt so future sessions honor the approved batch boundary.
+  - Record the change in the roadmap, prompt changelog, and decision ledger.
+  - Update progress tracking, validate docs, and commit.
+- Files changed:
+  - `AGENTS.md`
+  - `docs/codex/RESUME_PROMPT.md`
+  - `docs/codex/PROMPT_CHANGELOG.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000B.md`
+- Tests added or updated:
+  - None. This is a documentation and workflow-policy change only.
+- Evals added or updated:
+  - None. No runtime or orchestration behavior changed.
+- Commands run:
+  - `sed -n '1,260p' AGENTS.md`
+  - `sed -n '1,260p' docs/codex/MASTER_IMPLEMENTATION_PROMPT.md`
+  - `sed -n '1,240p' docs/codex/RESUME_PROMPT.md`
+  - `sed -n '1,240p' docs/codex/PROMPT_CHANGELOG.md`
+  - `sed -n '1,240p' docs/roadmap/design_to_execution_roadmap.md`
+  - `sed -n '1,220p' docs/progress/status.md`
+  - `tail -n 80 docs/progress/session_log.md`
+  - `sed -n '1,260p' docs/progress/decision_ledger.md`
+  - `git status --short --branch`
+  - `git diff --check`
+- Results:
+  - Future sessions may now execute a user-approved bounded batch instead of stopping after exactly
+    one step.
+  - The stop condition is still explicit: execution must stop at the approved batch boundary.
+  - The preserved master prompt remains unchanged as a historical record, while repo-local
+    operating instructions now carry the newer policy.
+- Docs updated:
+  - `AGENTS.md`
+  - `docs/codex/RESUME_PROMPT.md`
+  - `docs/codex/PROMPT_CHANGELOG.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000B.md`
+- Decisions made:
+  - Keep the master prompt file immutable as the original persisted instruction set.
+  - Apply the new policy through repo-local operating docs and resume instructions.
+  - Preserve bounded execution by requiring an explicit user-approved batch limit.
+- Known limitations:
+  - Older historical step files still describe the earlier one-step-per-session policy.
+  - This change does not itself start any roadmap feature work.
+- Next recommended step:
+  - Follow the user's next explicit batch instruction, starting from `STEP-010`.
+- Commit hash:
+  - pending post-commit recording

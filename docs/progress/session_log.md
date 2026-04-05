@@ -517,3 +517,39 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-010`
 - Next recommended step: `STEP-010` after explicit user confirmation
+
+## 2026-04-05 20:17 UTC
+
+- Session goal: relax the repo-local execution policy so future sessions can run a user-approved
+  bounded batch of roadmap steps
+- Selected step: `STEP-000B`
+- Files changed:
+  - `AGENTS.md`
+  - `docs/codex/RESUME_PROMPT.md`
+  - `docs/codex/PROMPT_CHANGELOG.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000B.md`
+- Commands run:
+  - `sed -n '1,260p' AGENTS.md`
+  - `sed -n '1,260p' docs/codex/MASTER_IMPLEMENTATION_PROMPT.md`
+  - `sed -n '1,240p' docs/codex/RESUME_PROMPT.md`
+  - `sed -n '1,240p' docs/codex/PROMPT_CHANGELOG.md`
+  - `sed -n '1,240p' docs/roadmap/design_to_execution_roadmap.md`
+  - `sed -n '1,220p' docs/progress/status.md`
+  - `tail -n 80 docs/progress/session_log.md`
+  - `sed -n '1,260p' docs/progress/decision_ledger.md`
+  - `git status --short --branch`
+  - `date -u '+%Y-%m-%d %H:%M UTC'`
+  - `git rev-parse --short HEAD`
+  - `git diff --check`
+- Tests run:
+  - None. This was a documentation and workflow-policy change only.
+- Evals run:
+  - None. No runtime or orchestration behavior changed.
+- Outcome: completed `STEP-000B`
+- Commit hash: none yet
+- Stop reason: workflow policy updated; waiting for the user's next explicit batch instruction
+- Next recommended step: start the next user-approved batch from `STEP-010`

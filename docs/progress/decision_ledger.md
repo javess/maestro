@@ -73,3 +73,6 @@
 
 - Decision: record a roadmap note that after `STEP-012` the following steps should start exposing a user-testable product path.
 - Rationale: the user explicitly wants a practical way to exercise the product once the architecture, graph, and impact-analysis foundations are in place.
+
+- Decision: relax the repo-local execution policy from strictly one step per session to user-directed bounded batches.
+- Rationale: the user wants to choose whether a session should stop after one step, advance the next `N` steps, or continue through a named target step while still preserving explicit boundaries and resumability.

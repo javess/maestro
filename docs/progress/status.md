@@ -4,6 +4,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | STEP-000 | Workflow bootstrap and prompt capture | done | 2026-04-05 10:26 UTC | [STEP-000](steps/STEP-000.md) | `6e1fe7e` | `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-000A` |
 | STEP-000A | VS Code workspace bootstrap | done | 2026-04-05 10:49 UTC | [STEP-000A](steps/STEP-000A.md) | `9cfd36b` | JSON validation pass; `pytest` pass; UI build pass | `STEP-001` |
+| STEP-000B | Workflow batching policy update | done | 2026-04-05 20:17 UTC | [STEP-000B](steps/STEP-000B.md) | pending post-commit recording | `git diff --check` pass | Follow user-approved batch starting from `STEP-010` |
 | STEP-001 | Canonical run graph contracts | done | 2026-04-05 11:02 UTC | [STEP-001](steps/STEP-001.md) | `e0bed4a` | `test_run_graph` pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-002` |
 | STEP-002 | Run graph persistence, replay, and resume support | done | 2026-04-05 11:14 UTC | [STEP-002](steps/STEP-002.md) | `441523c` | targeted persistence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-003` |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | 2026-04-05 11:35 UTC | [STEP-003](steps/STEP-003.md) | `ddcdd03` | targeted schema/storage pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-004` |
@@ -12,7 +13,7 @@
 | STEP-006 | Approval gate framework | done | 2026-04-05 13:00 UTC | [STEP-006](steps/STEP-006.md) | `f69655a` | targeted approval pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-007` |
 | STEP-007 | Product brief compiler | done | 2026-04-05 13:18 UTC | [STEP-007](steps/STEP-007.md) | `c711fd4` | targeted product-model pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-008` |
 | STEP-008 | Assumption tracker | done | 2026-04-05 13:34 UTC | [STEP-008](steps/STEP-008.md) | `6794e5f` | targeted assumption pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-009` |
-| STEP-009 | Architecture artifact model | done | 2026-04-05 20:14 UTC | [STEP-009](steps/STEP-009.md) | pending post-commit recording | targeted architecture-artifact pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-010` |
+| STEP-009 | Architecture artifact model | done | 2026-04-05 20:14 UTC | [STEP-009](steps/STEP-009.md) | `82a72f3` | targeted architecture-artifact pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-010` |
 | STEP-010 | Architecture synthesizer | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-009 |
 | STEP-011 | Backlog graph | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-010 |
 | STEP-012 | Repo-aware impact analysis | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-011 |
