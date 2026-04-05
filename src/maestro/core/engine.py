@@ -216,6 +216,11 @@ class OrchestratorEngine:
         return backlog
 
     def pick_ticket(self, state: RunState) -> Ticket | None:
+        logger.debug(
+            "pick_ticket_start run_id=%s completed=%s",
+            state.run_id,
+            len(state.completed_tickets),
+        )
         ticket = select_next_ticket(state.backlog, state.completed_tickets)
         if ticket is not None:
             ticket.status = TicketStatus.in_progress
@@ -411,6 +416,12 @@ class OrchestratorEngine:
             state.status = "done"
             return state
         while ticket.status is TicketStatus.in_progress:
+            logger.debug(
+                "run_plan_loop run_id=%s ticket=%s review_cycles=%s",
+                state.run_id,
+                ticket.id,
+                state.review_cycles,
+            )
             code_result = self.implement(state, ticket, repo.model_dump(mode="json"))
             commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
             checks = self.validate(state, commands)

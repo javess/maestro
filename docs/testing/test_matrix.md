@@ -128,3 +128,8 @@
 - Added `tests/test_logging.py` for log-level resolution and logging bootstrap coverage.
 - Updated `tests/test_openai_adapter.py` for OpenAI native-schema rejection fallback coverage.
 - Reran targeted provider, logging, and preview tests plus the full backend test suite.
+
+## STEP-013E Note
+
+- Extended `tests/test_logging.py` to cover provider request and response logging helpers.
+- Reran targeted logging and OpenAI adapter tests after adding `-vv` request/response traces.

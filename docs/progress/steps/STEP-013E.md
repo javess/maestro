@@ -1,0 +1,75 @@
+# STEP-013E
+
+- Step id: `STEP-013E`
+- Title: Maximum verbosity provider request logging
+- Status: done
+- Objective:
+  - Make `-vv` and `--log-level DEBUG` show complete provider request and response payloads, and
+    update repo guidance so runtime work adds logging by default.
+- Scope:
+  - Add request/response logging helpers.
+  - Log provider request and response payloads for OpenAI and FakeProvider in the highest
+    verbosity mode.
+  - Add extra debug step logs in the orchestrator loop.
+  - Update AGENTS and usage docs with the new logging expectation and operator command.
+- Non-goals:
+  - No changes to orchestration behavior.
+  - No changes to provider selection logic.
+  - No new eval scenarios.
+- Prerequisites:
+  - `STEP-013D` complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add reusable provider request/response logging helpers.
+  - Wire them into the active provider adapters.
+  - Update tests, docs, and progress tracking.
+- Files changed:
+  - `src/maestro/logging.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/providers/fake.py`
+  - `src/maestro/core/engine.py`
+  - `AGENTS.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013E.md`
+  - `tests/test_logging.py`
+- Tests added or updated:
+  - `tests/test_logging.py`
+- Evals added or updated:
+  - None. This is an observability-only step.
+- Commands run:
+  - `uv run pytest tests/test_logging.py tests/test_openai_adapter.py`
+  - `uv run ruff check src/maestro/logging.py src/maestro/providers/openai_adapter.py src/maestro/providers/fake.py src/maestro/core/engine.py tests/test_logging.py tests/test_openai_adapter.py`
+  - `uv run ty check`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro -vv plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+- Results:
+  - `-vv` now emits full `provider_request` and `provider_response` payloads.
+  - The OpenAI path still logs compatibility preflight and fallback decisions.
+  - Repo guidance now says runtime-facing changes should add logging by default.
+- Docs updated:
+  - `AGENTS.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013E.md`
+- Decisions made:
+  - Reserve full payload logging for the highest verbosity tier.
+  - Treat logging as a default implementation expectation for runtime-facing changes.
+- Known limitations:
+  - `-vv` logs can be very large because they include full prompts and structured payloads.
+  - Sensitive provider prompts are visible in local terminal output at the highest verbosity level.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from rich.logging import RichHandler
 
@@ -31,3 +32,43 @@ def configure_logging(
         force=True,
     )
     return level
+
+
+def log_provider_request(
+    logger: logging.Logger,
+    *,
+    provider: str,
+    action: str,
+    model: str,
+    prompt: str,
+    metadata: dict[str, Any] | None = None,
+    schema_name: str | None = None,
+) -> None:
+    logger.debug(
+        "provider_request provider=%s action=%s model=%s schema=%s metadata=%s\nprompt=%s",
+        provider,
+        action,
+        model,
+        schema_name or "-",
+        metadata or {},
+        prompt,
+    )
+
+
+def log_provider_response(
+    logger: logging.Logger,
+    *,
+    provider: str,
+    action: str,
+    model: str,
+    payload: str,
+    schema_name: str | None = None,
+) -> None:
+    logger.debug(
+        "provider_response provider=%s action=%s model=%s schema=%s\npayload=%s",
+        provider,
+        action,
+        model,
+        schema_name or "-",
+        payload,
+    )

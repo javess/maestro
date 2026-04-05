@@ -9,6 +9,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from maestro.core.structured import _extract_json_object
+from maestro.logging import log_provider_request, log_provider_response
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.contracts import ProviderCapability, ProviderError, ProviderModelInfo
 
@@ -129,8 +130,24 @@ class OpenAIProvider(LlmProvider):
         metadata: dict[str, Any] | None = None,
     ) -> str:
         logger.debug("openai_generate_text model=%s", model)
+        log_provider_request(
+            logger,
+            provider="openai",
+            action="generate_text",
+            model=model,
+            prompt=prompt,
+            metadata=metadata,
+        )
         response = self._get_client().responses.create(model=model, input=prompt)
-        return self._extract_text(response)
+        text = self._extract_text(response)
+        log_provider_response(
+            logger,
+            provider="openai",
+            action="generate_text",
+            model=model,
+            payload=text,
+        )
+        return text
 
     def generate_structured(
         self,
@@ -142,6 +159,15 @@ class OpenAIProvider(LlmProvider):
     ) -> SchemaT:
         client = self._get_client()
         if hasattr(client.responses, "parse") and self._supports_native_schema(schema):
+            log_provider_request(
+                logger,
+                provider="openai",
+                action="generate_structured_native",
+                model=model,
+                prompt=prompt,
+                metadata=metadata,
+                schema_name=schema.__name__,
+            )
             try:
                 logger.info(
                     "openai_generate_structured_native model=%s schema=%s",
@@ -159,7 +185,16 @@ class OpenAIProvider(LlmProvider):
                     error,
                 )
             else:
-                return schema.model_validate(self._extract_parsed(response))
+                parsed = self._extract_parsed(response)
+                log_provider_response(
+                    logger,
+                    provider="openai",
+                    action="generate_structured_native",
+                    model=model,
+                    payload=json.dumps(parsed, indent=2, sort_keys=True),
+                    schema_name=schema.__name__,
+                )
+                return schema.model_validate(parsed)
         elif hasattr(client.responses, "parse"):
             logger.info(
                 "openai_native_schema_skipped_incompatible model=%s schema=%s",
@@ -171,6 +206,15 @@ class OpenAIProvider(LlmProvider):
             "openai_generate_structured_fallback model=%s schema=%s",
             model,
             schema.__name__,
+        )
+        log_provider_request(
+            logger,
+            provider="openai",
+            action="generate_structured_fallback",
+            model=model,
+            prompt=prompt,
+            metadata=metadata,
+            schema_name=schema.__name__,
         )
         raw = self.generate_text(
             prompt=(

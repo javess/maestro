@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import json
+import logging
 from collections.abc import Callable
 from typing import Any, cast
 
 from pydantic import BaseModel
 
+from maestro.logging import log_provider_request, log_provider_response
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.backlog_graph import BacklogGraph
@@ -22,6 +25,8 @@ from maestro.schemas.contracts import (
     Severity,
     Ticket,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class FakeProvider(LlmProvider):
@@ -53,7 +58,23 @@ class FakeProvider(LlmProvider):
         model: str,
         metadata: dict[str, Any] | None = None,
     ) -> str:
-        return f"fake:{model}:{metadata or {}}:{prompt[:32]}"
+        log_provider_request(
+            logger,
+            provider="fake",
+            action="generate_text",
+            model=model,
+            prompt=prompt,
+            metadata=metadata,
+        )
+        text = f"fake:{model}:{metadata or {}}:{prompt[:32]}"
+        log_provider_response(
+            logger,
+            provider="fake",
+            action="generate_text",
+            model=model,
+            payload=text,
+        )
+        return text
 
     def generate_structured(
         self,
@@ -63,15 +84,43 @@ class FakeProvider(LlmProvider):
         schema: type[SchemaT],
         metadata: dict[str, Any] | None = None,
     ) -> SchemaT:
+        log_provider_request(
+            logger,
+            provider="fake",
+            action="generate_structured",
+            model=model,
+            prompt=prompt,
+            metadata=metadata,
+            schema_name=schema.__name__,
+        )
         if self.resolver is not None:
-            return cast(SchemaT, self.resolver(prompt, schema))
+            result = cast(SchemaT, self.resolver(prompt, schema))
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         payload = self.scenario.get(schema.__name__)
         if payload is not None:
             if isinstance(payload, BaseModel):
-                return cast(SchemaT, payload)
-            return schema.model_validate(payload)
+                result = cast(SchemaT, payload)
+            else:
+                result = schema.model_validate(payload)
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         if schema is ProductSpec:
-            return cast(
+            result = cast(
                 SchemaT,
                 ProductSpec(
                     title="Maestro",
@@ -95,9 +144,18 @@ class FakeProvider(LlmProvider):
                     acceptance_criteria=["Structured output validation", "Deterministic evals"],
                 ),
             )
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         if schema is Backlog:
             product_spec = ((metadata or {}).get("product_spec")) or {}
-            return cast(
+            result = cast(
                 SchemaT,
                 Backlog(
                     tickets=[
@@ -127,9 +185,18 @@ class FakeProvider(LlmProvider):
                     ),
                 ),
             )
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         if schema is CodeResult:
             ticket_id = (metadata or {}).get("ticket_id", "TICKET-1")
-            return cast(
+            result = cast(
                 SchemaT,
                 CodeResult(
                     ticket_id=ticket_id,
@@ -141,10 +208,19 @@ class FakeProvider(LlmProvider):
                     success=True,
                 ),
             )
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         if schema is ReviewResult:
             ticket_id = (metadata or {}).get("ticket_id", "TICKET-1")
             if self.scenario.get("force_review_issue"):
-                return cast(
+                result = cast(
                     SchemaT,
                     ReviewResult(
                         ticket_id=ticket_id,
@@ -160,7 +236,16 @@ class FakeProvider(LlmProvider):
                         ],
                     ),
                 )
-            return cast(
+                log_provider_response(
+                    logger,
+                    provider="fake",
+                    action="generate_structured",
+                    model=model,
+                    payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                    schema_name=schema.__name__,
+                )
+                return result
+            result = cast(
                 SchemaT,
                 ReviewResult(
                     ticket_id=ticket_id,
@@ -169,6 +254,15 @@ class FakeProvider(LlmProvider):
                     issues=[],
                 ),
             )
+            log_provider_response(
+                logger,
+                provider="fake",
+                action="generate_structured",
+                model=model,
+                payload=json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True),
+                schema_name=schema.__name__,
+            )
+            return result
         raise ValueError(f"No fake payload configured for {schema.__name__}")
 
     def supports_structured_output(self) -> bool:

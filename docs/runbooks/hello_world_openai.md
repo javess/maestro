@@ -115,6 +115,9 @@ Useful log lines in `-v` mode include:
 - `openai_generate_structured_fallback`
 - `state_transition`
 
+In `-vv` or `--log-level DEBUG`, `maestro` also logs the full provider request and response
+payloads through `provider_request` and `provider_response`.
+
 ## 6. OpenAI setup for the ready-made OXO brief
 
 From a fresh target repo:

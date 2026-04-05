@@ -121,3 +121,9 @@
 
 - Decision: use the standard library logger with Rich logging output and CLI-controlled verbosity.
 - Rationale: it adds no new heavy dependency, works cleanly with Typer, and is sufficient for state transitions, provider routing, fallback behavior, and shell command tracing.
+
+- Decision: use `-vv` and `--log-level DEBUG` to emit full provider request and response payloads.
+- Rationale: the user explicitly wants maximum observability for LLM calls, and the highest verbosity tier is the right place to show complete payloads without overwhelming normal runs.
+
+- Decision: update repo guidance to require logging for runtime-facing changes by default.
+- Rationale: observability needs to stay part of the implementation standard instead of depending on ad hoc follow-up requests.

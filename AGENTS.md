@@ -49,6 +49,9 @@ On every session, read these files in order before making changes:
 - For workflow or orchestration changes, update eval coverage when appropriate.
 - Record all commands and results in the current step file and `docs/progress/session_log.md`.
 - If the baseline is failing, document that before changing code and avoid regressions in touched areas.
+- Runtime-facing changes should add or update meaningful logging by default.
+- Use `INFO` for major progress milestones and `DEBUG` for detailed traces such as provider request
+  payloads, provider responses, and per-step execution details.
 
 ## Documentation Rules
 
@@ -94,3 +97,4 @@ On every session, read these files in order before making changes:
 - VS Code JSON validation: `python3 -m json.tool .vscode/settings.json`
 - Local init: `uv run maestro init`
 - Doctor: `uv run maestro doctor`
+- Maximum logging for local runs: `uv run maestro -vv plan examples/brief.md`

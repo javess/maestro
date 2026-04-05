@@ -34,6 +34,7 @@
 | STEP-013B | Ready-made OXO brief example | done | User-requested example brief and doc links for the CLI noughts-and-crosses use case |
 | STEP-013C | OpenAI schema fallback compatibility fix | superseded | Folded into STEP-013D before commit when the user requested immediate runtime verification and logging |
 | STEP-013D | OpenAI runtime verification and logging | done | User-requested live verification plus structured progress logging |
+| STEP-013E | Maximum verbosity provider request logging | done | User-requested `-vv` request/response logging and repo guidance update |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |

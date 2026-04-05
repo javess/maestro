@@ -963,3 +963,40 @@
   - The live OpenAI run now logs `openai_native_schema_skipped_incompatible` for `Backlog` and
     goes directly to the text-plus-JSON fallback path instead of first making the known-failing
     native structured-output request.
+
+## 2026-04-05 23:08 UTC
+
+- Session goal: extend `-vv` logging to show full provider request and response payloads and
+  update repo guidance so runtime changes add logging by default
+- Selected step: `STEP-013E`
+- Files changed:
+  - `src/maestro/logging.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/providers/fake.py`
+  - `src/maestro/core/engine.py`
+  - `AGENTS.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013E.md`
+  - `tests/test_logging.py`
+- Commands run:
+  - `uv run pytest tests/test_logging.py tests/test_openai_adapter.py`
+  - `uv run ruff check src/maestro/logging.py src/maestro/providers/openai_adapter.py src/maestro/providers/fake.py src/maestro/core/engine.py tests/test_logging.py tests/test_openai_adapter.py`
+  - `uv run ty check`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro -vv plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+- Tests run:
+  - `uv run pytest tests/test_logging.py tests/test_openai_adapter.py` passed
+  - `uv run ruff check src/maestro/logging.py src/maestro/providers/openai_adapter.py src/maestro/providers/fake.py src/maestro/core/engine.py tests/test_logging.py tests/test_openai_adapter.py` passed
+  - `uv run ty check` passed
+- Evals run:
+  - None. This step changes observability only.
+- Outcome: completed `STEP-013E`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-014`
+- Next recommended step: `STEP-014`

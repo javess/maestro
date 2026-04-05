@@ -108,3 +108,8 @@
   fallback fix do not alter deterministic fake-provider eval behavior.
 - Existing eval coverage remains valid because the orchestration state machine and fake-provider
   scenarios are unchanged.
+
+## STEP-013E Note
+
+- No eval scenario set changes were required in STEP-013E because the new `-vv` provider
+  request/response logging changes observability only.

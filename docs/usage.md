@@ -10,12 +10,22 @@ uv run maestro plan examples/brief.md
 uv run maestro status
 ```
 
-Use `-v` for progress logs and `-vv` or `--log-level DEBUG` for more detailed traces:
+Use `-v` for progress logs and `-vv` or `--log-level DEBUG` for the most detailed traces:
 
 ```bash
 uv run maestro -v plan examples/brief.md
+uv run maestro -vv plan examples/brief.md
 uv run maestro --log-level DEBUG preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
 ```
+
+In the highest-verbosity modes, `maestro` logs:
+
+- provider request payloads
+- provider response payloads
+- provider routing and fallback decisions
+- orchestrator state transitions
+- shell command execution
+- preview command execution
 
 ## Preview a local target repo
 
