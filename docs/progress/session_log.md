@@ -123,6 +123,27 @@
 - Stop reason: step complete; waiting for user confirmation before `STEP-003`
 - Next recommended step: `STEP-003` after explicit user confirmation
 
+## 2026-04-05 11:22 UTC
+
+- Session goal: update the roadmap to include a future local SQL persistence backend step at the end
+- Selected step: documentation-only roadmap maintenance
+- Files changed:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/session_log.md`
+- Commands run:
+  - control-plane reread sequence
+  - `git status --short --branch`
+- Tests run:
+  - none; not applicable for roadmap-only documentation change
+- Evals run:
+  - none; not applicable for roadmap-only documentation change
+- Outcome: completed roadmap update
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before returning to `STEP-003`
+- Next recommended step: `STEP-003` after explicit user confirmation
+
 ## 2026-04-05 10:44 UTC
 
 - Session goal: restore safe repo state and add a repository-scoped VS Code workspace setup before roadmap feature work

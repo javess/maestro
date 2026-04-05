@@ -28,3 +28,6 @@
 
 - Decision: keep run-graph fields optional on `RunState`.
 - Rationale: older saved state files must continue to load while the persistence surface evolves.
+
+- Decision: add a final roadmap step for a local SQL persistence backend, with SQLite as the default target and PostgreSQL only as a later consideration if justified.
+- Rationale: SQL-backed indexing and query support will likely be valuable, but the current model is still evolving, so the migration should happen after the core orchestration, artifact, and approval contracts stabilize.
