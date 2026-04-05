@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from maestro.agents.roles import (
 )
 from maestro.config import load_config
 from maestro.core.architecture_synthesizer import synthesize_architecture
-from maestro.core.backlog_graph import build_backlog_graph, select_next_ticket
+from maestro.core.backlog_graph import build_backlog_graph, select_ready_tickets
 from maestro.core.evidence import (
     build_evidence_bundle,
     collect_policy_findings,
@@ -66,6 +67,13 @@ class EngineDeps:
     providers: Mapping[str, LlmProvider]
     router: ProviderRouter
     prompt_root: Path
+
+
+@dataclass
+class TicketAttempt:
+    code_result: CodeResult
+    checks: list[CheckResult]
+    review: ReviewResult
 
 
 def build_engine_deps(
@@ -152,6 +160,9 @@ class OrchestratorEngine:
             return
         sync_code_result(Path(workdir), state.repo_path, code_result)
         self.deps.state_store.save(state)
+
+    def _parallel_ticket_limit(self) -> int:
+        return max(1, self.deps.policy.max_parallel_tickets)
 
     def _append_event(self, state: RunState, current: OrchestratorState, detail: str) -> None:
         state.current_state = current.value
@@ -251,29 +262,38 @@ class OrchestratorEngine:
         self._append_event(state, OrchestratorState.PLAN_TICKETS, str(len(backlog.tickets)))
         return backlog
 
-    def pick_ticket(self, state: RunState) -> Ticket | None:
+    def pick_tickets(self, state: RunState) -> list[Ticket]:
         logger.debug(
-            "pick_ticket_start run_id=%s completed=%s",
+            "pick_tickets_start run_id=%s completed=%s",
             state.run_id,
             len(state.completed_tickets),
         )
-        ticket = select_next_ticket(state.backlog, state.completed_tickets)
-        if ticket is not None:
-            ticket.status = TicketStatus.in_progress
-            state.current_ticket_id = ticket.id
-            self._append_event(state, OrchestratorState.PICK_TICKET, ticket.id)
-            return ticket
+        tickets = select_ready_tickets(
+            state.backlog,
+            state.completed_tickets,
+            limit=self._parallel_ticket_limit(),
+        )
+        if tickets:
+            for ticket in tickets:
+                ticket.status = TicketStatus.in_progress
+                self._append_event(state, OrchestratorState.PICK_TICKET, ticket.id)
+            state.current_ticket_id = tickets[0].id
+            return tickets
         self._append_event(state, OrchestratorState.DONE, "no pending tickets")
         state.status = "done"
         logger.info("run_complete_no_pending_tickets run_id=%s", state.run_id)
-        return None
+        return []
 
-    def implement(self, state: RunState, ticket: Ticket, repo_context: dict) -> CodeResult:
-        logger.debug("implement_start run_id=%s ticket=%s", state.run_id, ticket.id)
-        agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
+    def _generate_code_result(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        repo_context: dict,
+        execution_root: Path,
+    ) -> CodeResult:
         impact_analysis = state.backlog.impact_analyses.get(ticket.id)
-        execution_root = self._ticket_execution_root(state, ticket.id)
         repo_snapshot = build_repo_snapshot(execution_root, impact_analysis)
+        agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
         result = agent.run_code(
             {
                 "ticket_id": ticket.id,
@@ -287,7 +307,47 @@ class OrchestratorEngine:
                 },
             }
         )
-        result = apply_code_result(execution_root, result)
+        return apply_code_result(execution_root, result)
+
+    def _run_checks(
+        self,
+        execution_root: Path,
+        repo_commands: list[str],
+        code_result: CodeResult,
+    ) -> list[CheckResult]:
+        checks: list[CheckResult] = []
+        for command in _unique_commands([*repo_commands, *code_result.commands]):
+            result = self.deps.shell.run(command, execution_root)
+            checks.append(
+                CheckResult(
+                    command=command,
+                    success=result.ok,
+                    output=(result.stdout + result.stderr).strip(),
+                )
+            )
+        return checks
+
+    def _generate_review(
+        self,
+        ticket: Ticket,
+        code_result: CodeResult,
+        checks: list[CheckResult],
+    ) -> ReviewResult:
+        agent = ReviewerAgent(self.deps.router, self.deps.prompt_root, "reviewer")
+        return agent.run_review(
+            {
+                "ticket_id": ticket.id,
+                "ticket": ticket.model_dump(),
+                "code_result": code_result.model_dump(),
+                "checks": [check.model_dump() for check in checks],
+                "policy": self.deps.policy.model_dump(),
+            }
+        )
+
+    def implement(self, state: RunState, ticket: Ticket, repo_context: dict) -> CodeResult:
+        logger.debug("implement_start run_id=%s ticket=%s", state.run_id, ticket.id)
+        execution_root = self._ticket_execution_root(state, ticket.id)
+        result = self._generate_code_result(state, ticket, repo_context, execution_root)
         self.deps.artifact_store.write_json(
             state.artifacts,
             f"{ticket.id}_coder_attempt_{state.review_cycles + 1}",
@@ -308,21 +368,12 @@ class OrchestratorEngine:
             state.current_ticket_id,
             len(repo_commands),
         )
-        checks: list[CheckResult] = []
         execution_root = (
             self._ticket_execution_root(state, state.current_ticket_id)
             if state.current_ticket_id is not None
             else state.repo_path
         )
-        for command in _unique_commands([*repo_commands, *code_result.commands]):
-            result = self.deps.shell.run(command, execution_root)
-            checks.append(
-                CheckResult(
-                    command=command,
-                    success=result.ok,
-                    output=(result.stdout + result.stderr).strip(),
-                )
-            )
+        checks = self._run_checks(execution_root, repo_commands, code_result)
         self.deps.artifact_store.write_json(
             state.artifacts,
             f"{state.current_ticket_id}_checks_{state.review_cycles + 1}",
@@ -339,16 +390,7 @@ class OrchestratorEngine:
         checks: list[CheckResult],
     ) -> ReviewResult:
         logger.debug("review_start run_id=%s ticket=%s", state.run_id, ticket.id)
-        agent = ReviewerAgent(self.deps.router, self.deps.prompt_root, "reviewer")
-        review = agent.run_review(
-            {
-                "ticket_id": ticket.id,
-                "ticket": ticket.model_dump(),
-                "code_result": code_result.model_dump(),
-                "checks": [check.model_dump() for check in checks],
-                "policy": self.deps.policy.model_dump(),
-            }
-        )
+        review = self._generate_review(ticket, code_result, checks)
         self.deps.artifact_store.write_json(
             state.artifacts,
             f"{ticket.id}_reviewer_{state.review_cycles + 1}",
@@ -356,6 +398,84 @@ class OrchestratorEngine:
         )
         self._append_event(state, OrchestratorState.REVIEW, ticket.id)
         return review
+
+    def _persist_ticket_attempt(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        attempt: TicketAttempt,
+    ) -> None:
+        review_cycle = state.review_cycles + 1
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_coder_attempt_{review_cycle}",
+            attempt.code_result.model_dump(mode="json"),
+        )
+        self._append_event(state, OrchestratorState.IMPLEMENT, ticket.id)
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_checks_{review_cycle}",
+            [check.model_dump(mode="json") for check in attempt.checks],
+        )
+        self._append_event(state, OrchestratorState.VALIDATE, ticket.id)
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_reviewer_{review_cycle}",
+            attempt.review.model_dump(mode="json"),
+        )
+        self._append_event(state, OrchestratorState.REVIEW, ticket.id)
+
+    def _execute_ticket_attempt(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        repo_context: dict,
+        repo_commands: list[str],
+    ) -> TicketAttempt:
+        logger.debug("ticket_attempt_start run_id=%s ticket=%s", state.run_id, ticket.id)
+        execution_root = self._ticket_execution_root(state, ticket.id)
+        code_result = self._generate_code_result(
+            state,
+            ticket,
+            repo_context,
+            execution_root,
+        )
+        checks = self._run_checks(execution_root, repo_commands, code_result)
+        review = self._generate_review(ticket, code_result, checks)
+        return TicketAttempt(code_result=code_result, checks=checks, review=review)
+
+    def run_ticket_batch(
+        self,
+        state: RunState,
+        tickets: list[Ticket],
+        repo_context: dict,
+        repo_commands: list[str],
+    ) -> dict[str, TicketAttempt]:
+        for ticket in tickets:
+            self._ticket_execution_root(state, ticket.id)
+        if len(tickets) == 1:
+            ticket = tickets[0]
+            return {
+                ticket.id: self._execute_ticket_attempt(state, ticket, repo_context, repo_commands)
+            }
+        logger.info(
+            "parallel_ticket_batch_start run_id=%s tickets=%s workers=%s",
+            state.run_id,
+            ",".join(ticket.id for ticket in tickets),
+            len(tickets),
+        )
+        with ThreadPoolExecutor(max_workers=len(tickets)) as executor:
+            futures = {
+                ticket.id: executor.submit(
+                    self._execute_ticket_attempt,
+                    state,
+                    ticket,
+                    repo_context,
+                    repo_commands,
+                )
+                for ticket in tickets
+            }
+        return {ticket.id: futures[ticket.id].result() for ticket in tickets}
 
     def write_evidence_bundle(
         self,
@@ -446,6 +566,7 @@ class OrchestratorEngine:
                 self._append_event(state, OrchestratorState.ESCALATE, ",".join(violations))
                 return OrchestratorState.ESCALATE
             state.review_cycles += 1
+            ticket.status = TicketStatus.pending
             self._append_event(state, OrchestratorState.REVISE, ",".join(violations))
             return OrchestratorState.REVISE
         ticket.status = TicketStatus.complete
@@ -462,47 +583,59 @@ class OrchestratorEngine:
         repo = self.discover(state)
         spec = self.define_product(state, brief_path.read_text())
         self.plan_tickets(state, spec.model_dump(mode="json"))
-        ticket = self.pick_ticket(state)
-        if ticket is None:
+        tickets = self.pick_tickets(state)
+        if not tickets:
             state.status = "done"
             return state
-        while ticket.status is TicketStatus.in_progress:
+        repo_commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
+        while tickets:
             logger.debug(
-                "run_plan_loop run_id=%s ticket=%s review_cycles=%s",
+                "run_plan_loop run_id=%s tickets=%s review_cycles=%s",
                 state.run_id,
-                ticket.id,
+                ",".join(ticket.id for ticket in tickets),
                 state.review_cycles,
             )
-            code_result = self.implement(state, ticket, repo.model_dump(mode="json"))
-            commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
-            checks = self.validate(state, commands, code_result)
-            review = self.review(state, ticket, code_result, checks)
-            violations, approval_request = self.write_evidence_bundle(
+            attempts = self.run_ticket_batch(
                 state,
-                ticket,
-                code_result,
-                checks,
-                review,
-                repo.repo_info,
+                tickets,
+                repo.model_dump(mode="json"),
+                repo_commands,
             )
-            result = self.advance_ticket(
-                state,
-                ticket,
-                code_result,
-                checks,
-                review,
-                violations=violations,
-                approval_request=approval_request,
-            )
-            if result is OrchestratorState.ESCALATE:
-                break
-            if state.status == "awaiting_approval":
-                break
-            if result is OrchestratorState.COMPLETE_TICKET:
-                self._append_event(state, OrchestratorState.NEXT_TICKET, ticket.id)
-                ticket = self.pick_ticket(state)
-                if ticket is None:
+            should_stop = False
+            for ticket in tickets:
+                state.current_ticket_id = ticket.id
+                attempt = attempts[ticket.id]
+                self._persist_ticket_attempt(state, ticket, attempt)
+                violations, approval_request = self.write_evidence_bundle(
+                    state,
+                    ticket,
+                    attempt.code_result,
+                    attempt.checks,
+                    attempt.review,
+                    repo.repo_info,
+                )
+                result = self.advance_ticket(
+                    state,
+                    ticket,
+                    attempt.code_result,
+                    attempt.checks,
+                    attempt.review,
+                    violations=violations,
+                    approval_request=approval_request,
+                )
+                if result is OrchestratorState.ESCALATE or state.status == "awaiting_approval":
+                    should_stop = True
                     break
+            if should_stop:
+                break
+            self._append_event(
+                state,
+                OrchestratorState.NEXT_TICKET,
+                ",".join(ticket.id for ticket in tickets),
+            )
+            tickets = self.pick_tickets(state)
+            if not tickets:
+                break
         state.current_state = (
             OrchestratorState.DONE.value if state.status == "done" else state.current_state
         )

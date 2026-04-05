@@ -1,5 +1,7 @@
 import json
 import subprocess
+import threading
+import time
 from pathlib import Path
 from typing import cast
 
@@ -306,3 +308,106 @@ def test_run_plan_syncs_approved_changes_back_from_workspace(tmp_path: Path) -> 
         "def main() -> None:\n    print('from worktree')\n"
     )
     assert "TICKET-1" in state.ticket_workdirs
+
+
+def test_run_plan_executes_ready_tickets_in_parallel_when_policy_allows(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.name", "Test User"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(["git", "add", "pyproject.toml"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo, check=True, capture_output=True)
+
+    from maestro.schemas.contracts import PolicyPack
+
+    class ConcurrentCodeProvider(FakeProvider):
+        def __init__(self) -> None:
+            super().__init__(
+                {
+                    "Backlog": Backlog(
+                        tickets=[
+                            Ticket(
+                                id="TICKET-1",
+                                title="Create one",
+                                description="first",
+                                acceptance_criteria=["one"],
+                            ),
+                            Ticket(
+                                id="TICKET-2",
+                                title="Create two",
+                                description="second",
+                                acceptance_criteria=["two"],
+                            ),
+                        ]
+                    )
+                }
+            )
+            self.lock = threading.Lock()
+            self.inflight = 0
+            self.max_inflight = 0
+
+        def generate_structured(self, *, prompt: str, model: str, schema, metadata=None):
+            if schema.__name__ == "CodeResult":
+                ticket_id = cast(str, (metadata or {})["ticket_id"])
+                with self.lock:
+                    self.inflight += 1
+                    self.max_inflight = max(self.max_inflight, self.inflight)
+                time.sleep(0.2)
+                with self.lock:
+                    self.inflight -= 1
+                return CodeResult(
+                    ticket_id=ticket_id,
+                    summary=f"Create {ticket_id}",
+                    file_operations=[
+                        FileOperation(
+                            path=f"src/{ticket_id.lower()}.py",
+                            action="write",
+                            content=f"print('{ticket_id.lower()}')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=[],
+                )
+            if schema.__name__ == "ReviewResult":
+                ticket_id = cast(str, (metadata or {})["ticket_id"])
+                return ReviewResult(
+                    ticket_id=ticket_id,
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                )
+            return super().generate_structured(
+                prompt=prompt,
+                model=model,
+                schema=schema,
+                metadata=metadata,
+            )
+
+    provider = ConcurrentCodeProvider()
+    scenario = EvalScenario(
+        name="parallel-batch",
+        provider=provider,
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+        policy=PolicyPack(name="prototype", max_parallel_tickets=2, require_tests=False),
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "done"
+    assert provider.max_inflight >= 2
+    assert (repo / "src" / "ticket-1.py").read_text() == "print('ticket-1')\n"
+    assert (repo / "src" / "ticket-2.py").read_text() == "print('ticket-2')\n"

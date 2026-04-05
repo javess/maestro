@@ -1,5 +1,6 @@
 name: security_sensitive
 max_review_cycles: 1
+max_parallel_tickets: 1
 require_tests: true
 require_lint: true
 require_format: true

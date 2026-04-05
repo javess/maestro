@@ -18,6 +18,7 @@ machine. The baseline includes:
 - provider fallback routing and structured output repair paths
 - repo mutation through coder-produced file operations applied into the target repo workspace
 - git-backed ticket execution in isolated per-ticket workspaces under `<target-repo>/.maestro/worktrees/`
+- bounded parallel execution for dependency-safe ready ticket batches when policy allows it
 
 ## Quick start
 
@@ -92,6 +93,9 @@ uv run pyinstaller -m maestro.cli.main
 - type check: `uv run ty check`
 - tests: `uv run pytest`
 - progress logs: `uv run maestro -v ...` or `uv run maestro --log-level DEBUG ...`
+
+Parallel batch execution is controlled by `max_parallel_tickets` in the active policy pack.
+Shipped policies stay conservative by default except `prototype`, which currently allows `2`.
 
 ## Providers
 

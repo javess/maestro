@@ -133,3 +133,10 @@
   execution filesystem boundary, not the orchestrator state machine.
 - Existing deterministic scenarios were rerun to confirm isolated execution preserves current
   completion, escalation, approval-hold, and graph-ordering outcomes.
+
+## STEP-013IB Note
+
+- No eval scenario set changes were required in STEP-013IB because parallel ticket attempts still
+  preserve deterministic ordered persistence and state transitions.
+- Existing deterministic scenarios were preserved while integration tests validated actual
+  concurrent execution behavior.

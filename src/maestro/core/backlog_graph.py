@@ -48,13 +48,26 @@ def build_backlog_graph(backlog: Backlog) -> BacklogGraph:
 
 
 def select_next_ticket(backlog: Backlog, completed_tickets: list[str]) -> Ticket | None:
+    ready = select_ready_tickets(backlog, completed_tickets, limit=1)
+    return ready[0] if ready else None
+
+
+def select_ready_tickets(
+    backlog: Backlog,
+    completed_tickets: list[str],
+    *,
+    limit: int,
+) -> list[Ticket]:
     graph = backlog.execution_graph or build_backlog_graph(backlog)
     completed = set(completed_tickets)
+    ready: list[Ticket] = []
     for ticket_id in graph.ordered_ticket_ids:
         ticket = next((item for item in backlog.tickets if item.id == ticket_id), None)
         if ticket is None or ticket.status is not TicketStatus.pending:
             continue
         node = next(node for node in graph.nodes if node.ticket_id == ticket_id)
         if set(node.dependencies).issubset(completed):
-            return ticket
-    return None
+            ready.append(ticket)
+        if len(ready) >= limit:
+            break
+    return ready

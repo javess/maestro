@@ -157,3 +157,9 @@
 - Updated `tests/test_engine.py` to assert approved ticket changes sync back from isolated
   workspaces into the target repo.
 - Reran targeted engine/workspace/git-tool tests plus the full backend test suite.
+
+## STEP-013IB Note
+
+- Updated `tests/test_backlog_graph.py` to cover dependency-safe ready-batch selection.
+- Updated `tests/test_engine.py` to assert actual concurrent coder execution when policy allows it.
+- Reran targeted backlog-graph/engine tests plus the full backend test suite.

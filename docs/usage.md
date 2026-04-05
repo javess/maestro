@@ -30,6 +30,8 @@ In the highest-verbosity modes, `maestro` logs:
 When the coder role emits `file_operations`, `maestro` now applies them directly into the target
 repo before validation commands run. For git-backed repos, those writes happen inside an isolated
 ticket workspace under `.maestro/worktrees/` and sync back to the repo root only after approval.
+Independent ready tickets can also execute in bounded parallel batches when the active policy sets
+`max_parallel_tickets` above `1`.
 
 ## Preview a local target repo
 

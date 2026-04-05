@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from maestro.core.backlog_graph import build_backlog_graph, select_next_ticket
+from maestro.core.backlog_graph import build_backlog_graph, select_next_ticket, select_ready_tickets
 from maestro.schemas.backlog_graph import BacklogGraph, BacklogGraphEdge, BacklogGraphNode
 from maestro.schemas.contracts import Backlog, Ticket, TicketStatus
 
@@ -68,6 +68,20 @@ def test_select_next_ticket_respects_completed_dependencies() -> None:
     third = select_next_ticket(backlog, completed_tickets=["TICKET-1", "TICKET-3"])
     assert third is not None
     assert third.id == "TICKET-2"
+
+
+def test_select_ready_tickets_returns_dependency_safe_batch() -> None:
+    backlog = sample_backlog()
+    backlog.execution_graph = build_backlog_graph(backlog)
+
+    ready = select_ready_tickets(backlog, completed_tickets=[], limit=2)
+    assert [ticket.id for ticket in ready] == ["TICKET-1", "TICKET-3"]
+
+    for ticket in ready:
+        ticket.status = TicketStatus.complete
+
+    next_ready = select_ready_tickets(backlog, completed_tickets=["TICKET-1", "TICKET-3"], limit=2)
+    assert [ticket.id for ticket in next_ready] == ["TICKET-2"]
 
 
 def test_backlog_graph_rejects_unknown_edge_nodes() -> None:

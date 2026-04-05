@@ -161,3 +161,8 @@
   `.venv`, `node_modules`, and local build caches.
 - Rationale: isolated execution should preserve source context, but copying local tool caches makes
   the fallback path fragile and wasteful, especially on low-disk developer machines.
+
+- Decision: keep ticket attempt execution concurrent, but persist artifacts, evidence, and
+  orchestrator state transitions on the main thread in graph order.
+- Rationale: that preserves deterministic replay and auditability while still unlocking meaningful
+  speedup for independent tickets.

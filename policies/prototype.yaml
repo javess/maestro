@@ -1,5 +1,6 @@
 name: prototype
 max_review_cycles: 3
+max_parallel_tickets: 2
 require_tests: false
 require_lint: true
 require_format: true

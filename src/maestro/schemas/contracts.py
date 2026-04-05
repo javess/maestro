@@ -177,6 +177,7 @@ class RepoDiscovery(BaseModel):
 class PolicyPack(BaseModel):
     name: str
     max_review_cycles: int = 2
+    max_parallel_tickets: int = 1
     require_tests: bool = True
     require_lint: bool = True
     require_format: bool = True

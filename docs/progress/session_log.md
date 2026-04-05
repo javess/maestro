@@ -1171,3 +1171,49 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-013IB`
+
+## 2026-04-05 23:43 UTC
+
+- Session goal: add bounded parallel ticket execution while keeping persistence deterministic
+- Selected step: `STEP-013IB`
+- Files changed:
+  - `src/maestro/core/backlog_graph.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/schemas/contracts.py`
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `tests/test_backlog_graph.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/parallel_execution.md`
+  - `docs/runbooks/parallel_execution.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013IB.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_backlog_graph.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Tests run:
+  - targeted backlog-graph and engine tests passed
+  - `uv run ruff check src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py` passed
+  - `uv run ty check` passed
+  - `uv run ruff check src tests` passed
+  - full `uv run pytest --basetemp=...` passed
+- Evals run:
+  - None. Integration tests cover the concurrent attempt path without changing deterministic
+    scenario outcomes.
+- Outcome: completed `STEP-013IB`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-013J`

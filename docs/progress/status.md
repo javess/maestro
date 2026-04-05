@@ -30,7 +30,7 @@
 | STEP-013H | Repo mutation execution path | done | 2026-04-06 01:05 UTC | [STEP-013H](steps/STEP-013H.md) | pending post-commit recording | targeted workspace/engine pass; `ruff` pass; `ty` pass; `pytest` pass; live OXO repo mutated successfully | `STEP-013I` |
 | STEP-013I | Worktree isolation and parallel ticket execution | split | 2026-04-06 01:10 UTC | - | - | Split into `STEP-013IA` and `STEP-013IB` | `STEP-013IA` |
 | STEP-013IA | Worktree isolation | done | 2026-04-05 23:43 UTC | [STEP-013IA](steps/STEP-013IA.md) | pending post-commit recording | targeted engine/workspace/git tests pass; `ruff` pass; `ty` pass; full `pytest` pass | `STEP-013IB` |
-| STEP-013IB | Parallel ticket execution | planned | 2026-04-06 01:10 UTC | - | - | - | Wait for `STEP-013IA` |
+| STEP-013IB | Parallel ticket execution | done | 2026-04-05 23:43 UTC | [STEP-013IB](steps/STEP-013IB.md) | pending post-commit recording | targeted backlog/engine tests pass; `ruff` pass; `ty` pass; full `pytest` pass | `STEP-013J` |
 | STEP-013J | Multi-provider runtime adapters | planned | 2026-04-06 01:10 UTC | - | - | - | Wait for `STEP-013IB` |
 | STEP-014 | Migration planner | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013J` |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |

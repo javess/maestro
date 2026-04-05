@@ -1,0 +1,74 @@
+# STEP-013IB
+
+- Step id: `STEP-013IB`
+- Title: Parallel ticket execution
+- Status: done
+- Objective:
+  - Execute dependency-safe ready tickets concurrently when policy allows it.
+- Scope:
+  - Add deterministic ready-batch selection.
+  - Introduce bounded parallel execution for ticket attempts.
+  - Keep persistence, evidence, and state transitions ordered and deterministic.
+- Non-goals:
+  - No provider expansion yet.
+  - No database persistence yet.
+- Prerequisites:
+  - `STEP-013IA` complete.
+- Implementation plan:
+  - Add batch selection helpers on top of the backlog graph.
+  - Add a policy-controlled parallel ticket limit.
+  - Run ticket attempts concurrently while persisting results in stable order.
+  - Update tests, docs, and progress tracking.
+- Files changed:
+  - `src/maestro/core/backlog_graph.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/schemas/contracts.py`
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `tests/test_backlog_graph.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/parallel_execution.md`
+  - `docs/runbooks/parallel_execution.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013IB.md`
+- Tests added or updated:
+  - Updated `tests/test_backlog_graph.py` for ready-batch selection.
+  - Updated `tests/test_engine.py` for actual concurrent coder execution when policy allows it.
+- Evals added or updated:
+  - None. Parallel attempt execution preserves deterministic state-machine behavior and is covered
+    by integration tests.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_backlog_graph.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Results:
+  - The orchestrator now executes ready ticket batches concurrently when `max_parallel_tickets > 1`.
+  - Ticket attempts still persist artifacts, evidence, and state transitions in deterministic
+    ticket order.
+  - The `prototype` policy now allows `2` parallel tickets; the rest remain sequential by default.
+- Docs updated:
+  - Added architecture and runbook docs for parallel execution.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Keep concurrency bounded to the attempt phase and leave persistence/evidence/state changes on
+    the main thread.
+  - Use policy packs, not ad hoc CLI flags, to control parallelism.
+- Known limitations:
+  - Approval holds and escalations still stop the batch before moving to later work.
+  - Cleanup and throttling policy remain follow-on concerns.
+- Next recommended step:
+  - `STEP-013J`
+- Commit hash:
+  - pending
