@@ -42,6 +42,44 @@
 - Stop reason: step complete; waiting for user confirmation before `STEP-001`
 - Next recommended step: `STEP-001` after explicit user confirmation
 
+## 2026-04-05 11:02 UTC
+
+- Session goal: add canonical run-graph contracts as a narrow DAG model without changing orchestrator runtime behavior
+- Selected step: `STEP-001`
+- Files changed:
+  - `src/maestro/schemas/run_graph.py`
+  - `tests/test_run_graph.py`
+  - `docs/architecture/run_graph_model.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-001.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,320p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,260p' src/maestro/core/models.py`
+  - `sed -n '1,320p' src/maestro/core/engine.py`
+  - `rg -n "RunState|OrchestratorState|backlog|TicketStatus" src tests`
+  - `uv run pytest tests/test_run_graph.py`
+  - `uv run ruff check src/maestro/schemas/run_graph.py tests/test_run_graph.py docs/architecture/run_graph_model.md`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Tests run:
+  - `uv run pytest tests/test_run_graph.py` passed
+  - `uv run ruff check src/maestro/schemas/run_graph.py tests/test_run_graph.py docs/architecture/run_graph_model.md` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-001`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-002`
+- Next recommended step: `STEP-002` after explicit user confirmation
+
 ## 2026-04-05 10:44 UTC
 
 - Session goal: restore safe repo state and add a repository-scoped VS Code workspace setup before roadmap feature work

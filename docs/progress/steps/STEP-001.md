@@ -1,0 +1,76 @@
+# STEP-001
+
+- Step id: `STEP-001`
+- Title: Canonical run graph contracts
+- Status: done
+- Objective:
+  - Introduce typed run graph models representing the execution DAG instead of leaving the graph shape implicit in control flow.
+- Scope:
+  - Add schemas for graph nodes, edges, metadata, stage state, and full graph validation.
+  - Add a helper for a canonical bounded orchestrator graph.
+  - Add unit tests for validation, invariants, and serialization.
+  - Add an architecture note describing the model.
+- Non-goals:
+  - No run graph persistence yet.
+  - No orchestrator execution rewrite.
+  - No artifact or evidence attachment to graph nodes yet.
+- Prerequisites:
+  - Repository must be clean before changes start.
+  - STEP-000 and STEP-000A must be complete.
+- Implementation plan:
+  - Inspect the current orchestrator and existing schema surface.
+  - Add a narrow run-graph contract layer in schemas without invasive engine changes.
+  - Encode invariants for a canonical DAG.
+  - Add focused tests and architecture documentation.
+  - Run full validation baseline, update progress docs, and commit.
+- Files changed:
+  - `src/maestro/schemas/run_graph.py`
+  - `tests/test_run_graph.py`
+  - `docs/architecture/run_graph_model.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-001.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_run_graph.py`
+- Evals added or updated:
+  - None. The new contract layer does not change orchestrator behavior yet.
+- Commands run:
+  - `sed -n '1,320p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,260p' src/maestro/core/models.py`
+  - `sed -n '1,320p' src/maestro/core/engine.py`
+  - `rg -n "RunState|OrchestratorState|backlog|TicketStatus" src tests`
+  - `uv run pytest tests/test_run_graph.py`
+  - `uv run ruff check src/maestro/schemas/run_graph.py tests/test_run_graph.py docs/architecture/run_graph_model.md`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Results:
+  - Added typed contracts for run graph nodes, edges, metadata, stage state, and graph validation.
+  - Added a canonical bounded run-graph helper based on `OrchestratorState`.
+  - Enforced invariants including uniqueness, reachability, valid entry and terminals, dead-end rejection, and acyclicity.
+  - Added unit tests for round-trip serialization and invalid graph rejection.
+- Docs updated:
+  - `docs/architecture/run_graph_model.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-001.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Model the canonical graph as a bounded DAG instead of encoding engine loops directly.
+  - Unroll review retries by retry budget and treat multi-ticket continuation as a handoff rather than a back-edge.
+- Known limitations:
+  - The run graph is not yet persisted with `RunState`.
+  - The orchestrator still executes from implicit control flow rather than the run graph contract.
+  - The exact commit hash for the atomic step-closing commit cannot be embedded into the same commit without a follow-up amend; it is reported in session output instead.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-002`.
+- Commit hash:
+  - pending post-commit recording
+

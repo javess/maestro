@@ -25,3 +25,8 @@
 
 - VS Code workspace changes are editor configuration only.
 - Validate JSON structure and rerun lightweight relevant baseline commands before committing.
+
+## STEP-001 Note
+
+- Added `tests/test_run_graph.py` for run-graph validation, invariants, and serialization.
+- Full backend test baseline and UI build were rerun after the contract layer was added.

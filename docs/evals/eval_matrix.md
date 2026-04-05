@@ -14,3 +14,7 @@
 - Add or update eval scenarios whenever workflow behavior, orchestration, approval logic,
   persistence, or provider routing changes.
 - Record human-readable and JSON eval results in the current step file and session log.
+
+## STEP-001 Note
+
+- No eval scenarios changed in STEP-001 because the new run-graph layer is contract-only and does not yet alter orchestrator execution.

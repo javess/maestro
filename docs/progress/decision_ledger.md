@@ -19,3 +19,6 @@
 
 - Decision: keep `STEP-000A` editor-focused and avoid runtime code changes.
 - Rationale: the goal is a reviewable workspace setup with tasks, launch configs, test discovery, and extension recommendations, not a behavioral change to the product itself.
+
+- Decision: model `STEP-001` as a bounded DAG contract rather than mirroring runtime loops directly.
+- Rationale: the roadmap explicitly calls for an execution DAG, so retry and next-ticket loops are represented as bounded unrolling or graph handoff points instead of cyclic edges.
