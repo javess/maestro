@@ -99,6 +99,12 @@ Copy `examples/maestro.real-providers.yaml` to `maestro.yaml` and edit role mapp
 uv run maestro plan examples/brief.md --config maestro.yaml
 ```
 
+The shipped real-provider config expects keys for:
+
+- `OPENAI_API_KEY`
+- `GEMINI_API_KEY`
+- `ANTHROPIC_API_KEY`
+
 For the bundled OpenAI hello-world example:
 
 ```bash

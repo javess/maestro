@@ -166,3 +166,8 @@
   orchestrator state transitions on the main thread in graph order.
 - Rationale: that preserves deterministic replay and auditability while still unlocking meaningful
   speedup for independent tickets.
+
+- Decision: let each provider adapter choose its own structured-output strategy while preserving
+  one shared provider interface for the engine.
+- Rationale: OpenAI, Gemini, and Claude expose materially different structured-output capabilities,
+  so the adapter boundary is the correct place to absorb those differences.

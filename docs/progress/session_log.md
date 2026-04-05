@@ -1217,3 +1217,45 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-013J`
+
+## 2026-04-05 23:43 UTC
+
+- Session goal: wire Gemini and Claude runtime adapters behind the provider-neutral interface
+- Selected step: `STEP-013J`
+- Files changed:
+  - `src/maestro/providers/gemini_adapter.py`
+  - `src/maestro/providers/anthropic_adapter.py`
+  - `src/maestro/providers/factory.py`
+  - `tests/test_gemini_adapter.py`
+  - `tests/test_anthropic_adapter.py`
+  - `tests/test_providers.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/architecture/provider_runtime_adapters.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013J.md`
+- Commands run:
+  - official doc lookup for Anthropic and Gemini SDK call shapes
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_gemini_adapter.py tests/test_anthropic_adapter.py tests/test_providers.py tests/test_router.py`
+  - `uv run ruff check src/maestro/providers/anthropic_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/factory.py tests/test_gemini_adapter.py tests/test_anthropic_adapter.py tests/test_providers.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Tests run:
+  - targeted provider and router tests passed
+  - `uv run ruff check src/maestro/providers/anthropic_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/factory.py tests/test_gemini_adapter.py tests/test_anthropic_adapter.py tests/test_providers.py` passed
+  - `uv run ty check` passed
+  - `uv run ruff check src tests` passed
+  - full `uv run pytest --basetemp=...` passed
+- Evals run:
+  - None. Deterministic evals continue to use `FakeProvider`.
+- Outcome: completed `STEP-013J`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-014`

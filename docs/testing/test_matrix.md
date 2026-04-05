@@ -163,3 +163,11 @@
 - Updated `tests/test_backlog_graph.py` to cover dependency-safe ready-batch selection.
 - Updated `tests/test_engine.py` to assert actual concurrent coder execution when policy allows it.
 - Reran targeted backlog-graph/engine tests plus the full backend test suite.
+
+## STEP-013J Note
+
+- Added `tests/test_gemini_adapter.py` and `tests/test_anthropic_adapter.py` for mocked
+  multi-provider runtime coverage.
+- Updated `tests/test_providers.py` to verify API key env overrides flow through the provider
+  factory.
+- Reran targeted provider/router tests plus the full backend test suite.

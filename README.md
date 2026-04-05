@@ -120,9 +120,10 @@ fallbacks:
       model: gpt-5
 ```
 
-The OpenAI adapter is now runtime-wired for text and structured generation. Secure key storage is
-still future work; the current supported local-development path is `.env` plus environment
-variables.
+The OpenAI, Gemini, and Claude adapters are now runtime-wired. OpenAI prefers native structured
+output when possible, Gemini uses SDK JSON-schema generation plus fallback parsing, and Claude uses
+text-plus-JSON parsing. Secure key storage is still future work; the current supported
+local-development path is `.env` plus environment variables.
 
 If `maestro` detects that one of the richer Pydantic schemas is unlikely to fit OpenAI's native
 structured-output validator, it now skips that path up front and uses text generation plus JSON

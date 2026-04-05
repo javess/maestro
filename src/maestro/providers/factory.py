@@ -24,4 +24,8 @@ def build_provider(provider_type: str | dict[str, Any]) -> LlmProvider:
         raise ValueError(f"Unsupported provider type: {provider_name}")
     if provider_class is OpenAIProvider:
         return provider_class(api_key_env=config.get("api_key_env", "OPENAI_API_KEY"))
+    if provider_class is AnthropicProvider:
+        return provider_class(api_key_env=config.get("api_key_env", "ANTHROPIC_API_KEY"))
+    if provider_class is GeminiProvider:
+        return provider_class(api_key_env=config.get("api_key_env", "GEMINI_API_KEY"))
     return provider_class()

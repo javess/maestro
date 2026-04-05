@@ -140,3 +140,10 @@
   preserve deterministic ordered persistence and state transitions.
 - Existing deterministic scenarios were preserved while integration tests validated actual
   concurrent execution behavior.
+
+## STEP-013J Note
+
+- No eval scenario set changes were required in STEP-013J because deterministic evals remain on
+  `FakeProvider`.
+- Existing deterministic coverage continues to validate provider routing and fallback behavior,
+  while mocked adapter tests cover the new real-provider runtime paths.

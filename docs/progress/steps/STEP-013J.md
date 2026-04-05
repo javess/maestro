@@ -1,0 +1,72 @@
+# STEP-013J
+
+- Step id: `STEP-013J`
+- Title: Multi-provider runtime adapters
+- Status: done
+- Objective:
+  - Wire Gemini and Claude runtime adapters with the same provider-neutral contract style as
+    OpenAI.
+- Scope:
+  - Implement Gemini text and structured generation.
+  - Implement Claude text and structured generation.
+  - Pass provider-specific API key env overrides through the provider factory.
+  - Add mocked adapter tests and update provider docs.
+- Non-goals:
+  - No secure credential storage yet.
+  - No deterministic eval changes.
+- Prerequisites:
+  - `STEP-013IB` complete.
+- Implementation plan:
+  - Rework the Gemini and Anthropic adapter stubs into runtime adapters.
+  - Keep provider-specific behavior isolated inside adapter modules.
+  - Add mocked tests for text and structured calls.
+  - Update provider docs and progress tracking.
+- Files changed:
+  - `src/maestro/providers/gemini_adapter.py`
+  - `src/maestro/providers/anthropic_adapter.py`
+  - `src/maestro/providers/factory.py`
+  - `tests/test_gemini_adapter.py`
+  - `tests/test_anthropic_adapter.py`
+  - `tests/test_providers.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/architecture/provider_runtime_adapters.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013J.md`
+- Tests added or updated:
+  - Added `tests/test_gemini_adapter.py` for Gemini text, structured, and fallback behavior.
+  - Added `tests/test_anthropic_adapter.py` for Claude text and structured parsing.
+  - Updated `tests/test_providers.py` for provider factory env override coverage.
+- Evals added or updated:
+  - None. Deterministic evals remain on `FakeProvider`.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_gemini_adapter.py tests/test_anthropic_adapter.py tests/test_providers.py tests/test_router.py`
+  - `uv run ruff check src/maestro/providers/anthropic_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/factory.py tests/test_gemini_adapter.py tests/test_anthropic_adapter.py tests/test_providers.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Results:
+  - Gemini and Claude are now runtime-wired behind the shared provider interface.
+  - Provider factory config now passes API key env overrides to all real adapters.
+  - Provider docs now describe the different structured-output strategies while keeping the core
+    engine provider-neutral.
+- Docs updated:
+  - Updated README, usage docs, provider credential docs, and progress tracking.
+  - Added an architecture note for provider runtime adapter strategies.
+- Decisions made:
+  - Keep provider-specific structured-output behavior entirely inside adapter modules.
+  - Use mocked SDK-style tests rather than live API calls for deterministic validation.
+- Known limitations:
+  - Live multi-provider verification still depends on local keys and SDK installation.
+  - Claude structured output continues to rely on JSON extraction rather than native schema
+    enforcement.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending

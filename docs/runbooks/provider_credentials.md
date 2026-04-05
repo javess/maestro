@@ -6,10 +6,22 @@
 
 - create a `.env` file next to your config file
 - start from `.env.example`
-- set `OPENAI_API_KEY` for the OpenAI adapter
+- set any provider keys you plan to use:
+  - `OPENAI_API_KEY`
+  - `GEMINI_API_KEY`
+  - `ANTHROPIC_API_KEY`
 
 `load_config()` loads that `.env` file before validating provider config and does not override
 environment variables that are already set by the shell.
+
+## Runtime Support
+
+- OpenAI: runtime wired for text and structured generation with native-schema preflight plus
+  fallback parsing.
+- Gemini: runtime wired through the Google Gen AI SDK with JSON-schema generation plus fallback
+  parsing.
+- Claude: runtime wired through the Anthropic SDK with text generation plus JSON extraction for
+  structured outputs.
 
 ## Current Limitations
 
