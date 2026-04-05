@@ -1,0 +1,92 @@
+# STEP-013D
+
+- Step id: `STEP-013D`
+- Title: OpenAI runtime verification and logging
+- Status: done
+- Objective:
+  - Verify the OpenAI fallback against the live command path and add structured progress logging
+    with useful verbosity levels.
+- Scope:
+  - Reproduce the user-reported command path.
+  - Confirm the OpenAI structured-output schema rejection no longer crashes the run.
+  - Add CLI-controlled logging across config loading, provider routing, OpenAI fallback, preview
+    execution, shell commands, and orchestrator transitions.
+  - Add focused logging tests and update operator docs.
+- Non-goals:
+  - No schema redesign for provider-native compatibility.
+  - No frontend logging changes.
+  - No new eval scenarios.
+- Prerequisites:
+  - `STEP-013B` complete.
+  - `STEP-013C` existed as an uncommitted compatibility fix and was folded into this step.
+- Implementation plan:
+  - Verify the real command path and observe the fallback live.
+  - Add a lightweight logging bootstrap with `-v`, `-vv`, and `--log-level`.
+  - Instrument the main runtime callsites.
+  - Add targeted tests, rerun the backend test suite, update docs, and commit.
+- Files changed:
+  - `src/maestro/logging.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/config.py`
+  - `src/maestro/tools/shell.py`
+  - `src/maestro/preview/local.py`
+  - `src/maestro/providers/router.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_logging.py`
+  - `tests/test_openai_adapter.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013D.md`
+- Tests added or updated:
+  - `tests/test_logging.py`
+  - `tests/test_openai_adapter.py`
+- Evals added or updated:
+  - None. This step does not change deterministic fake-provider orchestration behavior.
+- Commands run:
+  - `maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro -v plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py`
+  - `uv run ruff check src/maestro/logging.py src/maestro/cli/main.py src/maestro/config.py src/maestro/tools/shell.py src/maestro/preview/local.py src/maestro/providers/router.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `git diff --check`
+- Results:
+  - The original global `maestro` invocation is currently blocked by a separate local tool install
+    architecture mismatch in `pydantic_core`.
+  - The repo-managed runtime reproduced the live OpenAI path and now skips the known-incompatible
+    `Backlog` native structured-output request up front before falling back to text-plus-JSON.
+  - The runtime still keeps the rejection-driven fallback as a safety net for schemas that are not
+    caught by the preflight compatibility check.
+  - Added structured logging with CLI verbosity controls and runtime callsite coverage.
+- Docs updated:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013D.md`
+- Decisions made:
+  - Use Rich-backed standard logging with CLI verbosity flags.
+  - Treat the live fallback verification and observability work as one atomic follow-up step.
+- Known limitations:
+  - Native provider-schema compatibility is still a future improvement area; fallback remains the
+    safety net.
+  - The user's globally installed `maestro` tool currently needs a reinstall in an arm64-compatible
+    environment.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording

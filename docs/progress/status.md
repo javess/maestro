@@ -21,8 +21,10 @@
 | STEP-012A | OpenAI provider wiring and local env loading | done | 2026-04-05 22:10 UTC | [STEP-012A](steps/STEP-012A.md) | `f9c1444` | targeted provider/env pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Resume with `STEP-013` |
 | STEP-013 | Preview environment abstraction | done | 2026-04-05 22:23 UTC | [STEP-013](steps/STEP-013.md) | `4013531` | preview tests pass; example repo checks pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-013A` |
 | STEP-013A | README operator examples | done | 2026-04-05 22:31 UTC | [STEP-013A](steps/STEP-013A.md) | `2c6f9de` | `git diff --check` pass | `STEP-013B` |
-| STEP-013B | Ready-made OXO brief example | done | 2026-04-05 22:36 UTC | [STEP-013B](steps/STEP-013B.md) | pending post-commit recording | `git diff --check` pass | `STEP-014` |
-| STEP-014 | Migration planner | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-013B |
+| STEP-013B | Ready-made OXO brief example | done | 2026-04-05 22:36 UTC | [STEP-013B](steps/STEP-013B.md) | `be94abe` | `git diff --check` pass | `STEP-013D` |
+| STEP-013C | OpenAI schema fallback compatibility fix | superseded | 2026-04-05 22:42 UTC | [STEP-013C](steps/STEP-013C.md) | - | Folded into `STEP-013D` before commit | `STEP-013D` |
+| STEP-013D | OpenAI runtime verification and logging | done | 2026-04-05 23:00 UTC | [STEP-013D](steps/STEP-013D.md) | pending post-commit recording | live OpenAI fallback verified; targeted tests pass; `pytest` pass; `ruff` pass; `ty` pass | `STEP-014` |
+| STEP-014 | Migration planner | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-013D |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |
 | STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |
 | STEP-017 | Scenario eval library expansion | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-016 |

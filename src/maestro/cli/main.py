@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import shutil
 import subprocess
 from pathlib import Path
@@ -12,6 +13,7 @@ from rich.table import Table
 from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.evals.harness import build_eval_engine, default_scenarios
+from maestro.logging import configure_logging
 from maestro.preview.factory import build_preview_adapter
 from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import TicketStatus
@@ -21,6 +23,26 @@ from maestro.tools.git import GitWorktreeManager
 
 app = typer.Typer(help="Deterministic multi-agent software delivery framework")
 console = Console()
+logger = logging.getLogger(__name__)
+
+
+@app.callback()
+def main(
+    verbose: int = typer.Option(0, "--verbose", "-v", count=True, help="Increase log verbosity."),
+    quiet: bool = typer.Option(False, "--quiet", "-q", help="Only emit errors."),
+    log_level: str | None = typer.Option(
+        None,
+        "--log-level",
+        help="Explicit log level override: DEBUG, INFO, WARNING, ERROR, or CRITICAL.",
+    ),
+) -> None:
+    configure_logging(verbose=verbose, quiet=quiet, log_level=log_level)
+    logger.debug(
+        "cli_initialized verbose=%s quiet=%s log_level=%s",
+        verbose,
+        quiet,
+        log_level,
+    )
 
 
 def _project_root() -> Path:
@@ -52,9 +74,21 @@ def discover(path: Path = Path(".")) -> None:
 
 @app.command()
 def plan(brief: Path, config: Path | None = None, repo: Path = Path(".")) -> None:
+    logger.info(
+        "plan_start repo=%s brief=%s config=%s",
+        repo.resolve(),
+        brief.resolve(),
+        _config_path(config),
+    )
     deps = build_engine_deps(_project_root(), _config_path(config))
     engine = OrchestratorEngine(_project_root(), deps)
     state = engine.run_plan(repo.resolve(), brief.resolve())
+    logger.info(
+        "plan_complete run_id=%s status=%s state=%s",
+        state.run_id,
+        state.status,
+        state.current_state,
+    )
     console.print_json(state.model_dump_json(indent=2))
 
 
@@ -180,6 +214,7 @@ def preview(
     adapter: str = "noop",
     config: Path | None = None,
 ) -> None:
+    logger.info("preview_start repo=%s adapter=%s", repo.resolve(), adapter)
     deps = build_engine_deps(_project_root(), _config_path(config))
     repo_path = repo.resolve()
     discovery = discover_repo(repo_path)
@@ -202,6 +237,12 @@ def preview(
             },
             indent=2,
         )
+    )
+    logger.info(
+        "preview_complete run_id=%s adapter=%s status=%s",
+        manifest.run_id,
+        adapter,
+        artifact.status,
     )
 
 

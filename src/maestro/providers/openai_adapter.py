@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import logging
 import os
 from typing import Any
 
@@ -10,6 +11,8 @@ from pydantic import ValidationError
 from maestro.core.structured import _extract_json_object
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.contracts import ProviderCapability, ProviderError, ProviderModelInfo
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAIProvider(LlmProvider):
@@ -43,6 +46,7 @@ class OpenAIProvider(LlmProvider):
                 "OpenAI Python SDK is not installed; run `uv sync --all-extras` to enable it"
             ) from error
         self._client = module.OpenAI(api_key=api_key)
+        logger.info("openai_client_initialized api_key_env=%s", self.api_key_env)
         return self._client
 
     def _extract_text(self, response: Any) -> str:
@@ -91,6 +95,32 @@ class OpenAIProvider(LlmProvider):
                     return part["parsed"]
         raise ValueError("OpenAI structured response did not contain parsed output")
 
+    def _is_schema_compatibility_error(self, error: Exception) -> bool:
+        message = str(error)
+        markers = (
+            "invalid_json_schema",
+            "Invalid schema for response_format",
+            "text.format.schema",
+        )
+        return any(marker in message for marker in markers)
+
+    def _schema_has_unsupported_additional_properties(self, value: Any) -> bool:
+        if isinstance(value, dict):
+            additional_properties = value.get("additionalProperties")
+            if isinstance(additional_properties, dict):
+                return True
+            return any(
+                self._schema_has_unsupported_additional_properties(item)
+                for item in value.values()
+            )
+        if isinstance(value, list):
+            return any(self._schema_has_unsupported_additional_properties(item) for item in value)
+        return False
+
+    def _supports_native_schema(self, schema: type[SchemaT]) -> bool:
+        schema_json = schema.model_json_schema()
+        return not self._schema_has_unsupported_additional_properties(schema_json)
+
     def generate_text(
         self,
         *,
@@ -98,6 +128,7 @@ class OpenAIProvider(LlmProvider):
         model: str,
         metadata: dict[str, Any] | None = None,
     ) -> str:
+        logger.debug("openai_generate_text model=%s", model)
         response = self._get_client().responses.create(model=model, input=prompt)
         return self._extract_text(response)
 
@@ -110,14 +141,42 @@ class OpenAIProvider(LlmProvider):
         metadata: dict[str, Any] | None = None,
     ) -> SchemaT:
         client = self._get_client()
-        if hasattr(client.responses, "parse"):
-            response = client.responses.parse(model=model, input=prompt, text_format=schema)
-            return schema.model_validate(self._extract_parsed(response))
+        if hasattr(client.responses, "parse") and self._supports_native_schema(schema):
+            try:
+                logger.info(
+                    "openai_generate_structured_native model=%s schema=%s",
+                    model,
+                    schema.__name__,
+                )
+                response = client.responses.parse(model=model, input=prompt, text_format=schema)
+            except Exception as error:  # noqa: BLE001
+                if not self._is_schema_compatibility_error(error):
+                    raise
+                logger.warning(
+                    "openai_native_schema_rejected model=%s schema=%s error=%s",
+                    model,
+                    schema.__name__,
+                    error,
+                )
+            else:
+                return schema.model_validate(self._extract_parsed(response))
+        elif hasattr(client.responses, "parse"):
+            logger.info(
+                "openai_native_schema_skipped_incompatible model=%s schema=%s",
+                model,
+                schema.__name__,
+            )
 
+        logger.info(
+            "openai_generate_structured_fallback model=%s schema=%s",
+            model,
+            schema.__name__,
+        )
         raw = self.generate_text(
             prompt=(
-                f"{prompt}\nReturn only valid JSON matching this schema name: "
-                f"{schema.__name__}."
+                f"{prompt}\nReturn only valid JSON matching this schema exactly. "
+                f"Schema name: {schema.__name__}.\n"
+                f"JSON schema:\n{json.dumps(schema.model_json_schema(), indent=2, sort_keys=True)}"
             ),
             model=model,
             metadata=metadata,

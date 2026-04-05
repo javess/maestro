@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
+
 from maestro.preview.base import PreviewAdapter
 from maestro.schemas.contracts import CheckResult
 from maestro.schemas.preview import PreviewArtifact, PreviewRequest, PreviewStatus
 from maestro.tools.shell import LocalShellRunner
+
+logger = logging.getLogger(__name__)
 
 
 class LocalPreviewAdapter(PreviewAdapter):
@@ -15,6 +19,7 @@ class LocalPreviewAdapter(PreviewAdapter):
     def build_preview(self, request: PreviewRequest) -> PreviewArtifact:
         if not request.command:
             raise ValueError("local preview adapter requires a command")
+        logger.info("preview_local_start repo=%s command=%s", request.repo_path, request.command)
         result = self.shell.run(request.command, request.repo_path)
         check = CheckResult(
             command=request.command,

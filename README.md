@@ -33,6 +33,7 @@ uv run maestro ui
 uv run maestro init
 uv run maestro discover
 uv run maestro plan examples/brief.md
+uv run maestro -v plan examples/brief.md
 uv run maestro run-ticket TICKET-1
 uv run maestro review TICKET-1
 uv run maestro status
@@ -84,6 +85,7 @@ uv run pyinstaller -m maestro.cli.main
 - format: `uv run ruff format .`
 - type check: `uv run ty check`
 - tests: `uv run pytest`
+- progress logs: `uv run maestro -v ...` or `uv run maestro --log-level DEBUG ...`
 
 ## Providers
 
@@ -111,6 +113,11 @@ fallbacks:
 The OpenAI adapter is now runtime-wired for text and structured generation. Secure key storage is
 still future work; the current supported local-development path is `.env` plus environment
 variables.
+
+If `maestro` detects that one of the richer Pydantic schemas is unlikely to fit OpenAI's native
+structured-output validator, it now skips that path up front and uses text generation plus JSON
+extraction instead. If a schema still slips through and OpenAI rejects it, the runtime keeps the
+same fallback as a safety net.
 
 ## Hello World
 

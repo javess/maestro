@@ -10,6 +10,13 @@ uv run maestro plan examples/brief.md
 uv run maestro status
 ```
 
+Use `-v` for progress logs and `-vv` or `--log-level DEBUG` for more detailed traces:
+
+```bash
+uv run maestro -v plan examples/brief.md
+uv run maestro --log-level DEBUG preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
+```
+
 ## Preview a local target repo
 
 ```bash

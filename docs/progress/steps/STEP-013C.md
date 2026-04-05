@@ -1,0 +1,67 @@
+# STEP-013C
+
+- Step id: `STEP-013C`
+- Title: OpenAI schema fallback compatibility fix
+- Status: done
+- Objective:
+  - Fix OpenAI-backed planning when the API rejects one of the current structured-output schemas.
+- Scope:
+  - Detect OpenAI schema-compatibility errors from native structured output.
+  - Fall back automatically to text generation plus JSON extraction.
+  - Add a regression test for the reported failure mode.
+  - Update operator docs to describe the fallback behavior.
+- Non-goals:
+  - No schema redesign.
+  - No changes to fake-provider deterministic eval behavior.
+  - No new provider integrations.
+- Prerequisites:
+  - `STEP-013B` complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Patch the OpenAI adapter to catch schema rejection errors from `responses.parse()`.
+  - Reuse the existing text-based structured parsing path as the fallback.
+  - Add a mocked regression test and update the docs.
+- Files changed:
+  - `src/maestro/providers/openai_adapter.py`
+  - `tests/test_openai_adapter.py`
+  - `README.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013C.md`
+- Tests added or updated:
+  - `tests/test_openai_adapter.py`
+- Evals added or updated:
+  - None. This fix changes the runtime OpenAI path only; deterministic evals still use
+    `FakeProvider`.
+- Commands run:
+  - `sed -n '1,260p' src/maestro/providers/openai_adapter.py`
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,240p' tests/test_openai_adapter.py`
+  - `uv run pytest tests/test_openai_adapter.py`
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py`
+  - `uv run ty check`
+  - `git diff --check`
+- Results:
+  - OpenAI schema rejection now falls back to text generation plus JSON extraction.
+  - Added a regression test for the reported `invalid_json_schema` failure path.
+  - Updated the OpenAI runbook and README to document the fallback behavior.
+- Docs updated:
+  - `README.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013C.md`
+- Decisions made:
+  - Prefer graceful degradation over immediate failure when OpenAI rejects a schema.
+- Known limitations:
+  - The fallback still depends on the model returning valid JSON.
+  - Some very large or ambiguous schemas may still require future schema simplification.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording

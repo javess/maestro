@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -7,6 +8,8 @@ from typing import Any
 from maestro.core.structured import StructuredAttempt, StructuredOutputRunner
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.contracts import MaestroConfig, ProviderError
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -39,6 +42,12 @@ class ProviderRouter:
         errors: list[ProviderError] = []
         for target in sequence:
             provider = self.providers[target.provider]
+            logger.info(
+                "provider_attempt role=%s provider=%s model=%s",
+                role,
+                target.provider,
+                target.model,
+            )
             try:
                 result, attempts = self.runner.generate(
                     provider,
@@ -53,6 +62,14 @@ class ProviderRouter:
                     attempts=attempts,
                 )
             except Exception as error:  # noqa: BLE001
-                errors.append(provider.normalize_error(error))
+                normalized = provider.normalize_error(error)
+                errors.append(normalized)
+                logger.warning(
+                    "provider_failed role=%s provider=%s retryable=%s message=%s",
+                    role,
+                    normalized.provider,
+                    normalized.retryable,
+                    normalized.message,
+                )
         formatted = ", ".join(f"{item.provider}:{item.message}" for item in errors)
         raise RuntimeError(f"All providers failed for role {role}: {formatted}")

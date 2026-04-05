@@ -112,3 +112,12 @@
 
 - Decision: add a ready-made `examples/oxo_cli_game_brief.md` instead of keeping the OXO example embedded only in README snippets.
 - Rationale: the user explicitly wants a reusable version of that brief, and storing it in `examples/` makes the workflow repeatable and easier to reference from docs and future sessions.
+
+- Decision: fall back from OpenAI native structured output to text-plus-JSON parsing when the API rejects a schema as invalid.
+- Rationale: some of the current rich Pydantic schemas are stricter or more complex than the OpenAI schema validator accepts, and runtime planning should degrade gracefully instead of failing before model generation starts.
+
+- Decision: fold the uncommitted `STEP-013C` changes into `STEP-013D` before commit.
+- Rationale: the user immediately requested live verification and better progress logging before `STEP-013C` was finalized, so the cleanest atomic history is one follow-up commit covering runtime verification plus observability.
+
+- Decision: use the standard library logger with Rich logging output and CLI-controlled verbosity.
+- Rationale: it adds no new heavy dependency, works cleanly with Typer, and is sufficient for state transitions, provider routing, fallback behavior, and shell command tracing.

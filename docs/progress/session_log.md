@@ -877,3 +877,89 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-014`
 - Next recommended step: `STEP-014`
+
+## 2026-04-05 22:42 UTC
+
+- Session goal: fix the user-reported OpenAI schema rejection by degrading gracefully from native
+  structured output to text-plus-JSON parsing
+- Selected step: `STEP-013C`
+- Files changed:
+  - `src/maestro/providers/openai_adapter.py`
+  - `tests/test_openai_adapter.py`
+  - `README.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013C.md`
+- Commands run:
+  - `sed -n '1,260p' src/maestro/providers/openai_adapter.py`
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,240p' tests/test_openai_adapter.py`
+  - `uv run pytest tests/test_openai_adapter.py`
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py`
+  - `uv run ty check`
+  - `git diff --check`
+- Tests run:
+  - `uv run pytest tests/test_openai_adapter.py` passed
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py` passed
+  - `uv run ty check` passed
+- Evals run:
+  - None. This targeted compatibility fix does not alter deterministic fake-provider eval behavior.
+- Outcome: superseded by `STEP-013D` before commit
+- Commit hash: none
+- Stop reason: user requested immediate live verification and logging before commit
+- Next recommended step: `STEP-013D`
+
+## 2026-04-05 23:00 UTC
+
+- Session goal: verify the OpenAI fallback against the real command path and add structured progress
+  logging with CLI-controlled verbosity
+- Selected step: `STEP-013D`
+- Files changed:
+  - `src/maestro/logging.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/config.py`
+  - `src/maestro/tools/shell.py`
+  - `src/maestro/preview/local.py`
+  - `src/maestro/providers/router.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_logging.py`
+  - `tests/test_openai_adapter.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013D.md`
+- Commands run:
+  - `maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+  - `uv run --directory /Users/javiersierra/dev/maestro maestro -v plan /Users/javiersierra/dev/scratch/cli-oxo/brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo /Users/javiersierra/dev/scratch/cli-oxo`
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py`
+  - `uv run ruff check src/maestro/logging.py src/maestro/cli/main.py src/maestro/config.py src/maestro/tools/shell.py src/maestro/preview/local.py src/maestro/providers/router.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `git diff --check`
+- Tests run:
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py` passed
+  - `uv run ruff check src/maestro/logging.py src/maestro/cli/main.py src/maestro/config.py src/maestro/tools/shell.py src/maestro/preview/local.py src/maestro/providers/router.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_logging.py tests/test_preview.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - None. Logging and the OpenAI runtime fallback fix do not change deterministic fake-provider eval behavior.
+- Outcome: completed `STEP-013D`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-014`
+- Next recommended step: `STEP-014`
+
+- Verification note:
+  - The live OpenAI run now logs `openai_native_schema_skipped_incompatible` for `Backlog` and
+    goes directly to the text-plus-JSON fallback path instead of first making the known-failing
+    native structured-output request.

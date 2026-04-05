@@ -97,9 +97,23 @@ OPENAI_API_KEY=your_key_here
 Then run:
 
 ```bash
-uv run maestro doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
-uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
+uv run maestro -v doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
+uv run maestro -v plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
 ```
+
+If `maestro` detects that a schema is not a good fit for OpenAI native structured output, it skips
+that API path and goes straight to plain text generation plus JSON extraction. If a schema still
+gets sent to the native path and OpenAI rejects it, the runtime keeps the same fallback as a safety
+net. You should be able to rerun the same command without changing the config.
+
+Useful log lines in `-v` mode include:
+
+- `provider_attempt`
+- `openai_generate_structured_native`
+- `openai_native_schema_skipped_incompatible`
+- `openai_native_schema_rejected`
+- `openai_generate_structured_fallback`
+- `state_transition`
 
 ## 6. OpenAI setup for the ready-made OXO brief
 
@@ -112,8 +126,8 @@ git init
 cp /Users/javiersierra/dev/maestro/examples/oxo_cli_game_brief.md brief.md
 cp /Users/javiersierra/dev/maestro/.env.example /Users/javiersierra/dev/maestro/examples/.env
 $EDITOR /Users/javiersierra/dev/maestro/examples/.env
-maestro doctor --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
-maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+uv run --directory /Users/javiersierra/dev/maestro maestro -v doctor --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+uv run --directory /Users/javiersierra/dev/maestro maestro -v plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
 ```
 
 That sequence gives you:
@@ -121,6 +135,7 @@ That sequence gives you:
 - the reusable OXO brief copied into your new repo
 - the OpenAI key loaded from the `examples/.env` file beside the config
 - a config validation check before the planning run
+- automatic fallback to text+JSON parsing if OpenAI rejects a native structured schema
 
 ## What was validated in this step
 

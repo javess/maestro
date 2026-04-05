@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,6 +50,8 @@ from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.storage.policies import load_policy
 from maestro.tools.shell import LocalShellRunner
 
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class EngineDeps:
@@ -70,6 +73,12 @@ def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
     }
     router = ProviderRouter(config=config, providers=providers)
     policy = load_policy(config.policy, project_root / "policies")
+    logger.info(
+        "engine_deps_built config=%s policy=%s providers=%s",
+        config_path,
+        policy.name,
+        ",".join(sorted(providers.keys())),
+    )
     return EngineDeps(
         config=config,
         policy=policy,
@@ -100,11 +109,23 @@ class OrchestratorEngine:
             artifacts=manifest,
         )
         self.deps.state_store.save(state)
+        logger.info(
+            "run_initialized run_id=%s repo=%s brief=%s",
+            state.run_id,
+            repo_path,
+            brief_path,
+        )
         return state
 
     def _append_event(self, state: RunState, current: OrchestratorState, detail: str) -> None:
         state.current_state = current.value
         state.events.append(RunEvent(state=current.value, detail=detail))
+        logger.info(
+            "state_transition run_id=%s state=%s detail=%s",
+            state.run_id,
+            current.value,
+            detail,
+        )
         state.run_graph, state.run_graph_current_node_id = advance_run_graph(
             state.run_graph,
             orchestrator_state=current,
@@ -114,9 +135,16 @@ class OrchestratorEngine:
 
     def _record_state_note(self, state: RunState, detail: str) -> None:
         state.events.append(RunEvent(state=state.current_state, detail=detail))
+        logger.info(
+            "state_note run_id=%s state=%s detail=%s",
+            state.run_id,
+            state.current_state,
+            detail,
+        )
         self.deps.state_store.save(state)
 
     def discover(self, state: RunState):
+        logger.debug("repo_discovery_start run_id=%s repo=%s", state.run_id, state.repo_path)
         repo = discover_repo(state.repo_path)
         self.deps.artifact_store.write_json(
             state.artifacts,
@@ -127,6 +155,7 @@ class OrchestratorEngine:
         return repo
 
     def define_product(self, state: RunState, brief_text: str):
+        logger.debug("define_product_start run_id=%s", state.run_id)
         agent = ProductDesignerAgent(self.deps.router, self.deps.prompt_root, "product_designer")
         compiled_brief = compile_product_brief(brief_text)
         self.deps.artifact_store.write_json(
@@ -144,6 +173,7 @@ class OrchestratorEngine:
         return spec
 
     def plan_tickets(self, state: RunState, spec_payload: dict):
+        logger.debug("plan_tickets_start run_id=%s", state.run_id)
         agent = CeremonyMasterAgent(self.deps.router, self.deps.prompt_root, "ceremony_master")
         repo = discover_repo(state.repo_path)
         spec = ProductSpec.model_validate(spec_payload)
@@ -172,6 +202,11 @@ class OrchestratorEngine:
             },
         )
         state.backlog = backlog
+        logger.info(
+            "plan_tickets_complete run_id=%s tickets=%s",
+            state.run_id,
+            len(backlog.tickets),
+        )
         self.deps.artifact_store.write_json(
             state.artifacts,
             "ceremony_master",
@@ -189,9 +224,11 @@ class OrchestratorEngine:
             return ticket
         self._append_event(state, OrchestratorState.DONE, "no pending tickets")
         state.status = "done"
+        logger.info("run_complete_no_pending_tickets run_id=%s", state.run_id)
         return None
 
     def implement(self, state: RunState, ticket: Ticket, repo_context: dict) -> CodeResult:
+        logger.debug("implement_start run_id=%s ticket=%s", state.run_id, ticket.id)
         agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
         impact_analysis = state.backlog.impact_analyses.get(ticket.id)
         result = agent.run_code(
@@ -215,6 +252,12 @@ class OrchestratorEngine:
         return result
 
     def validate(self, state: RunState, repo_commands: list[str]) -> list[CheckResult]:
+        logger.debug(
+            "validate_start run_id=%s ticket=%s commands=%s",
+            state.run_id,
+            state.current_ticket_id,
+            len(repo_commands),
+        )
         checks: list[CheckResult] = []
         for command in repo_commands:
             result = self.deps.shell.run(command, state.repo_path)
@@ -240,6 +283,7 @@ class OrchestratorEngine:
         code_result: CodeResult,
         checks: list[CheckResult],
     ) -> ReviewResult:
+        logger.debug("review_start run_id=%s ticket=%s", state.run_id, ticket.id)
         agent = ReviewerAgent(self.deps.router, self.deps.prompt_root, "reviewer")
         review = agent.run_review(
             {
@@ -267,6 +311,7 @@ class OrchestratorEngine:
         review: ReviewResult,
         repo_info: RepoInfo,
     ) -> tuple[list[str], ApprovalRequest | None]:
+        logger.debug("evidence_bundle_start run_id=%s ticket=%s", state.run_id, ticket.id)
         review_cycle = state.review_cycles + 1
         violations, policy_findings = collect_policy_findings(
             policy=self.deps.policy,
@@ -298,6 +343,13 @@ class OrchestratorEngine:
         self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
         state.approval_request = approval_request
         self.deps.state_store.save(state)
+        logger.info(
+            "evidence_bundle_written run_id=%s ticket=%s violations=%s approval_required=%s",
+            state.run_id,
+            ticket.id,
+            len(violations),
+            approval_request is not None,
+        )
         return violations, approval_request
 
     def advance_ticket(
@@ -310,6 +362,7 @@ class OrchestratorEngine:
         violations: list[str] | None = None,
         approval_request: ApprovalRequest | None = None,
     ) -> OrchestratorState:
+        logger.debug("advance_ticket_start run_id=%s ticket=%s", state.run_id, ticket.id)
         if violations is None:
             violations = enforce_code_policy(self.deps.policy, code_result)
             violations.extend(enforce_review_policy(self.deps.policy, state.review_cycles, review))
@@ -326,6 +379,12 @@ class OrchestratorEngine:
             )
             return OrchestratorState.REVIEW
         if violations:
+            logger.warning(
+                "ticket_policy_violations run_id=%s ticket=%s violations=%s",
+                state.run_id,
+                ticket.id,
+                ",".join(violations),
+            )
             if state.review_cycles >= self.deps.policy.max_review_cycles:
                 ticket.status = TicketStatus.escalated
                 state.status = "escalated"
@@ -337,10 +396,12 @@ class OrchestratorEngine:
         ticket.status = TicketStatus.complete
         state.completed_tickets.append(ticket.id)
         state.review_cycles = 0
+        logger.info("ticket_completed run_id=%s ticket=%s", state.run_id, ticket.id)
         self._append_event(state, OrchestratorState.COMPLETE_TICKET, ticket.id)
         return OrchestratorState.COMPLETE_TICKET
 
     def run_plan(self, repo_path: Path, brief_path: Path) -> RunState:
+        logger.info("run_plan_start repo=%s brief=%s", repo_path, brief_path)
         state = self.new_state(repo_path=repo_path, brief_path=brief_path)
         repo = self.discover(state)
         spec = self.define_product(state, brief_path.read_text())
@@ -388,4 +449,10 @@ class OrchestratorEngine:
             state.run_graph_current_node_id,
         )
         self.deps.state_store.save(state)
+        logger.info(
+            "run_plan_complete run_id=%s status=%s state=%s",
+            state.run_id,
+            state.status,
+            state.current_state,
+        )
         return state

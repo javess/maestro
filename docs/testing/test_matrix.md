@@ -122,3 +122,9 @@
   the first user-testable example target.
 - Validated the example repo directly with `pytest`, `ruff`, and `ty`.
 - Full backend test baseline and UI build were rerun after preview abstraction integration.
+
+## STEP-013D Note
+
+- Added `tests/test_logging.py` for log-level resolution and logging bootstrap coverage.
+- Updated `tests/test_openai_adapter.py` for OpenAI native-schema rejection fallback coverage.
+- Reran targeted provider, logging, and preview tests plus the full backend test suite.

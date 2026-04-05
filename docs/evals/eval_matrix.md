@@ -101,3 +101,10 @@
   through a separate CLI surface and does not yet alter the orchestrator state machine.
 - Existing scenarios were rerun to confirm the preview abstraction does not change deterministic
   planning, approval, fallback, or backlog-ordering behavior.
+
+## STEP-013D Note
+
+- No scenario set changes were required in STEP-013D because logging and the OpenAI runtime
+  fallback fix do not alter deterministic fake-provider eval behavior.
+- Existing eval coverage remains valid because the orchestration state machine and fake-provider
+  scenarios are unchanged.
