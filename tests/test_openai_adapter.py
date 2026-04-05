@@ -20,14 +20,14 @@ class _ParseResponses:
             "Response",
             (),
             {
-                "output_parsed": {
-                    "title": "Maestro",
-                    "summary": "Structured response",
-                    "problem": "Need deterministic orchestration.",
-                    "outcomes": ["Plan"],
-                    "scope": ["Code"],
-                    "acceptance_criteria": ["Valid schema"],
-                }
+                "output_parsed": ProductSpec(
+                    title="Maestro",
+                    summary="Structured response",
+                    problem="Need deterministic orchestration.",
+                    outcomes=["Plan"],
+                    scope=["Code"],
+                    acceptance_criteria=["Valid schema"],
+                )
             },
         )()
 

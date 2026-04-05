@@ -1,0 +1,58 @@
+# STEP-013F
+
+- Step id: `STEP-013F`
+- Title: OpenAI native parsed-model logging fix
+- Status: done
+- Objective:
+  - Fix the `-vv` OpenAI path so native structured parse results that arrive as Pydantic model
+    instances can be logged safely without crashing the run.
+- Scope:
+  - Normalize native structured parse payloads into JSON-serializable data before debug logging.
+  - Add or update tests that reproduce the native parsed-model case.
+  - Record the bugfix as a prerequisite before the repo-local `.maestro/` storage step.
+- Non-goals:
+  - No changes to storage paths yet.
+  - No changes to provider selection or schema semantics.
+- Prerequisites:
+  - `STEP-013E` complete.
+  - Unsafe uncommitted runtime diff inspected and confirmed to be a narrow logging bugfix.
+- Implementation plan:
+  - Update the OpenAI adapter logging path to serialize nested Pydantic models safely.
+  - Update OpenAI adapter tests to return a parsed Pydantic model from the native parse fixture.
+  - Re-run targeted tests and a live OpenAI verification command.
+  - Update progress docs and commit the fix.
+- Files changed:
+  - `src/maestro/providers/openai_adapter.py`
+  - `tests/test_openai_adapter.py`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013F.md`
+- Tests added or updated:
+  - `tests/test_openai_adapter.py`
+- Evals added or updated:
+  - None. This is a provider logging bugfix.
+- Commands run:
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py`
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py`
+  - `maestro -vv plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `git diff --check`
+- Results:
+  - Native structured parse results returned as Pydantic models no longer crash debug logging.
+  - The exact live `maestro -vv plan ...` command progressed past the earlier `ProductSpec` logging
+    failure and continued into later stages of planning and execution.
+- Docs updated:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013F.md`
+- Decisions made:
+  - Split this prerequisite bugfix out before the requested storage-path refactor.
+- Known limitations:
+  - The target-repo `.maestro/` storage change is still pending in `STEP-013G`.
+- Next recommended step:
+  - `STEP-013G`
+- Commit hash:
+  - pending

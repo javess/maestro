@@ -1000,3 +1000,32 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-014`
 - Next recommended step: `STEP-014`
+
+## 2026-04-06 00:20 UTC
+
+- Session goal: resolve the unsafe uncommitted OpenAI debug-logging fix before the requested
+  repo-local `.maestro/` storage move
+- Selected step: `STEP-013F`
+- Files changed:
+  - `src/maestro/providers/openai_adapter.py`
+  - `tests/test_openai_adapter.py`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013F.md`
+- Commands run:
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py`
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py`
+  - `maestro -vv plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `git diff --check`
+- Tests run:
+  - `uv run pytest tests/test_openai_adapter.py tests/test_logging.py` passed
+  - `uv run ruff check src/maestro/providers/openai_adapter.py tests/test_openai_adapter.py` passed
+- Evals run:
+  - None. This is a provider logging bugfix.
+- Outcome: completed `STEP-013F`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before the requested repo-local
+  storage change in `STEP-013G`
+- Next recommended step: `STEP-013G`

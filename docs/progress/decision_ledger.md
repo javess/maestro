@@ -127,3 +127,12 @@
 
 - Decision: update repo guidance to require logging for runtime-facing changes by default.
 - Rationale: observability needs to stay part of the implementation standard instead of depending on ad hoc follow-up requests.
+
+- Decision: split a tiny prerequisite `STEP-013F` before the requested repo-local `.maestro/` storage change.
+- Rationale: the repository had uncommitted runtime bugfix changes from live OpenAI verification, and the workflow requires resolving that unsafe state in a small atomic step before layering a storage refactor on top.
+
+- Decision: treat OpenAI native parsed-model debug logging as a provider-adapter responsibility rather than constraining provider outputs to raw dicts.
+- Rationale: native structured parse results may legitimately be returned as Pydantic model instances, and very-verbose logging must serialize them safely without changing canonical schema handling.
+
+- Decision: insert `STEP-013G` before `STEP-014` for repo-local `.maestro` workspace storage.
+- Rationale: the user explicitly wants plan/state artifacts to live with the target repository, and that storage-path move is a bounded product-behavior change that should happen before broader roadmap work resumes.

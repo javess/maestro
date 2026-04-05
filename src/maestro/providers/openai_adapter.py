@@ -6,7 +6,7 @@ import logging
 import os
 from typing import Any
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from maestro.core.structured import _extract_json_object
 from maestro.logging import log_provider_request, log_provider_response
@@ -122,6 +122,15 @@ class OpenAIProvider(LlmProvider):
         schema_json = schema.model_json_schema()
         return not self._schema_has_unsupported_additional_properties(schema_json)
 
+    def _json_ready(self, payload: Any) -> Any:
+        if isinstance(payload, BaseModel):
+            return payload.model_dump(mode="json")
+        if isinstance(payload, dict):
+            return {key: self._json_ready(value) for key, value in payload.items()}
+        if isinstance(payload, list):
+            return [self._json_ready(item) for item in payload]
+        return payload
+
     def generate_text(
         self,
         *,
@@ -191,7 +200,7 @@ class OpenAIProvider(LlmProvider):
                     provider="openai",
                     action="generate_structured_native",
                     model=model,
-                    payload=json.dumps(parsed, indent=2, sort_keys=True),
+                    payload=json.dumps(self._json_ready(parsed), indent=2, sort_keys=True),
                     schema_name=schema.__name__,
                 )
                 return schema.model_validate(parsed)
