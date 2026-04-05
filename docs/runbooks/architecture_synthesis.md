@@ -4,8 +4,8 @@ Use this when you need to inspect how `maestro` generated planning-time architec
 
 ## Where To Look
 
-- run artifact: `runs/<RUN_ID>/architecture_synthesizer.json`
-- planning artifact: `runs/<RUN_ID>/ceremony_master.json`
+- run artifact: `<target-repo>/.maestro/runs/<RUN_ID>/architecture_synthesizer.json`
+- planning artifact: `<target-repo>/.maestro/runs/<RUN_ID>/ceremony_master.json`
 - in-memory contract: `Backlog.architecture_artifacts`
 
 ## What To Expect

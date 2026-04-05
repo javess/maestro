@@ -9,7 +9,12 @@ from maestro.schemas.contracts import (
     RiskLevel,
     RunState,
 )
-from maestro.storage.local import LocalArtifactStore, LocalStateStore
+from maestro.storage.local import (
+    LocalArtifactStore,
+    LocalStateStore,
+    MaestroWorkspace,
+    workspace_root_for_repo,
+)
 
 
 def test_artifact_store_writes_json(tmp_path: Path) -> None:
@@ -74,3 +79,15 @@ def test_state_store_loads_legacy_partial_state_without_run_graph(tmp_path: Path
     loaded = store.load("legacy-1")
     assert loaded.run_graph is None
     assert loaded.run_graph_current_node_id is None
+
+
+def test_workspace_for_repo_creates_repo_local_maestro_directories(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    workspace = MaestroWorkspace.for_repo(repo)
+    assert workspace.root == repo / ".maestro"
+    assert workspace.runs_dir == repo / ".maestro" / "runs"
+    assert workspace.state_dir == repo / ".maestro" / "state"
+    assert workspace.runs_dir.exists()
+    assert workspace.state_dir.exists()
+    assert workspace_root_for_repo(repo) == repo / ".maestro"

@@ -65,7 +65,12 @@ class EngineDeps:
     prompt_root: Path
 
 
-def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
+def build_engine_deps(
+    project_root: Path,
+    config_path: Path,
+    *,
+    workspace_root: Path | None = None,
+) -> EngineDeps:
     config = load_config(config_path)
     providers = {
         name: build_provider(provider_cfg)
@@ -79,11 +84,13 @@ def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
         policy.name,
         ",".join(sorted(providers.keys())),
     )
+    artifact_root = workspace_root / "runs" if workspace_root is not None else project_root / "runs"
+    state_root = workspace_root / "state" if workspace_root is not None else artifact_root / "state"
     return EngineDeps(
         config=config,
         policy=policy,
-        artifact_store=LocalArtifactStore(project_root / "runs"),
-        state_store=LocalStateStore(project_root / "runs" / "state"),
+        artifact_store=LocalArtifactStore(artifact_root),
+        state_store=LocalStateStore(state_root),
         shell=LocalShellRunner(),
         providers=providers,
         router=router,

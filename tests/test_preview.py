@@ -56,3 +56,5 @@ def test_preview_cli_persists_local_preview(tmp_path: Path) -> None:
 
     assert result.exit_code == 0
     assert "preview cli ok" in result.output
+    assert str(repo / ".maestro") in result.output
+    assert (repo / ".maestro" / "runs").exists()

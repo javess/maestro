@@ -14,7 +14,7 @@ When a run reaches a successful automated review but the active policy requires 
 ## Where To Inspect
 
 1. Run `uv run maestro eval --json-output` or `uv run maestro plan --brief examples/brief.md`.
-2. Open `runs/state/<RUN_ID>.json`.
+2. Open `<target-repo>/.maestro/state/<RUN_ID>.json`.
 3. Inspect:
    - `status`
    - `approval_request`

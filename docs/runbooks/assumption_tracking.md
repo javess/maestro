@@ -14,7 +14,7 @@ Tracked categories:
 ## Where To Inspect
 
 1. Run `uv run maestro plan --brief examples/brief.md`.
-2. Open the saved run directory under `runs/<RUN_ID>/`.
+2. Open the saved run directory under `<target-repo>/.maestro/runs/<RUN_ID>/`.
 3. Inspect:
    - `product_brief_compiler.json`
    - `product_designer.json`

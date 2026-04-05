@@ -136,3 +136,9 @@
 
 - Decision: insert `STEP-013G` before `STEP-014` for repo-local `.maestro` workspace storage.
 - Rationale: the user explicitly wants plan/state artifacts to live with the target repository, and that storage-path move is a bounded product-behavior change that should happen before broader roadmap work resumes.
+
+- Decision: make repo-local `.maestro/` storage the default for runtime CLI commands while keeping eval storage framework-local.
+- Rationale: runtime outputs should travel with the operated-on repo, but evals need isolated deterministic storage that does not pollute target repositories.
+
+- Decision: keep `status` and `resume` backward-compatible by falling back to the legacy central state store for older run ids.
+- Rationale: existing run ids should remain inspectable without forcing a migration step during this storage-path change.

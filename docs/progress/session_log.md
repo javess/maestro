@@ -1029,3 +1029,56 @@
 - Stop reason: step complete; waiting for user confirmation before the requested repo-local
   storage change in `STEP-013G`
 - Next recommended step: `STEP-013G`
+
+## 2026-04-06 00:35 UTC
+
+- Session goal: move runtime run state and artifacts into repo-local `.maestro/` storage
+- Selected step: `STEP-013G`
+- Files changed:
+  - `src/maestro/storage/local.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_storage.py`
+  - `tests/test_engine.py`
+  - `tests/test_preview.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/repo_local_workspace.md`
+  - `docs/runbooks/repo_local_workspace.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/runbooks/preview_environments.md`
+  - `docs/runbooks/approval_gates.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/runbooks/risk_scoring.md`
+  - `docs/runbooks/architecture_synthesis.md`
+  - `docs/runbooks/backlog_graph.md`
+  - `docs/runbooks/impact_analysis.md`
+  - `docs/runbooks/assumption_tracking.md`
+  - `docs/runbooks/product_brief_compiler.md`
+  - `docs/runbooks/run_graph_resume.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013G.md`
+- Commands run:
+  - `uv run pytest tests/test_storage.py tests/test_engine.py tests/test_preview.py`
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_storage.py tests/test_engine.py tests/test_preview.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `maestro -vv plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `maestro status --repo .`
+- Tests run:
+  - `uv run pytest tests/test_storage.py tests/test_engine.py tests/test_preview.py` passed
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_storage.py tests/test_engine.py tests/test_preview.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - None. Runtime storage moved to repo-local `.maestro/`, but eval storage intentionally remains
+    framework-local and existing eval scenarios were unchanged.
+- Outcome: completed `STEP-013G`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-014`
+- Next recommended step: `STEP-014`

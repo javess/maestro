@@ -4,7 +4,7 @@ Use this when you need to inspect or debug how `maestro` ordered planned tickets
 
 ## Where To Look
 
-- planning artifact: `runs/<RUN_ID>/ceremony_master.json`
+- planning artifact: `<target-repo>/.maestro/runs/<RUN_ID>/ceremony_master.json`
 - in-memory contract: `Backlog.execution_graph`
 - eval scenario: `backlog-graph-ordering`
 

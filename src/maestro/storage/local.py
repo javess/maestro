@@ -7,6 +7,25 @@ from typing import Any
 
 from maestro.schemas.contracts import ArtifactEntry, ArtifactManifest, EvidenceBundle, RunState
 
+WORKSPACE_DIRNAME = ".maestro"
+
+
+def workspace_root_for_repo(repo_path: Path) -> Path:
+    return repo_path / WORKSPACE_DIRNAME
+
+
+class MaestroWorkspace:
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        self.runs_dir = root / "runs"
+        self.state_dir = root / "state"
+        self.runs_dir.mkdir(parents=True, exist_ok=True)
+        self.state_dir.mkdir(parents=True, exist_ok=True)
+
+    @classmethod
+    def for_repo(cls, repo_path: Path) -> MaestroWorkspace:
+        return cls(workspace_root_for_repo(repo_path))
+
 
 class LocalArtifactStore:
     def __init__(self, root: Path) -> None:
@@ -51,3 +70,9 @@ class LocalStateStore:
     def load(self, run_id: str) -> RunState:
         path = self.root / f"{run_id}.json"
         return RunState.model_validate_json(path.read_text())
+
+    def list_run_ids(self) -> list[str]:
+        return sorted(path.stem for path in self.root.glob("*.json"))
+
+    def exists(self, run_id: str) -> bool:
+        return (self.root / f"{run_id}.json").exists()

@@ -18,7 +18,7 @@ from maestro.preview.factory import build_preview_adapter
 from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import TicketStatus
 from maestro.schemas.preview import PreviewRequest
-from maestro.storage.local import LocalStateStore
+from maestro.storage.local import LocalStateStore, MaestroWorkspace, workspace_root_for_repo
 from maestro.tools.git import GitWorktreeManager
 
 app = typer.Typer(help="Deterministic multi-agent software delivery framework")
@@ -53,8 +53,26 @@ def _config_path(config: Path | None) -> Path:
     return config or _project_root() / "examples" / "maestro.example.yaml"
 
 
+def _workspace(repo: Path) -> MaestroWorkspace:
+    return MaestroWorkspace.for_repo(repo.resolve())
+
+
+def _legacy_state_store() -> LocalStateStore:
+    return LocalStateStore(_project_root() / "runs" / "state")
+
+
+def _resolve_state_store(repo: Path, run_id: str | None = None) -> LocalStateStore:
+    repo_store = LocalStateStore(_workspace(repo).state_dir)
+    if run_id is None or repo_store.exists(run_id):
+        return repo_store
+    legacy_store = _legacy_state_store()
+    if legacy_store.exists(run_id):
+        return legacy_store
+    return repo_store
+
+
 @app.command()
-def init(config: Path = Path("maestro.yaml")) -> None:
+def init(config: Path = Path("maestro.yaml"), repo: Path = Path(".")) -> None:
     root = _project_root()
     target = config.resolve()
     example = root / "examples" / "maestro.example.yaml"
@@ -62,8 +80,16 @@ def init(config: Path = Path("maestro.yaml")) -> None:
     if not target.exists():
         shutil.copyfile(example, target)
         created = True
-    (root / "runs" / "state").mkdir(parents=True, exist_ok=True)
-    console.print({"config": str(target), "created": created})
+    workspace = _workspace(repo)
+    console.print(
+        {
+            "config": str(target),
+            "created": created,
+            "workspace_root": str(workspace.root),
+            "runs_dir": str(workspace.runs_dir),
+            "state_dir": str(workspace.state_dir),
+        }
+    )
 
 
 @app.command()
@@ -74,15 +100,20 @@ def discover(path: Path = Path(".")) -> None:
 
 @app.command()
 def plan(brief: Path, config: Path | None = None, repo: Path = Path(".")) -> None:
+    repo_root = repo.resolve()
     logger.info(
         "plan_start repo=%s brief=%s config=%s",
-        repo.resolve(),
+        repo_root,
         brief.resolve(),
         _config_path(config),
     )
-    deps = build_engine_deps(_project_root(), _config_path(config))
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(config),
+        workspace_root=_workspace(repo_root).root,
+    )
     engine = OrchestratorEngine(_project_root(), deps)
-    state = engine.run_plan(repo.resolve(), brief.resolve())
+    state = engine.run_plan(repo_root, brief.resolve())
     logger.info(
         "plan_complete run_id=%s status=%s state=%s",
         state.run_id,
@@ -94,9 +125,14 @@ def plan(brief: Path, config: Path | None = None, repo: Path = Path(".")) -> Non
 
 @app.command("run-ticket")
 def run_ticket(ticket_id: str, config: Path | None = None, repo: Path = Path(".")) -> None:
-    deps = build_engine_deps(_project_root(), _config_path(config))
+    repo_root = repo.resolve()
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(config),
+        workspace_root=_workspace(repo_root).root,
+    )
     engine = OrchestratorEngine(_project_root(), deps)
-    state = engine.new_state(repo.resolve(), None)
+    state = engine.new_state(repo_root, None)
     discovery = engine.discover(state)
     fake_brief = _project_root() / "examples" / "brief.md"
     spec = engine.define_product(state, fake_brief.read_text())
@@ -141,10 +177,10 @@ def review(ticket_id: str, config: Path | None = None, repo: Path = Path(".")) -
 
 
 @app.command()
-def status(run_id: str | None = None) -> None:
-    state_store = LocalStateStore(_project_root() / "runs" / "state")
+def status(run_id: str | None = None, repo: Path = Path(".")) -> None:
+    state_store = _resolve_state_store(repo.resolve(), run_id)
     if run_id is None:
-        rows = sorted((_project_root() / "runs" / "state").glob("*.json"))
+        rows = [state_store.root / f"{value}.json" for value in state_store.list_run_ids()]
         table = Table("run_id", "status", "state")
         for row in rows:
             state = state_store.load(row.stem)
@@ -156,8 +192,8 @@ def status(run_id: str | None = None) -> None:
 
 
 @app.command()
-def resume(run_id: str) -> None:
-    state_store = LocalStateStore(_project_root() / "runs" / "state")
+def resume(run_id: str, repo: Path = Path(".")) -> None:
+    state_store = _resolve_state_store(repo.resolve(), run_id)
     state = state_store.load(run_id)
     console.print_json(state.model_dump_json(indent=2))
 
@@ -214,9 +250,13 @@ def preview(
     adapter: str = "noop",
     config: Path | None = None,
 ) -> None:
-    logger.info("preview_start repo=%s adapter=%s", repo.resolve(), adapter)
-    deps = build_engine_deps(_project_root(), _config_path(config))
     repo_path = repo.resolve()
+    logger.info("preview_start repo=%s adapter=%s", repo_path, adapter)
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(config),
+        workspace_root=_workspace(repo_path).root,
+    )
     discovery = discover_repo(repo_path)
     preview_adapter = build_preview_adapter(adapter, shell=deps.shell)
     artifact = preview_adapter.build_preview(
@@ -233,6 +273,7 @@ def preview(
             {
                 "run_id": manifest.run_id,
                 "artifact_path": str(path),
+                "workspace_root": str(workspace_root_for_repo(repo_path)),
                 "preview": artifact.model_dump(mode="json"),
             },
             indent=2,

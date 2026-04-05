@@ -133,3 +133,12 @@
 
 - Extended `tests/test_logging.py` to cover provider request and response logging helpers.
 - Reran targeted logging and OpenAI adapter tests after adding `-vv` request/response traces.
+
+## STEP-013G Note
+
+- Updated `tests/test_storage.py` for repo-local workspace helper coverage.
+- Updated `tests/test_engine.py` to assert runtime state and run artifacts persist under
+  `<target-repo>/.maestro/`.
+- Updated `tests/test_preview.py` to assert preview CLI output and artifact persistence use the
+  repo-local workspace.
+- Reran targeted storage, engine, and preview tests plus the full backend test suite.

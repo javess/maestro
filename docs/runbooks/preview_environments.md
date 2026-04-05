@@ -22,7 +22,7 @@ The command prints:
 The persisted artifact is stored at:
 
 ```text
-runs/<RUN_ID>/preview_local.json
+<target-repo>/.maestro/runs/<RUN_ID>/preview_local.json
 ```
 
 ## When to use it

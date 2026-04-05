@@ -1,0 +1,87 @@
+# STEP-013G
+
+- Step id: `STEP-013G`
+- Title: Repo-local `.maestro` workspace storage
+- Status: done
+- Objective:
+  - Move runtime run-state and artifact persistence from the framework repo into the target repo's
+    `.maestro/` workspace.
+- Scope:
+  - Default runtime commands to write under `<target-repo>/.maestro/`.
+  - Keep eval storage isolated and framework-local.
+  - Add backward-compatible `status` and `resume` fallback reads for older run ids.
+  - Update docs to point operators at the new storage layout.
+- Non-goals:
+  - No SQL storage in this step.
+  - No cross-repo workspace index.
+  - No artifact migration of older runs.
+- Prerequisites:
+  - `STEP-013F` complete.
+- Implementation plan:
+  - Add repo-local workspace helpers.
+  - Route runtime CLI commands through the target repo workspace.
+  - Add tests for repo-local persistence.
+  - Update operator docs and progress records.
+- Files changed:
+  - `src/maestro/storage/local.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_storage.py`
+  - `tests/test_engine.py`
+  - `tests/test_preview.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/repo_local_workspace.md`
+  - `docs/runbooks/repo_local_workspace.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/runbooks/preview_environments.md`
+  - `docs/runbooks/approval_gates.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/runbooks/risk_scoring.md`
+  - `docs/runbooks/architecture_synthesis.md`
+  - `docs/runbooks/backlog_graph.md`
+  - `docs/runbooks/impact_analysis.md`
+  - `docs/runbooks/assumption_tracking.md`
+  - `docs/runbooks/product_brief_compiler.md`
+  - `docs/runbooks/run_graph_resume.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013G.md`
+- Tests added or updated:
+  - `tests/test_storage.py`
+  - `tests/test_engine.py`
+  - `tests/test_preview.py`
+- Evals added or updated:
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `uv run pytest tests/test_storage.py tests/test_engine.py tests/test_preview.py`
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_storage.py tests/test_engine.py tests/test_preview.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `maestro -vv plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .`
+  - `maestro status --repo .`
+- Results:
+  - Runtime runs now create and use `<target-repo>/.maestro/` by default.
+  - The OXO target repo now contains `.maestro/runs/` and `.maestro/state/`.
+  - `status --repo` reads repo-local runs and still supports fallback reads for legacy central runs.
+- Docs updated:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/repo_local_workspace.md`
+  - `docs/runbooks/repo_local_workspace.md`
+  - updated storage references in affected runbooks
+  - progress docs
+- Decisions made:
+  - Keep repo-local workspace storage as the default runtime behavior.
+  - Preserve fallback reads for old central run ids instead of migrating them in-place.
+- Known limitations:
+  - Older run artifacts are not copied automatically into `.maestro/`.
+  - Eval runs still live under the framework repo by design.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending

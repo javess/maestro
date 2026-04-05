@@ -7,7 +7,7 @@ This is the simplest supported manual test path for `maestro` after `STEP-013`.
 - repo discovery against a tiny Python repo
 - local preview generation through a deterministic smoke command
 - planning against the same repo with either the fake provider or OpenAI
-- persisted run artifacts under `runs/`
+- persisted run artifacts under the target repo's `.maestro/`
 
 ## Files involved
 
@@ -139,6 +139,7 @@ That sequence gives you:
 - the OpenAI key loaded from the `examples/.env` file beside the config
 - a config validation check before the planning run
 - automatic fallback to text+JSON parsing if OpenAI rejects a native structured schema
+- repo-local artifacts and run state under `.maestro/`
 
 ## What was validated in this step
 
@@ -154,6 +155,6 @@ Not validated in-repo during `STEP-013`:
 
 ## Where to look after a run
 
-- run state: `runs/state/<RUN_ID>.json`
-- preview artifact: `runs/<RUN_ID>/preview_local.json`
-- planner and evidence artifacts: `runs/<RUN_ID>/`
+- run state: `<target-repo>/.maestro/state/<RUN_ID>.json`
+- preview artifact: `<target-repo>/.maestro/runs/<RUN_ID>/preview_local.json`
+- planner and evidence artifacts: `<target-repo>/.maestro/runs/<RUN_ID>/`

@@ -4,7 +4,7 @@ Use this when you need to inspect or debug repo-aware planning and execution con
 
 ## Where To Look
 
-- run artifact: `runs/<RUN_ID>/impact_analysis.json`
+- run artifact: `<target-repo>/.maestro/runs/<RUN_ID>/impact_analysis.json`
 - planning payload: `Backlog.impact_analyses`
 - execution payload: coder `repo_context.impact_analysis`
 

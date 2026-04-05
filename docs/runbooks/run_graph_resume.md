@@ -18,7 +18,6 @@ still executes from explicit Python logic.
 
 ## Operator Notes
 
-- Use `maestro status` and `maestro resume <RUN_ID>` to inspect saved state.
+- Use `maestro status --repo <target-repo>` and `maestro resume <RUN_ID> --repo <target-repo>` to inspect saved state.
 - The persisted graph is currently an inspection and resume contract, not yet the direct execution driver.
 - Multi-ticket continuation remains a graph handoff boundary rather than a cyclic edge in the graph itself.
-

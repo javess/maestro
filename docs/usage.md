@@ -7,7 +7,7 @@ uv sync --all-extras
 uv run maestro init
 uv run maestro doctor
 uv run maestro plan examples/brief.md
-uv run maestro status
+uv run maestro status --repo .
 ```
 
 Use `-v` for progress logs and `-vv` or `--log-level DEBUG` for the most detailed traces:
@@ -35,6 +35,12 @@ uv run maestro preview --repo examples/hello_world_cli_game --adapter local --co
 
 The preview command writes a preview artifact into `runs/<RUN_ID>/preview_<adapter>.json` and is
 the first user-testable surface exposed by the roadmap.
+The artifact and run state live inside the target repo under `.maestro/`:
+
+```text
+<target-repo>/.maestro/runs/<RUN_ID>/preview_<adapter>.json
+<target-repo>/.maestro/state/<RUN_ID>.json
+```
 
 ## Test
 
@@ -94,6 +100,12 @@ cp .env.example examples/.env
 $EDITOR examples/.env
 uv run maestro doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
 uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
+```
+
+To inspect the saved outputs afterward:
+
+```bash
+uv run maestro status --repo examples/hello_world_cli_game
 ```
 
 ## Known limitations

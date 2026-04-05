@@ -9,7 +9,7 @@ Current behavior:
 
 - one bundle is written for each ticket attempt
 - bundles are registered in `RunState.artifacts.evidence_bundles`
-- bundle files live under `runs/<RUN_ID>/<TICKET_ID>_evidence_<N>.json`
+- bundle files live under `<target-repo>/.maestro/runs/<RUN_ID>/<TICKET_ID>_evidence_<N>.json`
 
 ## Bundle Contents
 
@@ -34,7 +34,7 @@ Each emitted bundle can contain:
 ## How To Inspect
 
 1. Run `uv run maestro plan --brief examples/brief.md` or `uv run maestro eval`.
-2. Open the saved run state in `runs/state/<RUN_ID>.json`.
+2. Open the saved run state in `<target-repo>/.maestro/state/<RUN_ID>.json`.
 3. Read `artifacts.evidence_bundles` for the persisted bundle paths.
 4. Inspect the referenced JSON bundle files for checks, findings, review status, and rollback
    guidance.

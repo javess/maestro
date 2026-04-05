@@ -49,6 +49,8 @@ Workflow control-plane and resume state live in `AGENTS.md`, `docs/codex/`,
 `docs/roadmap/`, and `docs/progress/`.
 VS Code workspace setup lives under `.vscode/` and is described in `docs/runbooks/vscode_setup.md`.
 The first user-testable preview path is documented in `docs/runbooks/hello_world_openai.md`.
+Runtime plan, state, preview, and evidence artifacts now persist in the target repo under
+`.maestro/`.
 
 ## Install as a global CLI
 
@@ -140,6 +142,11 @@ uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/mae
 The local preview path above was validated in this repository. The OpenAI-backed plan command
 requires your API key and was documented but not executed in this session.
 
+After a run against a target repo, inspect:
+
+- `<target-repo>/.maestro/state/<RUN_ID>.json`
+- `<target-repo>/.maestro/runs/<RUN_ID>/`
+
 ## New Repo Example
 
 To point `maestro` at a brand-new repo anywhere on your machine:
@@ -213,6 +220,13 @@ This repository includes a validated minimal fixture at
 `examples/hello_world_cli_game/`. It demonstrates the current product shape: deterministic
 planning, artifact generation, and local preview execution. Fully automatic repo mutation remains a
 later roadmap capability.
+
+For any target repo you run against, artifacts are stored locally in `.maestro/`:
+
+```text
+<target-repo>/.maestro/state/<RUN_ID>.json
+<target-repo>/.maestro/runs/<RUN_ID>/
+```
 
 The ready-made planning brief for the richer OXO example lives at
 `examples/oxo_cli_game_brief.md`.

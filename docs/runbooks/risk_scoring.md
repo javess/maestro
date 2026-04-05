@@ -8,7 +8,7 @@ the emitted evidence bundle.
 ## Where To Look
 
 1. Run `uv run maestro plan --brief examples/brief.md` or `uv run maestro run-ticket TICKET-1`.
-2. Open the saved run state in `runs/state/<RUN_ID>.json`.
+2. Open the saved run state in `<target-repo>/.maestro/state/<RUN_ID>.json`.
 3. Follow `artifacts.evidence_bundles` to the relevant bundle JSON.
 4. Inspect `risk_score` for:
    - `score`

@@ -113,3 +113,9 @@
 
 - No eval scenario set changes were required in STEP-013E because the new `-vv` provider
   request/response logging changes observability only.
+
+## STEP-013G Note
+
+- No eval scenario set changes were required in STEP-013G because repo-local `.maestro/` storage
+  changes runtime persistence location, not deterministic orchestration outcomes.
+- Existing eval runs remain intentionally framework-local and isolated from target repos.
