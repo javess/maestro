@@ -11,7 +11,11 @@ from maestro.agents.roles import (
     ReviewerAgent,
 )
 from maestro.config import load_config
-from maestro.core.evidence import build_evidence_bundle, collect_policy_findings
+from maestro.core.evidence import (
+    build_evidence_bundle,
+    collect_policy_findings,
+    determine_approval_request,
+)
 from maestro.core.models import OrchestratorState
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
 from maestro.core.run_graph_runtime import (
@@ -24,6 +28,7 @@ from maestro.providers.factory import build_provider
 from maestro.providers.router import ProviderRouter
 from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import (
+    ApprovalRequest,
     CheckResult,
     CodeResult,
     MaestroConfig,
@@ -100,6 +105,10 @@ class OrchestratorEngine:
             orchestrator_state=current,
             current_node_id=state.run_graph_current_node_id,
         )
+        self.deps.state_store.save(state)
+
+    def _record_state_note(self, state: RunState, detail: str) -> None:
+        state.events.append(RunEvent(state=state.current_state, detail=detail))
         self.deps.state_store.save(state)
 
     def discover(self, state: RunState):
@@ -215,7 +224,7 @@ class OrchestratorEngine:
         checks: list[CheckResult],
         review: ReviewResult,
         repo_info: RepoInfo,
-    ) -> list[str]:
+    ) -> tuple[list[str], ApprovalRequest | None]:
         review_cycle = state.review_cycles + 1
         violations, policy_findings = collect_policy_findings(
             policy=self.deps.policy,
@@ -223,6 +232,13 @@ class OrchestratorEngine:
             code_result=code_result,
             checks=checks,
             review=review,
+        )
+        approval_request = determine_approval_request(
+            policy=self.deps.policy,
+            ticket=ticket,
+            code_result=code_result,
+            repo_info=repo_info,
+            violations=violations,
         )
         bundle = build_evidence_bundle(
             run_id=state.run_id,
@@ -235,10 +251,12 @@ class OrchestratorEngine:
             violations=violations,
             policy_findings=policy_findings,
             policy=self.deps.policy,
+            approval_request=approval_request,
         )
         self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
+        state.approval_request = approval_request
         self.deps.state_store.save(state)
-        return violations
+        return violations, approval_request
 
     def advance_ticket(
         self,
@@ -248,6 +266,7 @@ class OrchestratorEngine:
         checks: list[CheckResult],
         review: ReviewResult,
         violations: list[str] | None = None,
+        approval_request: ApprovalRequest | None = None,
     ) -> OrchestratorState:
         if violations is None:
             violations = enforce_code_policy(self.deps.policy, code_result)
@@ -257,6 +276,13 @@ class OrchestratorEngine:
                 violations.append("review_rejected")
             if failing_checks:
                 violations.append("checks_failed")
+        if not violations and approval_request is not None:
+            state.status = "awaiting_approval"
+            self._record_state_note(
+                state,
+                f"approval_required:{state.current_ticket_id}:{approval_request.required_approvals}",
+            )
+            return OrchestratorState.REVIEW
         if violations:
             if state.review_cycles >= self.deps.policy.max_review_cycles:
                 ticket.status = TicketStatus.escalated
@@ -286,7 +312,7 @@ class OrchestratorEngine:
             commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
             checks = self.validate(state, commands)
             review = self.review(state, ticket, code_result, checks)
-            violations = self.write_evidence_bundle(
+            violations, approval_request = self.write_evidence_bundle(
                 state,
                 ticket,
                 code_result,
@@ -301,8 +327,11 @@ class OrchestratorEngine:
                 checks,
                 review,
                 violations=violations,
+                approval_request=approval_request,
             )
             if result is OrchestratorState.ESCALATE:
+                break
+            if state.status == "awaiting_approval":
                 break
             if result is OrchestratorState.COMPLETE_TICKET:
                 self._append_event(state, OrchestratorState.NEXT_TICKET, ticket.id)

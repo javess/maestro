@@ -49,3 +49,9 @@
 
 - Decision: persist `RiskScore` in evidence bundles instead of creating a separate artifact stream.
 - Rationale: the score is part of the per-attempt audit record and will be consumed by later approval work.
+
+- Decision: evaluate approval gates only after the automated path would otherwise complete successfully.
+- Rationale: approval holds should not hide revise or escalation causes behind a manual-review requirement.
+
+- Decision: represent approval holds with `RunState.status="awaiting_approval"` plus a persisted `ApprovalRequest`.
+- Rationale: this keeps the deterministic state machine intact without inventing a new orchestration state for this bounded step.

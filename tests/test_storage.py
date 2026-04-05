@@ -1,7 +1,14 @@
 from pathlib import Path
 
 from maestro.core.run_graph_runtime import determine_resume_node_id, initialize_run_graph
-from maestro.schemas.contracts import ArtifactManifest, EvidenceBundle, RunState
+from maestro.schemas.contracts import (
+    ApprovalMode,
+    ApprovalRequest,
+    ArtifactManifest,
+    EvidenceBundle,
+    RiskLevel,
+    RunState,
+)
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 
 
@@ -32,12 +39,21 @@ def test_state_store_round_trip(tmp_path: Path) -> None:
         repo_path=tmp_path,
         run_graph=graph,
         run_graph_current_node_id=current,
+        approval_request=ApprovalRequest(
+            ticket_id="T-1",
+            mode=ApprovalMode.review_go,
+            required_approvals=1,
+            risk_level=RiskLevel.high,
+            risk_score=6,
+            reason="risk high",
+        ),
         artifacts=ArtifactManifest(run_id="run-1"),
     )
     store.save(state)
     loaded = store.load("run-1")
     assert loaded.run_id == "run-1"
     assert loaded.run_graph is not None
+    assert loaded.approval_request is not None
     assert determine_resume_node_id(loaded.run_graph, loaded.run_graph_current_node_id) == current
 
 

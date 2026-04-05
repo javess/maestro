@@ -73,7 +73,7 @@ def run_ticket(ticket_id: str, config: Path | None = None, repo: Path = Path("."
     commands = discovery.repo_info.lint_commands + discovery.repo_info.test_commands
     checks = engine.validate(state, commands)
     review = engine.review(state, ticket, code_result, checks)
-    violations = engine.write_evidence_bundle(
+    violations, approval_request = engine.write_evidence_bundle(
         state,
         ticket,
         code_result,
@@ -88,6 +88,7 @@ def run_ticket(ticket_id: str, config: Path | None = None, repo: Path = Path("."
         checks,
         review,
         violations=violations,
+        approval_request=approval_request,
     )
     console.print_json(
         json.dumps(

@@ -56,3 +56,11 @@
 - Updated `tests/test_evidence.py` and `tests/test_engine.py` to assert persisted risk scores in
   generated evidence bundles.
 - Full backend test baseline and UI build were rerun after policy and artifact changes.
+
+## STEP-006 Note
+
+- Updated `tests/test_engine.py` to assert the approval-required hold path and persisted approval
+  request state.
+- Updated `tests/test_storage.py` to round-trip persisted approval requests in saved run state.
+- Updated `tests/test_evidence.py` with approval-request unit coverage.
+- Full backend test baseline and UI build were rerun after approval-gate changes.

@@ -38,3 +38,10 @@
   orchestration transitions.
 - Existing scenarios were rerun to confirm that risk scoring is persisted without changing the
   current happy-path and escalation outcomes.
+
+## STEP-006 Note
+
+- Added `approval-required-flow` to prove deterministic blocking when policy and risk require
+  human approval.
+- Existing scenarios continue to validate happy-path, escalation, failed-check, fallback, and now
+  approval-hold behavior.

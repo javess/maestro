@@ -9,7 +9,14 @@ from maestro.core.engine import EngineDeps, OrchestratorEngine
 from maestro.core.models import OrchestratorState
 from maestro.providers.fake import FakeProvider
 from maestro.providers.router import ProviderRouter
-from maestro.schemas.contracts import FallbackConfig, MaestroConfig, PolicyPack, RoleConfig
+from maestro.schemas.contracts import (
+    ApprovalMode,
+    FallbackConfig,
+    MaestroConfig,
+    PolicyPack,
+    RiskLevel,
+    RoleConfig,
+)
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.tools.shell import LocalShellRunner
 
@@ -45,6 +52,7 @@ class EvalScenario:
     expected_status: str
     fallback_provider: FakeProvider | None = None
     shell_failures: set[str] | None = None
+    policy: PolicyPack | None = None
 
 
 def build_eval_engine(project_root: Path, scenario: EvalScenario) -> OrchestratorEngine:
@@ -68,7 +76,7 @@ def build_eval_engine(project_root: Path, scenario: EvalScenario) -> Orchestrato
         providers["fallback"] = scenario.fallback_provider
     deps = EngineDeps(
         config=config,
-        policy=PolicyPack(name="default"),
+        policy=scenario.policy or PolicyPack(name="default"),
         artifact_store=LocalArtifactStore(project_root / "runs"),
         state_store=LocalStateStore(project_root / "runs" / "state"),
         shell=PassingShellRunner(scenario.shell_failures),
@@ -106,5 +114,16 @@ def default_scenarios() -> list[EvalScenario]:
             fallback_provider=FakeProvider(),
             expected_final_state=OrchestratorState.DONE,
             expected_status="done",
+        ),
+        EvalScenario(
+            name="approval-required-flow",
+            provider=FakeProvider(),
+            expected_final_state=OrchestratorState.REVIEW,
+            expected_status="awaiting_approval",
+            policy=PolicyPack(
+                name="strict",
+                approval_mode=ApprovalMode.review_go,
+                approval_risk_level=RiskLevel.low,
+            ),
         ),
     ]

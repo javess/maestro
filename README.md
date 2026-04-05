@@ -9,6 +9,7 @@ machine. The baseline includes:
 - typed schemas and artifact persistence
 - evidence bundle emission for implementation and review attempts
 - deterministic policy-driven risk scoring for ticket changes
+- deterministic approval gates that can pause high-risk work for human review
 - repo adapters for common ecosystems
 - provider abstraction with fake and real provider adapters
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
@@ -79,6 +80,9 @@ Runs now persist evidence bundle artifacts alongside other run outputs. These bu
 changed-file summaries, validation checks, policy findings, review outcomes, and rollback
 guidance for each ticket attempt, along with a deterministic risk score derived from policy and
 change context.
+
+When a policy requires human approval, runs stop in an `awaiting_approval` state with a persisted
+approval request instead of escalating or silently continuing.
 
 ## Binary packaging
 

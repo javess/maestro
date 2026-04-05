@@ -1,0 +1,94 @@
+# STEP-006
+
+- Step id: `STEP-006`
+- Title: Approval gate framework
+- Status: done
+- Objective:
+  - Introduce deterministic human-in-the-loop approval modes.
+- Scope:
+  - Add typed approval request contracts and policy configuration for `auto_go`, `review_go`,
+    and `multi_go`.
+  - Gate successful automated outcomes on policy and risk score.
+  - Persist approval requests in run state and evidence bundles.
+  - Add focused integration, persistence, and eval coverage for approval-required flow.
+- Non-goals:
+  - No interactive approval-resolution CLI or external approval backend.
+  - No new orchestrator state enum beyond the existing persisted status hold.
+  - No provider behavior changes.
+- Prerequisites:
+  - STEP-005 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Extend contracts and policies with approval mode configuration.
+  - Add deterministic approval-gate evaluation after automated success paths.
+  - Persist blocked approval requests in run state and evidence bundles.
+  - Add tests, eval coverage, docs, and commit.
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/approval.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `tests/test_storage.py`
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `docs/architecture/approval_gates.md`
+  - `docs/runbooks/approval_gates.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-006.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `tests/test_storage.py`
+- Evals added or updated:
+  - Added approval-required eval scenario via the existing deterministic harness.
+- Commands run:
+  - `sed -n '1,220p' src/maestro/core/models.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `sed -n '1,220p' tests/test_storage.py`
+  - `uv run pytest tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_run_graph_runtime.py`
+  - `uv run ruff check src/maestro/core/approval.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/evals/harness.py src/maestro/cli/main.py src/maestro/schemas/contracts.py tests/test_evidence.py tests/test_engine.py tests/test_storage.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added deterministic approval request contracts and policy-controlled approval modes.
+  - Blocked successful high-risk work in `awaiting_approval` instead of escalating or auto-completing.
+  - Persisted approval requests in run state and evidence bundles.
+  - Added an eval scenario proving approval-required flow remains deterministic.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/approval_gates.md`
+  - `docs/runbooks/approval_gates.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-006.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Gate only after automated success so approval holds do not obscure revise or escalate causes.
+  - Represent approval holds with persisted run status and request data instead of inventing a new
+    orchestrator state for this step.
+- Known limitations:
+  - Explicit approval resolution and resume commands are not yet implemented.
+  - Multi-approval mode persists the required count, but later work still needs a resolution path
+    that can collect and apply approvals incrementally.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-007`.
+- Commit hash:
+  - pending post-commit recording

@@ -15,7 +15,7 @@ def test_run_plan_completes(tmp_path: Path) -> None:
     deps = build_engine_deps(project_root, project_root / "examples" / "maestro.example.yaml")
     engine = OrchestratorEngine(project_root, deps)
     state = engine.run_plan(repo, project_root / "examples" / "brief.md")
-    assert state.status in {"done", "escalated"}
+    assert state.status in {"done", "escalated", "awaiting_approval"}
 
 
 def test_run_plan_emits_evidence_bundle_for_completed_ticket(tmp_path: Path) -> None:
@@ -56,3 +56,28 @@ def test_run_plan_emits_evidence_bundle_for_escalated_ticket(tmp_path: Path) -> 
     assert bundle["risk_score"]["score"] >= 0
     assert "review_rejected" in bundle["metadata"]["violations"]
     assert bundle["rollback_notes"]
+
+
+def test_run_plan_waits_for_approval_when_policy_requires_it(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    from maestro.schemas.contracts import ApprovalMode, PolicyPack, RiskLevel
+
+    scenario = EvalScenario(
+        name="approval-required",
+        provider=FakeProvider(),
+        expected_final_state=OrchestratorState.REVIEW,
+        expected_status="awaiting_approval",
+        policy=PolicyPack(
+            name="strict",
+            approval_mode=ApprovalMode.review_go,
+            approval_risk_level=RiskLevel.low,
+        ),
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    assert state.status == "awaiting_approval"
+    assert state.current_state == OrchestratorState.REVIEW.value
+    assert state.approval_request is not None
+    assert state.approval_request.required_approvals == 1
+    assert state.current_ticket_id == "TICKET-1"

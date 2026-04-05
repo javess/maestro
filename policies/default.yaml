@@ -11,6 +11,9 @@ dependency_change_rules:
 escalation_rules:
   on_protected_path_change: true
   on_retry_exhausted: true
+approval_mode: auto_go
+approval_risk_level: high
+multi_approval_count: 2
 risk_weights:
   blast_radius_medium: 2
   blast_radius_large: 4

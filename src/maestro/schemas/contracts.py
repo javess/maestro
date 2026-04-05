@@ -23,6 +23,12 @@ class RiskLevel(StrEnum):
     critical = "critical"
 
 
+class ApprovalMode(StrEnum):
+    auto_go = "auto_go"
+    review_go = "review_go"
+    multi_go = "multi_go"
+
+
 class TicketStatus(StrEnum):
     pending = "pending"
     in_progress = "in_progress"
@@ -115,6 +121,9 @@ class PolicyPack(BaseModel):
     protected_paths: list[str] = Field(default_factory=list)
     dependency_change_rules: dict[str, Any] = Field(default_factory=dict)
     escalation_rules: dict[str, Any] = Field(default_factory=dict)
+    approval_mode: ApprovalMode = ApprovalMode.auto_go
+    approval_risk_level: RiskLevel = RiskLevel.high
+    multi_approval_count: int = 2
     risk_weights: dict[str, int] = Field(
         default_factory=lambda: {
             "blast_radius_medium": 2,
@@ -172,6 +181,17 @@ class RiskScore(BaseModel):
     factors: list[RiskFactor] = Field(default_factory=list)
 
 
+class ApprovalRequest(BaseModel):
+    ticket_id: str
+    mode: ApprovalMode
+    required_approvals: int
+    granted_approvals: list[str] = Field(default_factory=list)
+    risk_level: RiskLevel
+    risk_score: int
+    reason: str
+    status: Literal["pending", "approved"] = "pending"
+
+
 class EvidenceBundle(BaseModel):
     bundle_id: str
     run_id: str
@@ -182,6 +202,7 @@ class EvidenceBundle(BaseModel):
     rollback_notes: list[RollbackNote] = Field(default_factory=list)
     review_result: ReviewResult | None = None
     risk_score: RiskScore | None = None
+    approval_request: ApprovalRequest | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -246,6 +267,7 @@ class RunState(BaseModel):
     current_ticket_id: str | None = None
     completed_tickets: list[str] = Field(default_factory=list)
     review_cycles: int = 0
+    approval_request: ApprovalRequest | None = None
     artifacts: ArtifactManifest
     events: list[RunEvent] = Field(default_factory=list)
-    status: Literal["running", "done", "escalated"] = "running"
+    status: Literal["running", "done", "escalated", "awaiting_approval"] = "running"

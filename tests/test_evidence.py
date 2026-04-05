@@ -1,13 +1,17 @@
 from pathlib import Path
 
+from maestro.core.approval import build_approval_request
 from maestro.core.evidence import build_evidence_bundle, collect_policy_findings
 from maestro.schemas.contracts import (
+    ApprovalMode,
     CheckResult,
     CodeChange,
     CodeResult,
     PolicyPack,
     RepoInfo,
     ReviewResult,
+    RiskLevel,
+    RiskScore,
     Ticket,
 )
 
@@ -45,6 +49,23 @@ def test_collect_policy_findings_captures_failures() -> None:
     assert next(item for item in findings if item.rule == "checks").outcome == "fail"
 
 
+def test_build_approval_request_respects_policy_thresholds() -> None:
+    policy = PolicyPack(
+        name="strict",
+        approval_mode=ApprovalMode.review_go,
+        approval_risk_level=RiskLevel.high,
+    )
+    request = build_approval_request(
+        policy=policy,
+        ticket_id="T-1",
+        risk_score=RiskScore(score=6, level=RiskLevel.high),
+    )
+
+    assert request is not None
+    assert request.mode is ApprovalMode.review_go
+    assert request.required_approvals == 1
+
+
 def test_build_evidence_bundle_includes_review_and_rollback_guidance() -> None:
     ticket = Ticket(
         id="T-1",
@@ -79,5 +100,6 @@ def test_build_evidence_bundle_includes_review_and_rollback_guidance() -> None:
     assert bundle.diff_summary.changed_files == ["src/app.py"]
     assert bundle.review_result is not None
     assert bundle.risk_score is not None
+    assert bundle.approval_request is None
     assert bundle.metadata["violations"] == ["checks_failed", "review_rejected"]
     assert bundle.rollback_notes[0].steps[0].startswith("Revert changed files:")
