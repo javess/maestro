@@ -126,6 +126,7 @@ To switch the same flow to OpenAI-backed planning, create a `.env` file next to
 `examples/maestro.openai.yaml`, set `OPENAI_API_KEY`, then run:
 
 ```bash
+cp .env.example examples/.env
 uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
 ```
 
@@ -140,22 +141,7 @@ To point `maestro` at a brand-new repo anywhere on your machine:
 mkdir -p ~/dev/scratch/cli-oxo
 cd ~/dev/scratch/cli-oxo
 git init
-cat > brief.md <<'EOF'
-# CLI Noughts And Crosses
-
-Build a command-line noughts-and-crosses game.
-
-Outcomes:
-- ask for player names
-- track score across multiple rounds
-- keep the game small and testable
-
-Constraints:
-- Python project
-- local CLI only
-- deterministic demo mode for preview
-EOF
-
+cp /Users/javiersierra/dev/maestro/examples/oxo_cli_game_brief.md brief.md
 maestro plan brief.md --repo .
 ```
 
@@ -163,6 +149,9 @@ If you want OpenAI-backed planning for that repo, place an `.env` file next to y
 `OPENAI_API_KEY=...`, then run:
 
 ```bash
+cp /Users/javiersierra/dev/maestro/.env.example /Users/javiersierra/dev/maestro/examples/.env
+$EDITOR /Users/javiersierra/dev/maestro/examples/.env
+maestro doctor --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
 maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
 ```
 
@@ -182,17 +171,30 @@ The shortest path today is:
 mkdir -p ~/dev/scratch/cli-oxo
 cd ~/dev/scratch/cli-oxo
 git init
-cp /Users/javiersierra/dev/maestro/examples/hello_world_cli_game_brief.md brief.md
-$EDITOR brief.md
+cp /Users/javiersierra/dev/maestro/examples/oxo_cli_game_brief.md brief.md
 maestro plan brief.md --repo .
 ```
 
-Then adapt the brief so it asks for:
+The ready-made brief already includes:
 
 - a 3x3 board
 - two named players
 - score tracking between rounds
 - a deterministic `--demo` path for preview
+- explicit testability requirements
+
+To run the OXO planning path with OpenAI, use this exact setup:
+
+```bash
+cp /Users/javiersierra/dev/maestro/.env.example /Users/javiersierra/dev/maestro/examples/.env
+$EDITOR /Users/javiersierra/dev/maestro/examples/.env
+maestro doctor --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+```
+
+The `.env` file must live in `/Users/javiersierra/dev/maestro/examples/.env` because
+`maestro.openai.yaml` lives in `/Users/javiersierra/dev/maestro/examples/` and the current config
+loader reads provider keys from that config directory.
 
 Once you have a runnable target repo, you can use the preview surface like this:
 
@@ -204,6 +206,9 @@ This repository includes a validated minimal fixture at
 `examples/hello_world_cli_game/`. It demonstrates the current product shape: deterministic
 planning, artifact generation, and local preview execution. Fully automatic repo mutation remains a
 later roadmap capability.
+
+The ready-made planning brief for the richer OXO example lives at
+`examples/oxo_cli_game_brief.md`.
 
 ## UI
 

@@ -13,6 +13,7 @@ This is the simplest supported manual test path for `maestro` after `STEP-013`.
 
 - repo: `examples/hello_world_cli_game/`
 - brief: `examples/hello_world_cli_game_brief.md`
+- richer planning brief: `examples/oxo_cli_game_brief.md`
 - OpenAI config: `examples/maestro.openai.yaml`
 
 ## 1. Install project dependencies
@@ -54,9 +55,34 @@ uv run maestro plan examples/hello_world_cli_game_brief.md --repo examples/hello
 
 This uses the default fake-provider config and should complete deterministically.
 
+## Optional: use the ready-made OXO brief
+
+If you want a slightly richer planning target than the bundled hello-world fixture, use:
+
+```bash
+uv run maestro plan examples/oxo_cli_game_brief.md --repo examples/hello_world_cli_game
+```
+
+Or copy that brief into a fresh repo:
+
+```bash
+mkdir -p ~/dev/scratch/cli-oxo
+cd ~/dev/scratch/cli-oxo
+git init
+cp /Users/javiersierra/dev/maestro/examples/oxo_cli_game_brief.md brief.md
+maestro plan brief.md --repo .
+```
+
 ## 5. Switch the same planning flow to OpenAI
 
-Create `examples/.env` from the repo root:
+The current config loader reads `.env` from the same directory as the config file. For the bundled
+OpenAI config, that means the env file path is:
+
+```text
+/Users/javiersierra/dev/maestro/examples/.env
+```
+
+Create it from the repo root:
 
 ```bash
 cp .env.example examples/.env
@@ -74,6 +100,27 @@ Then run:
 uv run maestro doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
 uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
 ```
+
+## 6. OpenAI setup for the ready-made OXO brief
+
+From a fresh target repo:
+
+```bash
+mkdir -p ~/dev/scratch/cli-oxo
+cd ~/dev/scratch/cli-oxo
+git init
+cp /Users/javiersierra/dev/maestro/examples/oxo_cli_game_brief.md brief.md
+cp /Users/javiersierra/dev/maestro/.env.example /Users/javiersierra/dev/maestro/examples/.env
+$EDITOR /Users/javiersierra/dev/maestro/examples/.env
+maestro doctor --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+maestro plan brief.md --config /Users/javiersierra/dev/maestro/examples/maestro.openai.yaml --repo .
+```
+
+That sequence gives you:
+
+- the reusable OXO brief copied into your new repo
+- the OpenAI key loaded from the `examples/.env` file beside the config
+- a config validation check before the planning run
 
 ## What was validated in this step
 

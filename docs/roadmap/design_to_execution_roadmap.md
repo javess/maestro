@@ -31,6 +31,7 @@
 | STEP-012A | OpenAI provider wiring and local env loading | done | User-requested provider runtime integration before STEP-013 |
 | STEP-013 | Preview environment abstraction | done | Generic preview surface with local/noop adapter |
 | STEP-013A | README operator examples | done | User-requested follow-up docs for global install, repo bootstrap, and CLI game usage |
+| STEP-013B | Ready-made OXO brief example | done | User-requested example brief and doc links for the CLI noughts-and-crosses use case |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |

@@ -1,0 +1,61 @@
+# STEP-013B
+
+- Step id: `STEP-013B`
+- Title: Ready-made OXO brief example
+- Status: done
+- Objective:
+  - Add a reusable noughts-and-crosses brief under `examples/` and update the docs to reference
+    it directly.
+- Scope:
+  - Add `examples/oxo_cli_game_brief.md`.
+  - Update README and runbook references to use the saved example.
+  - Record the documentation follow-up in progress tracking.
+- Non-goals:
+  - No runtime code changes.
+  - No new tests or eval scenarios.
+  - No changes to the hello-world fixture repo itself.
+- Prerequisites:
+  - `STEP-013A` complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add the reusable OXO brief file.
+  - Replace ad hoc README instructions with references to the saved brief.
+  - Update progress docs and commit.
+- Files changed:
+  - `examples/oxo_cli_game_brief.md`
+  - `README.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013B.md`
+- Tests added or updated:
+  - None. This was a documentation and examples-only step.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git status --short --branch`
+  - `sed -n '1,320p' README.md`
+  - `git diff --check`
+- Results:
+  - Added a reusable OXO game planning brief to `examples/`.
+  - Updated the README and hello-world runbook to reference the saved brief directly.
+  - Reduced duplication in the docs by replacing inline brief text with a ready-made example file.
+- Docs updated:
+  - `README.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013B.md`
+- Decisions made:
+  - Store the OXO brief as a first-class reusable example file.
+- Known limitations:
+  - The brief is ready-made, but the current baseline still plans and previews rather than fully
+    authoring the target repo implementation.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording

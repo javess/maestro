@@ -109,3 +109,6 @@
 
 - Decision: document fresh-repo and CLI-game usage as planning-and-preview workflows, not autonomous repo authoring.
 - Rationale: the current product baseline does not yet perform general codebase mutation, so the README must stay accurate about what `maestro` can do today.
+
+- Decision: add a ready-made `examples/oxo_cli_game_brief.md` instead of keeping the OXO example embedded only in README snippets.
+- Rationale: the user explicitly wants a reusable version of that brief, and storing it in `examples/` makes the workflow repeatable and easier to reference from docs and future sessions.
