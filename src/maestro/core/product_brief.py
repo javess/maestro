@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from maestro.core.assumptions import split_assumptions
 from maestro.schemas.contracts import CompiledBrief
 
 SECTION_ALIASES = {
@@ -16,6 +17,8 @@ SECTION_ALIASES = {
     "constraints": "constraints",
     "risks": "risks",
     "assumptions": "assumptions",
+    "questions": "unresolved_questions",
+    "unresolved questions": "unresolved_questions",
     "acceptance criteria": "acceptance_criteria",
 }
 
@@ -50,6 +53,7 @@ def compile_product_brief(raw_text: str) -> CompiledBrief:
         "constraints",
         "risks",
         "assumptions",
+        "unresolved_questions",
         "acceptance_criteria",
     ]
     sections: dict[str, list[str]] = {field: [] for field in section_keys}
@@ -89,6 +93,10 @@ def compile_product_brief(raw_text: str) -> CompiledBrief:
     summary_hint = preamble[0] if preamble else text.splitlines()[0].strip() if text else ""
     if preamble and not sections["problem_points"]:
         sections["problem_points"].append(preamble[0])
+    assumption_log, unresolved_questions = split_assumptions(
+        sections["assumptions"] + sections["unresolved_questions"],
+        source="brief",
+    )
     return CompiledBrief(
         raw_text=text,
         title_hint=title_hint,
@@ -101,5 +109,7 @@ def compile_product_brief(raw_text: str) -> CompiledBrief:
         constraints=sections["constraints"],
         risks=sections["risks"],
         assumptions=sections["assumptions"],
+        assumption_log=assumption_log,
+        unresolved_questions=unresolved_questions,
         acceptance_criteria=sections["acceptance_criteria"],
     )

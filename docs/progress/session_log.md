@@ -144,6 +144,53 @@
 - Stop reason: step complete; waiting for user confirmation before returning to `STEP-003`
 - Next recommended step: `STEP-003` after explicit user confirmation
 
+## 2026-04-05 13:34 UTC
+
+- Session goal: add explicit assumption tracking and unresolved-question persistence to product and planning artifacts
+- Selected step: `STEP-008`
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/assumptions.py`
+  - `src/maestro/core/product_brief.py`
+  - `src/maestro/providers/fake.py`
+  - `prompts/product_designer.md`
+  - `prompts/ceremony_master.md`
+  - `tests/test_assumptions.py`
+  - `tests/test_product_brief.py`
+  - `tests/test_schemas.py`
+  - `tests/test_fake_provider.py`
+  - `docs/architecture/assumption_model.md`
+  - `docs/runbooks/assumption_tracking.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-008.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,240p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,220p' prompts/ceremony_master.md`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `uv run pytest tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ruff check src/maestro/core/assumptions.py src/maestro/core/product_brief.py src/maestro/schemas/contracts.py src/maestro/providers/fake.py prompts/product_designer.md prompts/ceremony_master.md tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py` passed
+  - `uv run ruff check src/maestro/core/assumptions.py src/maestro/core/product_brief.py src/maestro/schemas/contracts.py src/maestro/providers/fake.py prompts/product_designer.md prompts/ceremony_master.md tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-008`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-009`
+- Next recommended step: `STEP-009` after explicit user confirmation
+
 ## 2026-04-05 13:18 UTC
 
 - Session goal: add a deterministic product brief compiler and richer normalized product model

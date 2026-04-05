@@ -7,6 +7,8 @@ from pydantic import BaseModel
 
 from maestro.providers.base import LlmProvider, SchemaT
 from maestro.schemas.contracts import (
+    AssumptionKind,
+    AssumptionRecord,
     Backlog,
     CodeResult,
     ProductSpec,
@@ -80,10 +82,19 @@ class FakeProvider(LlmProvider):
                     constraints=["Deterministic execution", "Schema-validated outputs"],
                     risks=["Provider variability"],
                     assumptions=["Repositories expose standard test commands"],
+                    assumption_log=[
+                        AssumptionRecord(
+                            kind=AssumptionKind.stated_fact,
+                            statement="Repositories expose standard test commands",
+                            source="product_spec",
+                        )
+                    ],
+                    unresolved_questions=["Which repo-local constraints are still unknown?"],
                     acceptance_criteria=["Structured output validation", "Deterministic evals"],
                 ),
             )
         if schema is Backlog:
+            product_spec = ((metadata or {}).get("product_spec")) or {}
             return cast(
                 SchemaT,
                 Backlog(
@@ -94,7 +105,12 @@ class FakeProvider(LlmProvider):
                             description="Create deterministic baseline",
                             acceptance_criteria=["Tests pass", "CLI runs"],
                         )
-                    ]
+                    ],
+                    assumption_log=[
+                        AssumptionRecord.model_validate(item)
+                        for item in product_spec.get("assumption_log", [])
+                    ],
+                    unresolved_questions=list(product_spec.get("unresolved_questions", [])),
                 ),
             )
         if schema is CodeResult:

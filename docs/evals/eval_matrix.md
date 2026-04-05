@@ -52,3 +52,10 @@
   schema do not change current orchestration transitions.
 - Existing scenarios were rerun to confirm product-definition normalization preserves current
   deterministic outcomes.
+
+## STEP-008 Note
+
+- No scenario set changes were required in STEP-008 because assumption tracking does not yet alter
+  orchestration transitions.
+- Existing scenarios were rerun to confirm structured uncertainty persistence preserves current
+  deterministic outcomes.

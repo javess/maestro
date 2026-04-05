@@ -15,6 +15,8 @@ def test_fake_provider_defaults() -> None:
     assert result.title == "Maestro"
     assert result.problem
     assert result.target_users
+    assert result.assumption_log
+    assert result.unresolved_questions
 
 
 def test_fake_provider_resolver() -> None:

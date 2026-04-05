@@ -61,3 +61,9 @@
 
 - Decision: expand `ProductSpec` rather than introducing a second final product artifact.
 - Rationale: later planning and synthesis steps should consume one canonical normalized product model.
+
+- Decision: classify assumptions with deterministic local rules rather than provider output.
+- Rationale: STEP-008 needs resumable, testable uncertainty tracking that does not depend on model behavior.
+
+- Decision: add assumption tracking to `Backlog` now even though planning behavior is unchanged.
+- Rationale: later graph and planning steps need structured uncertainty on planning artifacts without another contract migration.

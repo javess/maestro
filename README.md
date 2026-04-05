@@ -11,6 +11,7 @@ machine. The baseline includes:
 - deterministic policy-driven risk scoring for ticket changes
 - deterministic approval gates that can pause high-risk work for human review
 - deterministic product brief compilation into a normalized product model
+- explicit assumption tracking across product and planning artifacts
 - repo adapters for common ecosystems
 - provider abstraction with fake and real provider adapters
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
@@ -87,6 +88,9 @@ approval request instead of escalating or silently continuing.
 
 Raw brief text is also normalized through a deterministic compiler before the product-designer role
 produces the typed `ProductSpec`.
+
+Assumptions, inferred facts, guesses, and unresolved questions are now persisted explicitly on the
+compiled brief, product spec, and backlog artifacts.
 
 ## Binary packaging
 

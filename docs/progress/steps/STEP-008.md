@@ -1,0 +1,91 @@
+# STEP-008
+
+- Step id: `STEP-008`
+- Title: Assumption tracker
+- Status: done
+- Objective:
+  - Track stated facts, inferred facts, guesses, and unresolved questions.
+- Scope:
+  - Add typed assumption contracts and deterministic classification plumbing.
+  - Attach assumption structure and unresolved questions to compiled brief, product, and planning
+    outputs.
+  - Carry assumption structures through the fake planner path for deterministic tests.
+  - Add focused unit tests for classification and schema plumbing.
+- Non-goals:
+  - No workflow branching based on assumptions yet.
+  - No architecture synthesis or question-resolution workflow.
+  - No repo-impact analysis changes.
+- Prerequisites:
+  - STEP-007 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add typed assumption records and categories.
+  - Add deterministic assumption classification helpers.
+  - Wire assumption structures into compiled briefs, product specs, and backlogs.
+  - Add tests, rerun validation, update docs, and commit.
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/assumptions.py`
+  - `src/maestro/core/product_brief.py`
+  - `src/maestro/providers/fake.py`
+  - `prompts/product_designer.md`
+  - `prompts/ceremony_master.md`
+  - `tests/test_assumptions.py`
+  - `tests/test_product_brief.py`
+  - `tests/test_schemas.py`
+  - `tests/test_fake_provider.py`
+  - `docs/architecture/assumption_model.md`
+  - `docs/runbooks/assumption_tracking.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-008.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_assumptions.py`
+  - `tests/test_product_brief.py`
+  - `tests/test_schemas.py`
+  - `tests/test_fake_provider.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun to confirm the new assumption
+    structures do not alter current orchestration transitions.
+- Commands run:
+  - `sed -n '1,240p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,220p' prompts/ceremony_master.md`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `uv run pytest tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ruff check src/maestro/core/assumptions.py src/maestro/core/product_brief.py src/maestro/schemas/contracts.py src/maestro/providers/fake.py prompts/product_designer.md prompts/ceremony_master.md tests/test_assumptions.py tests/test_product_brief.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added explicit assumption records and unresolved-question tracking.
+  - Deterministically classified brief assumptions into structured categories.
+  - Attached assumption structures to compiled brief, product, and planning artifacts.
+  - Preserved current orchestration outcomes while making uncertainty visible in artifacts.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/assumption_model.md`
+  - `docs/runbooks/assumption_tracking.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-008.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Keep assumption classification deterministic and rule-based rather than model-derived.
+  - Carry uncertainty into `Backlog` now so later planner steps can consume it without another
+    schema migration.
+- Known limitations:
+  - Classification heuristics are still intentionally narrow and prefix-oriented.
+  - Assumptions do not yet influence orchestration decisions directly.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-009`.
+- Commit hash:
+  - pending post-commit recording

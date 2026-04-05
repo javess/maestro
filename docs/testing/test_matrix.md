@@ -71,3 +71,9 @@
 - Updated `tests/test_schemas.py` and `tests/test_fake_provider.py` for the richer product model.
 - Updated `tests/test_engine.py` to keep the product-definition path covered after compiled-brief integration.
 - Full backend test baseline and UI build were rerun after product-model changes.
+
+## STEP-008 Note
+
+- Added `tests/test_assumptions.py` for deterministic assumption classification and unresolved-question extraction.
+- Updated `tests/test_product_brief.py`, `tests/test_schemas.py`, and `tests/test_fake_provider.py` for structured assumption and backlog propagation.
+- Full backend test baseline and UI build were rerun after uncertainty-model changes.

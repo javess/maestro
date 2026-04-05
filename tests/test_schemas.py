@@ -1,5 +1,7 @@
 from maestro.schemas.contracts import (
     ArtifactManifest,
+    AssumptionKind,
+    AssumptionRecord,
     Backlog,
     CompiledBrief,
     DiffSummary,
@@ -21,16 +23,26 @@ def test_product_spec_round_trip() -> None:
         scope=["b"],
         constraints=["c1"],
         assumptions=["a1"],
+        assumption_log=[
+            AssumptionRecord(
+                kind=AssumptionKind.stated_fact,
+                statement="a1",
+                source="product_spec",
+            )
+        ],
+        unresolved_questions=["q1?"],
         acceptance_criteria=["c"],
     )
     assert spec.title == "x"
     assert spec.problem == "z"
+    assert spec.assumption_log[0].kind is AssumptionKind.stated_fact
 
 
 def test_compiled_brief_defaults() -> None:
     brief = CompiledBrief(raw_text="Build something")
     assert brief.title_hint == ""
     assert brief.problem_points == []
+    assert brief.assumption_log == []
 
 
 def test_backlog_requires_tickets() -> None:
@@ -42,9 +54,17 @@ def test_backlog_requires_tickets() -> None:
                 description="d",
                 acceptance_criteria=["a"],
             )
-        ]
+        ],
+        assumption_log=[
+            AssumptionRecord(
+                kind=AssumptionKind.guess,
+                statement="API shape may change",
+                source="planning",
+            )
+        ],
     )
     assert backlog.tickets[0].id == "T-1"
+    assert backlog.assumption_log[0].source == "planning"
 
 
 def test_evidence_bundle_defaults_and_manifest_reference() -> None:

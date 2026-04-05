@@ -29,6 +29,13 @@ class ApprovalMode(StrEnum):
     multi_go = "multi_go"
 
 
+class AssumptionKind(StrEnum):
+    stated_fact = "stated_fact"
+    inferred_fact = "inferred_fact"
+    guess = "guess"
+    unresolved_question = "unresolved_question"
+
+
 class TicketStatus(StrEnum):
     pending = "pending"
     in_progress = "in_progress"
@@ -47,6 +54,8 @@ class ProductSpec(BaseModel):
     constraints: list[str] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
+    assumption_log: list[AssumptionRecord] = Field(default_factory=list)
+    unresolved_questions: list[str] = Field(default_factory=list)
     acceptance_criteria: list[str]
 
 
@@ -62,7 +71,15 @@ class CompiledBrief(BaseModel):
     constraints: list[str] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
+    assumption_log: list[AssumptionRecord] = Field(default_factory=list)
+    unresolved_questions: list[str] = Field(default_factory=list)
     acceptance_criteria: list[str] = Field(default_factory=list)
+
+
+class AssumptionRecord(BaseModel):
+    kind: AssumptionKind
+    statement: str
+    source: Literal["brief", "product_spec", "planning"] = "brief"
 
 
 class Ticket(BaseModel):
@@ -77,6 +94,8 @@ class Ticket(BaseModel):
 
 class Backlog(BaseModel):
     tickets: list[Ticket]
+    assumption_log: list[AssumptionRecord] = Field(default_factory=list)
+    unresolved_questions: list[str] = Field(default_factory=list)
 
 
 class CodeChange(BaseModel):

@@ -11,4 +11,6 @@ Use the normalized `brief` payload to populate:
 - `constraints`
 - `risks`
 - `assumptions`
+- `assumption_log`
+- `unresolved_questions`
 - `acceptance_criteria`
