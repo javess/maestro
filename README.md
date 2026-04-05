@@ -17,6 +17,7 @@ machine. The baseline includes:
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
 - provider fallback routing and structured output repair paths
 - repo mutation through coder-produced file operations applied into the target repo workspace
+- git-backed ticket execution in isolated per-ticket workspaces under `<target-repo>/.maestro/worktrees/`
 
 ## Quick start
 
@@ -51,7 +52,9 @@ Workflow control-plane and resume state live in `AGENTS.md`, `docs/codex/`,
 VS Code workspace setup lives under `.vscode/` and is described in `docs/runbooks/vscode_setup.md`.
 The first user-testable preview path is documented in `docs/runbooks/hello_world_openai.md`.
 Runtime plan, state, preview, and evidence artifacts now persist in the target repo under
-`.maestro/`.
+`.maestro/`. Git-backed repos also execute ticket attempts in isolated per-ticket workspaces
+under `.maestro/worktrees/`, syncing approved changes back into the repo root only after review
+and policy gates pass.
 
 ## Install as a global CLI
 

@@ -27,7 +27,7 @@ from maestro.core.run_graph_runtime import (
     determine_resume_node_id,
     initialize_run_graph,
 )
-from maestro.core.workspace import apply_code_result
+from maestro.core.workspace import apply_code_result, sync_code_result
 from maestro.providers.base import LlmProvider
 from maestro.providers.factory import build_provider
 from maestro.providers.router import ProviderRouter
@@ -50,6 +50,7 @@ from maestro.schemas.contracts import (
 )
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.storage.policies import load_policy
+from maestro.tools.git import GitWorktreeManager
 from maestro.tools.shell import LocalShellRunner
 
 logger = logging.getLogger(__name__)
@@ -125,6 +126,32 @@ class OrchestratorEngine:
             brief_path,
         )
         return state
+
+    def _ticket_execution_root(self, state: RunState, ticket_id: str) -> Path:
+        workdir = state.ticket_workdirs.get(ticket_id)
+        if workdir is not None:
+            return Path(workdir)
+        if not (state.repo_path / ".git").exists():
+            return state.repo_path
+        workspace = state.repo_path / ".maestro" / "worktrees" / state.run_id / ticket_id
+        manager = GitWorktreeManager(state.repo_path)
+        root, kind = manager.create_workspace(workspace)
+        state.ticket_workdirs[ticket_id] = str(root)
+        state.events.append(
+            RunEvent(
+                state=OrchestratorState.IMPLEMENT.value,
+                detail=f"workspace:{ticket_id}:{kind}",
+            )
+        )
+        self.deps.state_store.save(state)
+        return root
+
+    def _sync_ticket_result(self, state: RunState, ticket: Ticket, code_result: CodeResult) -> None:
+        workdir = state.ticket_workdirs.get(ticket.id)
+        if workdir is None:
+            return
+        sync_code_result(Path(workdir), state.repo_path, code_result)
+        self.deps.state_store.save(state)
 
     def _append_event(self, state: RunState, current: OrchestratorState, detail: str) -> None:
         state.current_state = current.value
@@ -245,7 +272,8 @@ class OrchestratorEngine:
         logger.debug("implement_start run_id=%s ticket=%s", state.run_id, ticket.id)
         agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
         impact_analysis = state.backlog.impact_analyses.get(ticket.id)
-        repo_snapshot = build_repo_snapshot(state.repo_path, impact_analysis)
+        execution_root = self._ticket_execution_root(state, ticket.id)
+        repo_snapshot = build_repo_snapshot(execution_root, impact_analysis)
         result = agent.run_code(
             {
                 "ticket_id": ticket.id,
@@ -259,7 +287,7 @@ class OrchestratorEngine:
                 },
             }
         )
-        result = apply_code_result(state.repo_path, result)
+        result = apply_code_result(execution_root, result)
         self.deps.artifact_store.write_json(
             state.artifacts,
             f"{ticket.id}_coder_attempt_{state.review_cycles + 1}",
@@ -281,8 +309,13 @@ class OrchestratorEngine:
             len(repo_commands),
         )
         checks: list[CheckResult] = []
+        execution_root = (
+            self._ticket_execution_root(state, state.current_ticket_id)
+            if state.current_ticket_id is not None
+            else state.repo_path
+        )
         for command in _unique_commands([*repo_commands, *code_result.commands]):
-            result = self.deps.shell.run(command, state.repo_path)
+            result = self.deps.shell.run(command, execution_root)
             checks.append(
                 CheckResult(
                     command=command,
@@ -416,6 +449,7 @@ class OrchestratorEngine:
             self._append_event(state, OrchestratorState.REVISE, ",".join(violations))
             return OrchestratorState.REVISE
         ticket.status = TicketStatus.complete
+        self._sync_ticket_result(state, ticket, code_result)
         state.completed_tickets.append(ticket.id)
         state.review_cycles = 0
         logger.info("ticket_completed run_id=%s ticket=%s", state.run_id, ticket.id)

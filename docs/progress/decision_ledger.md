@@ -151,3 +151,13 @@
 - Decision: build coder repo context from the impact-analysis context slice plus file contents.
 - Rationale: the live execution path needs nearby source content without scanning entire repos or
   passing hidden global state into prompts.
+
+- Decision: split `STEP-013I` into `STEP-013IA` and `STEP-013IB`.
+- Rationale: worktree isolation changes the execution filesystem semantics, while parallel ticket
+  execution adds concurrency and state-coordination risk; shipping them separately keeps each
+  commit reviewable and easier to debug.
+
+- Decision: dirty-repo workspace copies must skip bulky cache and dependency directories such as
+  `.venv`, `node_modules`, and local build caches.
+- Rationale: isolated execution should preserve source context, but copying local tool caches makes
+  the fallback path fragile and wasteful, especially on low-disk developer machines.

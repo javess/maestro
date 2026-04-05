@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from maestro.schemas.contracts import CodeChange, CodeResult, FileOperation
@@ -35,3 +36,16 @@ def _summary_for_path(path: str) -> str:
     if suffix:
         return f"write {suffix.lstrip('.')} file"
     return "write file"
+
+
+def sync_code_result(source_root: Path, target_root: Path, result: CodeResult) -> None:
+    for operation in result.file_operations:
+        source = source_root / operation.path
+        target = target_root / operation.path
+        if operation.action == "delete":
+            if target.exists():
+                target.unlink()
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if source.exists():
+            shutil.copy2(source, target)

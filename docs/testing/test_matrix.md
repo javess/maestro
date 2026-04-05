@@ -149,3 +149,11 @@
 - Updated `tests/test_engine.py` to assert the engine writes coder-produced files into the target
   repo during execution.
 - Reran targeted workspace/engine tests plus the full backend test suite.
+
+## STEP-013IA Note
+
+- Added `tests/test_git_tools.py` to cover dirty-repo workspace-copy behavior and cache-directory
+  exclusions.
+- Updated `tests/test_engine.py` to assert approved ticket changes sync back from isolated
+  workspaces into the target repo.
+- Reran targeted engine/workspace/git-tool tests plus the full backend test suite.

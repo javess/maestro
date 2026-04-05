@@ -328,6 +328,7 @@ class RunState(BaseModel):
     run_graph_current_node_id: str | None = None
     backlog: Backlog = Field(default_factory=lambda: Backlog(tickets=[]))
     current_ticket_id: str | None = None
+    ticket_workdirs: dict[str, str] = Field(default_factory=dict)
     completed_tickets: list[str] = Field(default_factory=list)
     review_cycles: int = 0
     approval_request: ApprovalRequest | None = None

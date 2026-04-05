@@ -1123,3 +1123,51 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-013I`
+
+## 2026-04-05 23:43 UTC
+
+- Session goal: isolate git-backed ticket execution in per-ticket workspaces and sync approved
+  changes back to the target repo
+- Selected step: `STEP-013IA`
+- Files changed:
+  - `src/maestro/core/engine.py`
+  - `src/maestro/core/workspace.py`
+  - `src/maestro/tools/git.py`
+  - `src/maestro/schemas/contracts.py`
+  - `tests/test_engine.py`
+  - `tests/test_git_tools.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/worktree_isolation.md`
+  - `docs/runbooks/worktree_isolation.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013IA.md`
+- Commands run:
+  - `git status --short --branch`
+  - `uv run pytest --no-cov tests/test_engine.py tests/test_workspace.py`
+  - `df -h . /tmp /Users/javiersierra`
+  - `rm -rf ui/node_modules ui/dist`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_engine.py tests/test_workspace.py`
+  - `uv run ruff check src/maestro/core/engine.py src/maestro/core/workspace.py src/maestro/tools/git.py tests/test_engine.py tests/test_workspace.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_engine.py tests/test_workspace.py tests/test_git_tools.py`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Tests run:
+  - targeted engine/workspace tests passed
+  - targeted engine/workspace/git-tool tests passed
+  - `uv run ruff check src tests` passed
+  - `uv run ty check` passed
+  - full `uv run pytest --basetemp=...` passed
+- Evals run:
+  - None. Worktree isolation does not change deterministic state-machine outcomes, so integration
+    and regression tests were the relevant coverage.
+- Outcome: completed `STEP-013IA`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-013IB`

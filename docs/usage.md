@@ -28,7 +28,8 @@ In the highest-verbosity modes, `maestro` logs:
 - preview command execution
 
 When the coder role emits `file_operations`, `maestro` now applies them directly into the target
-repo before validation commands run.
+repo before validation commands run. For git-backed repos, those writes happen inside an isolated
+ticket workspace under `.maestro/worktrees/` and sync back to the repo root only after approval.
 
 ## Preview a local target repo
 
@@ -116,4 +117,5 @@ uv run maestro status --repo examples/hello_world_cli_game
 - Real OpenAI planning requires a local `OPENAI_API_KEY`; deterministic evals still use `FakeProvider`.
 - The coder role returns validated structured code-change plans; this baseline does not yet apply arbitrary file edits to target repositories.
 - Preview environments currently support `noop` and local smoke-command execution, not hosted deployment stacks.
-- Git worktree isolation is represented by the tool layer and CLI contracts, but full ticket worktree lifecycle automation is still a follow-on implementation.
+- Ticket workspaces are not cleaned up automatically yet; isolated runs remain available under
+  `.maestro/worktrees/` for inspection.

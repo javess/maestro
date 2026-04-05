@@ -126,3 +126,10 @@
   tests with deterministic fake providers and does not alter the orchestrator state machine shape.
 - Existing deterministic scenarios were preserved while the runtime execution path began applying
   file operations to target repos.
+
+## STEP-013IA Note
+
+- No eval scenario set changes were required in STEP-013IA because worktree isolation changes the
+  execution filesystem boundary, not the orchestrator state machine.
+- Existing deterministic scenarios were rerun to confirm isolated execution preserves current
+  completion, escalation, approval-hold, and graph-ordering outcomes.

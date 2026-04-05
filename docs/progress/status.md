@@ -28,8 +28,10 @@
 | STEP-013F | OpenAI native parsed-model logging fix | done | 2026-04-06 00:20 UTC | [STEP-013F](steps/STEP-013F.md) | pending post-commit recording | `test_openai_adapter`/`test_logging` pass; live `maestro -vv plan ...` progressed past `ProductSpec` logging crash; `ruff` pass; `git diff --check` pass | `STEP-013G` |
 | STEP-013G | Repo-local `.maestro` workspace storage | done | 2026-04-06 00:35 UTC | [STEP-013G](steps/STEP-013G.md) | pending post-commit recording | targeted storage/engine/preview tests pass; `ruff` pass; `ty` pass; `pytest` pass; live OXO repo writes under `.maestro/`; `status --repo` pass | `STEP-014` |
 | STEP-013H | Repo mutation execution path | done | 2026-04-06 01:05 UTC | [STEP-013H](steps/STEP-013H.md) | pending post-commit recording | targeted workspace/engine pass; `ruff` pass; `ty` pass; `pytest` pass; live OXO repo mutated successfully | `STEP-013I` |
-| STEP-013I | Worktree isolation and parallel ticket execution | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013H` |
-| STEP-013J | Multi-provider runtime adapters | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013I` |
+| STEP-013I | Worktree isolation and parallel ticket execution | split | 2026-04-06 01:10 UTC | - | - | Split into `STEP-013IA` and `STEP-013IB` | `STEP-013IA` |
+| STEP-013IA | Worktree isolation | done | 2026-04-05 23:43 UTC | [STEP-013IA](steps/STEP-013IA.md) | pending post-commit recording | targeted engine/workspace/git tests pass; `ruff` pass; `ty` pass; full `pytest` pass | `STEP-013IB` |
+| STEP-013IB | Parallel ticket execution | planned | 2026-04-06 01:10 UTC | - | - | - | Wait for `STEP-013IA` |
+| STEP-013J | Multi-provider runtime adapters | planned | 2026-04-06 01:10 UTC | - | - | - | Wait for `STEP-013IB` |
 | STEP-014 | Migration planner | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-013J` |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |
 | STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |

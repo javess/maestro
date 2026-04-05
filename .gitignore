@@ -10,6 +10,7 @@ build/
 node_modules/
 ui/dist/
 runs/
+.maestro/
 .DS_Store
 .env
 .env.local

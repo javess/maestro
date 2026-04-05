@@ -1,4 +1,5 @@
 import json
+import subprocess
 from pathlib import Path
 from typing import cast
 
@@ -236,3 +237,72 @@ def test_run_plan_applies_file_operations_to_repo(tmp_path: Path) -> None:
 
     assert state.status == "done"
     assert (repo / "src" / "app.py").read_text() == "def main() -> None:\n    print('ok')\n"
+
+
+def test_run_plan_syncs_approved_changes_back_from_workspace(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.name", "Test User"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(["git", "add", "pyproject.toml"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo, check=True, capture_output=True)
+
+    scenario = EvalScenario(
+        name="worktree-sync",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="Create app",
+                            description="Create the first app file",
+                            acceptance_criteria=["app exists"],
+                        )
+                    ]
+                ),
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Create app file",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="write",
+                            content="def main() -> None:\n    print('from worktree')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=["tests/test_app.py"],
+                ),
+                "ReviewResult": ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "done"
+    assert (repo / "src" / "app.py").read_text() == (
+        "def main() -> None:\n    print('from worktree')\n"
+    )
+    assert "TICKET-1" in state.ticket_workdirs
