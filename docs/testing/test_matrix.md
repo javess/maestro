@@ -77,3 +77,10 @@
 - Added `tests/test_assumptions.py` for deterministic assumption classification and unresolved-question extraction.
 - Updated `tests/test_product_brief.py`, `tests/test_schemas.py`, and `tests/test_fake_provider.py` for structured assumption and backlog propagation.
 - Full backend test baseline and UI build were rerun after uncertainty-model changes.
+
+## STEP-009 Note
+
+- Added `tests/test_architecture_artifacts.py` for architecture artifact validation, reference
+  integrity, and serialization round-trips.
+- Full backend test baseline and UI build were rerun after introducing the schema-only
+  architecture contracts.

@@ -465,3 +465,55 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-001`
 - Next recommended step: `STEP-001` after explicit user confirmation
+
+## 2026-04-05 20:14 UTC
+
+- Session goal: add typed architecture artifact contracts and persist the post-STEP-012 product-testability reminder
+- Selected step: `STEP-009`
+- Files changed:
+  - `src/maestro/schemas/architecture.py`
+  - `tests/test_architecture_artifacts.py`
+  - `docs/architecture/architecture_artifact_reference.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-009.md`
+- Commands run:
+  - `sed -n '1,240p' AGENTS.md`
+  - `sed -n '1,320p' docs/roadmap/design_to_execution_roadmap.md`
+  - `sed -n '1,240p' docs/progress/status.md`
+  - `tail -n 120 docs/progress/session_log.md`
+  - `sed -n '1,320p' docs/progress/steps/STEP-008.md`
+  - `sed -n '1,260p' docs/progress/decision_ledger.md`
+  - `git status --short --branch`
+  - `sed -n '1,220p' docs/testing/test_matrix.md`
+  - `sed -n '1,220p' docs/evals/eval_matrix.md`
+  - `sed -n '1,360p' src/maestro/schemas/contracts.py`
+  - `rg -n "Architecture|architecture|ArtifactManifest|Backlog|ProductSpec|RunState" src tests docs`
+  - `sed -n '1,260p' tests/test_schemas.py`
+  - `sed -n '1,260p' pyproject.toml`
+  - `rg --files src/maestro/schemas tests docs/architecture docs/runbooks`
+  - `sed -n '1,220p' src/maestro/providers/fake.py`
+  - `sed -n '1,220p' src/maestro/agents/roles.py`
+  - `uv run pytest tests/test_architecture_artifacts.py tests/test_schemas.py`
+  - `uv run ruff check src/maestro/schemas/architecture.py tests/test_architecture_artifacts.py docs/architecture/architecture_artifact_reference.md`
+  - `date -u '+%Y-%m-%d %H:%M UTC'`
+  - `git rev-parse --short HEAD`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_architecture_artifacts.py tests/test_schemas.py` passed
+  - `uv run ruff check src/maestro/schemas/architecture.py tests/test_architecture_artifacts.py docs/architecture/architecture_artifact_reference.md` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-009`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-010`
+- Next recommended step: `STEP-010` after explicit user confirmation

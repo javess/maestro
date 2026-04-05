@@ -1,0 +1,89 @@
+# STEP-009
+
+- Step id: `STEP-009`
+- Title: Architecture artifact model
+- Status: done
+- Objective:
+  - Define typed architecture artifacts that later synthesis can populate.
+- Scope:
+  - Add schema contracts for system context, module boundaries, domain entities, data flows,
+    API contracts, state transitions, and architecture decisions.
+  - Add narrow validation rules for duplicate ids and broken module references.
+  - Add schema and serialization tests for the new artifact container.
+  - Document the new contract surface and persist the testing note for after `STEP-012`.
+- Non-goals:
+  - No architecture synthesis logic yet.
+  - No orchestration changes.
+  - No repo-aware impact analysis or backlog graph changes.
+- Prerequisites:
+  - STEP-008 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add a dedicated architecture schema module.
+  - Define the canonical architecture artifact container and validation rules.
+  - Add focused tests for round-trip serialization and invalid-reference rejection.
+  - Update architecture/progress/testing/eval docs, rerun validation, and commit.
+- Files changed:
+  - `src/maestro/schemas/architecture.py`
+  - `tests/test_architecture_artifacts.py`
+  - `docs/architecture/architecture_artifact_reference.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-009.md`
+- Tests added or updated:
+  - `tests/test_architecture_artifacts.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun because the new contracts are not
+    consumed by orchestration yet.
+- Commands run:
+  - `sed -n '1,240p' AGENTS.md`
+  - `sed -n '1,320p' docs/roadmap/design_to_execution_roadmap.md`
+  - `sed -n '1,240p' docs/progress/status.md`
+  - `tail -n 120 docs/progress/session_log.md`
+  - `sed -n '1,320p' docs/progress/steps/STEP-008.md`
+  - `sed -n '1,260p' docs/progress/decision_ledger.md`
+  - `git status --short --branch`
+  - `sed -n '1,220p' docs/testing/test_matrix.md`
+  - `sed -n '1,220p' docs/evals/eval_matrix.md`
+  - `sed -n '1,360p' src/maestro/schemas/contracts.py`
+  - `rg -n "Architecture|architecture|ArtifactManifest|Backlog|ProductSpec|RunState" src tests docs`
+  - `sed -n '1,260p' tests/test_schemas.py`
+  - `sed -n '1,260p' pyproject.toml`
+  - `rg --files src/maestro/schemas tests docs/architecture docs/runbooks`
+  - `sed -n '1,220p' src/maestro/providers/fake.py`
+  - `sed -n '1,220p' src/maestro/agents/roles.py`
+  - `uv run pytest tests/test_architecture_artifacts.py tests/test_schemas.py`
+  - `uv run ruff check src/maestro/schemas/architecture.py tests/test_architecture_artifacts.py docs/architecture/architecture_artifact_reference.md`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added a dedicated `ArchitectureArtifacts` schema module.
+  - Defined typed contracts for architecture structure and lightweight ADR-style decisions.
+  - Rejected malformed artifacts with duplicate ids or unresolved module references.
+  - Persisted the roadmap note to begin exposing a user-testable product path after `STEP-012`.
+- Docs updated:
+  - `docs/architecture/architecture_artifact_reference.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-009.md`
+- Decisions made:
+  - Keep architecture contracts in a dedicated module to avoid overloading the general contracts file.
+  - Limit validation to identity and module-reference integrity until synthesis requirements are clearer.
+  - Record the user-requested testability reminder after `STEP-012` as a roadmap note instead of changing step order.
+- Known limitations:
+  - No runtime flow persists or consumes architecture artifacts yet.
+  - Reference validation only checks module ids, not richer semantics such as data stores or event schemas.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-010`.
+- Commit hash:
+  - pending post-commit recording

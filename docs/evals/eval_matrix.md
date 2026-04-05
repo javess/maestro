@@ -59,3 +59,10 @@
   orchestration transitions.
 - Existing scenarios were rerun to confirm structured uncertainty persistence preserves current
   deterministic outcomes.
+
+## STEP-009 Note
+
+- No scenario set changes were required in STEP-009 because architecture artifact contracts are
+  schema-only and are not consumed by orchestration yet.
+- Existing scenarios were rerun to confirm the new contract module does not alter current
+  deterministic outcomes.

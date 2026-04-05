@@ -11,8 +11,8 @@
 | STEP-005 | Risk scoring engine | done | 2026-04-05 12:31 UTC | [STEP-005](steps/STEP-005.md) | `476082f` | targeted risk pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-006` |
 | STEP-006 | Approval gate framework | done | 2026-04-05 13:00 UTC | [STEP-006](steps/STEP-006.md) | `f69655a` | targeted approval pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-007` |
 | STEP-007 | Product brief compiler | done | 2026-04-05 13:18 UTC | [STEP-007](steps/STEP-007.md) | `c711fd4` | targeted product-model pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-008` |
-| STEP-008 | Assumption tracker | done | 2026-04-05 13:34 UTC | [STEP-008](steps/STEP-008.md) | pending post-commit recording | targeted assumption pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-009` |
-| STEP-009 | Architecture artifact model | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-008 |
+| STEP-008 | Assumption tracker | done | 2026-04-05 13:34 UTC | [STEP-008](steps/STEP-008.md) | `6794e5f` | targeted assumption pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-009` |
+| STEP-009 | Architecture artifact model | done | 2026-04-05 20:14 UTC | [STEP-009](steps/STEP-009.md) | pending post-commit recording | targeted architecture-artifact pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-010` |
 | STEP-010 | Architecture synthesizer | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-009 |
 | STEP-011 | Backlog graph | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-010 |
 | STEP-012 | Repo-aware impact analysis | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-011 |

@@ -67,3 +67,9 @@
 
 - Decision: add assumption tracking to `Backlog` now even though planning behavior is unchanged.
 - Rationale: later graph and planning steps need structured uncertainty on planning artifacts without another contract migration.
+
+- Decision: introduce architecture artifacts in a dedicated schema module instead of expanding `contracts.py` again.
+- Rationale: STEP-009 is a bounded contract step, and a separate module keeps the design surface explicit and easier to evolve before synthesis logic arrives.
+
+- Decision: record a roadmap note that after `STEP-012` the following steps should start exposing a user-testable product path.
+- Rationale: the user explicitly wants a practical way to exercise the product once the architecture, graph, and impact-analysis foundations are in place.

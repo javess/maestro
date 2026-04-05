@@ -40,6 +40,11 @@
 4. Continue one bounded step at a time in roadmap order.
 5. Reserve `STEP-018` for the end of the roadmap because the storage model is still evolving and JSON should remain the simpler source of truth until the contracts stabilize.
 
+## Product Testability Note
+
+- After completing `STEP-012`, start exposing a user-testable product path in the following bounded
+  steps so the framework can be exercised beyond internal tests and evals.
+
 ## Added Future Step
 
 ### STEP-018 — Local SQL persistence backend
