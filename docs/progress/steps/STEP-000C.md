@@ -1,0 +1,50 @@
+# STEP-000C
+
+- Step id: `STEP-000C`
+- Title: VS Code settings finalization
+- Status: done
+- Objective:
+  - Preserve the outstanding workspace settings change as its own atomic setup commit.
+- Scope:
+  - Commit `.vscode/settings.json` only.
+  - Update progress docs so the change is resumable from repo state.
+- Non-goals:
+  - No runtime code changes.
+  - No roadmap feature implementation.
+- Prerequisites:
+  - Repository contains only the intended `.vscode/settings.json` change.
+- Implementation plan:
+  - Confirm the diff is isolated.
+  - Update progress tracking docs.
+  - Commit the workspace settings change separately.
+- Files changed:
+  - `.vscode/settings.json`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000C.md`
+- Tests added or updated:
+  - None. This is an editor-configuration-only change.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git diff -- .vscode/settings.json`
+  - `git status --short --branch`
+  - `git diff --check`
+- Results:
+  - Preserved the workspace settings change in its own setup commit.
+- Docs updated:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000C.md`
+- Decisions made:
+  - Keep the VS Code settings change isolated from preview/runtime work.
+- Known limitations:
+  - No runtime behavior changes.
+- Next recommended step:
+  - Continue with `STEP-013`.
+- Commit hash:
+  - pending post-commit recording

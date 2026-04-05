@@ -94,3 +94,6 @@
 
 - Decision: use `.env` loading only for local development and defer secure secret storage to a later dedicated step.
 - Rationale: provider wiring and secure credential storage are different risk surfaces and should not be bundled into one review step.
+
+- Decision: preserve the outstanding `.vscode/settings.json` change in its own tiny setup commit before `STEP-013`.
+- Rationale: the user explicitly requested that the workspace setting change be committed, and isolating it avoids mixing editor setup with preview-runtime work.

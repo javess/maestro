@@ -18,12 +18,8 @@
   },
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestArgs": [
-    "tests"
-  ],
-  "python.analysis.extraPaths": [
-    "${workspaceFolder}/src"
-  ],
+  "python.testing.pytestArgs": ["tests"],
+  "python.analysis.extraPaths": ["${workspaceFolder}/src"],
   "python.analysis.typeCheckingMode": "basic",
   "python.envFile": "${workspaceFolder}/.env",
   "python.terminal.activateEnvironment": true,
@@ -40,6 +36,6 @@
     "**/node_modules": true,
     "**/ui/dist": true,
     "**/runs": true
-  }
+  },
+  "makefile.configureOnOpen": false
 }
-

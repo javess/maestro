@@ -742,3 +742,28 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-013`
 - Next recommended step: `STEP-013`
+
+## 2026-04-05 22:13 UTC
+
+- Session goal: preserve the outstanding VS Code workspace settings change before starting
+  `STEP-013`
+- Selected step: `STEP-000C`
+- Files changed:
+  - `.vscode/settings.json`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000C.md`
+- Commands run:
+  - `git diff -- .vscode/settings.json`
+  - `git status --short --branch`
+  - `git diff --check`
+- Tests run:
+  - None. This was an editor-configuration-only change.
+- Evals run:
+  - None.
+- Outcome: completed `STEP-000C`
+- Commit hash: none yet
+- Stop reason: tiny prerequisite complete; continue with `STEP-013`
+- Next recommended step: `STEP-013`

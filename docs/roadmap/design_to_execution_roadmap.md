@@ -15,6 +15,7 @@
 | --- | --- | --- | --- |
 | STEP-000 | Workflow bootstrap and prompt capture | done | Durable control-plane bootstrap |
 | STEP-000A | VS Code workspace bootstrap | done | User-requested prerequisite developer workflow setup before STEP-001 |
+| STEP-000C | VS Code settings finalization | done | User-requested follow-up workspace settings commit before STEP-013 |
 | STEP-001 | Canonical run graph contracts | done | Typed DAG contracts and validation |
 | STEP-002 | Run graph persistence, replay, and resume support | done | Persist and resume canonical run graphs |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | Approval and audit evidence contracts |
