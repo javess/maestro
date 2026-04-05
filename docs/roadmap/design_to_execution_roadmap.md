@@ -15,8 +15,8 @@
 | STEP-000A | VS Code workspace bootstrap | done | User-requested prerequisite developer workflow setup before STEP-001 |
 | STEP-001 | Canonical run graph contracts | done | Typed DAG contracts and validation |
 | STEP-002 | Run graph persistence, replay, and resume support | done | Persist and resume canonical run graphs |
-| STEP-003 | Evidence bundle contracts and artifact manifest extensions | planned | Approval and audit evidence contracts |
-| STEP-004 | Evidence bundle generation in the existing flow | planned | Generate evidence bundles from the current run path |
+| STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | Approval and audit evidence contracts |
+| STEP-004 | Evidence bundle generation in the existing flow | done | Generate evidence bundles from the current run path |
 | STEP-005 | Risk scoring engine | planned | Deterministic policy-driven risk scoring |
 | STEP-006 | Approval gate framework | planned | Deterministic approval policy modes |
 | STEP-007 | Product brief compiler | planned | Normalized product model from brief input |

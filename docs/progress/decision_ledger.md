@@ -37,3 +37,9 @@
 
 - Decision: add a dedicated `evidence_bundles` list to `ArtifactManifest`.
 - Rationale: bundles are a first-class audit surface and should be discoverable without filtering generic artifact entries.
+
+- Decision: emit evidence bundles once per ticket attempt, before the state machine decides whether to complete, revise, or escalate.
+- Rationale: this preserves audit evidence for failed and revised attempts instead of only the terminal outcome.
+
+- Decision: derive policy findings in evidence bundles from existing deterministic policy checks and review outcomes.
+- Rationale: STEP-004 should expose current enforcement results without introducing new risk or approval logic ahead of the roadmap.

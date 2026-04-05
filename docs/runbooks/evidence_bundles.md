@@ -2,18 +2,18 @@
 
 ## What Exists Today
 
-The repository now has a typed evidence bundle contract and manifest references for persisted
-bundle artifacts.
+The repository now emits evidence bundle artifacts during the existing implementation, validate,
+and review flow.
 
 Current behavior:
 
-- bundles can be represented and written to disk
-- manifests can list bundle artifact references
-- bundle generation is not yet wired into the execution path
+- one bundle is written for each ticket attempt
+- bundles are registered in `RunState.artifacts.evidence_bundles`
+- bundle files live under `runs/<RUN_ID>/<TICKET_ID>_evidence_<N>.json`
 
 ## Bundle Contents
 
-The contract supports:
+Each emitted bundle can contain:
 
 - diff summary
 - checks
@@ -25,6 +25,16 @@ The contract supports:
 ## Operational Guidance
 
 - Treat evidence bundles as audit-oriented run artifacts.
-- Do not assume every run currently emits a bundle; generation is a follow-on step.
-- Use manifest references rather than ad hoc file scanning once bundle generation is wired in.
+- Use manifest references rather than ad hoc file scanning.
+- Expect multiple bundles for the same ticket when review or validation loops require retries.
+- Inspect `metadata.violations` for the deterministic reasons a ticket moved to revise or escalate.
+- Treat rollback notes as generated operational guidance, not as a substitute for future
+  migration-aware rollback planning.
 
+## How To Inspect
+
+1. Run `uv run maestro plan --brief examples/brief.md` or `uv run maestro eval`.
+2. Open the saved run state in `runs/state/<RUN_ID>.json`.
+3. Read `artifacts.evidence_bundles` for the persisted bundle paths.
+4. Inspect the referenced JSON bundle files for checks, findings, review status, and rollback
+   guidance.

@@ -42,3 +42,9 @@
 - Updated `tests/test_schemas.py` for evidence bundle contracts and placeholders.
 - Updated `tests/test_storage.py` for evidence bundle persistence and manifest references.
 - Full backend test baseline and UI build were rerun after artifact contract changes.
+
+## STEP-004 Note
+
+- Added `tests/test_evidence.py` for policy-finding aggregation and bundle content generation.
+- Updated `tests/test_engine.py` to assert evidence bundle emission in completed and escalated flows.
+- Full backend test baseline and UI build were rerun after runtime artifact generation changes.

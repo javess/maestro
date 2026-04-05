@@ -1,0 +1,86 @@
+# STEP-004
+
+- Step id: `STEP-004`
+- Title: Evidence bundle generation in the existing flow
+- Status: done
+- Objective:
+  - Generate real evidence bundles from the current implementation, validation, and review flow.
+- Scope:
+  - Add deterministic evidence bundle generation for each ticket attempt.
+  - Record changed files, checks, policy findings, review summary, and rollback guidance.
+  - Persist emitted bundles through the existing local artifact store and manifest.
+  - Add focused unit and integration coverage for completed and escalated flows.
+- Non-goals:
+  - No approval-gate behavior changes.
+  - No risk scoring beyond deterministic policy findings already available in the current flow.
+  - No new artifact backend beyond local JSON persistence.
+- Prerequisites:
+  - STEP-003 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Inspect the implement, validate, review, and ticket advancement path.
+  - Add a deterministic evidence builder and policy-finding helper.
+  - Emit evidence bundles once all per-attempt inputs are available.
+  - Add unit and engine tests, rerun full validation, update docs, and commit.
+- Files changed:
+  - `README.md`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/core/evidence.py`
+  - `tests/test_engine.py`
+  - `tests/test_evidence.py`
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-004.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+- Evals added or updated:
+  - Updated eval output reporting to include evidence bundle counts per scenario.
+- Commands run:
+  - `sed -n '1,280p' src/maestro/core/engine.py`
+  - `sed -n '1,280p' src/maestro/storage/local.py`
+  - `sed -n '1,320p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `sed -n '1,240p' src/maestro/cli/main.py`
+  - `uv run pytest tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py`
+  - `uv run ruff check src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added deterministic evidence bundle generation to the current engine flow.
+  - Persisted one evidence bundle per ticket attempt with manifest references.
+  - Recorded policy findings, review outcomes, and rollback guidance in emitted bundles.
+  - Extended eval reporting to surface evidence bundle counts.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-004.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Emit evidence bundles per ticket attempt rather than only on final completion so revise and
+    escalate loops retain attempt-level audit history.
+  - Keep policy findings deterministic by deriving them from the existing policy checks and review
+    outcome instead of introducing new scoring logic in this step.
+- Known limitations:
+  - Rollback notes are generated from current ticket context and are not yet migration-aware.
+  - Eval reporting includes evidence bundle counts, but the eval CLI still behaves as a reporter
+    rather than a strict assertion runner.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-005`.
+- Commit hash:
+  - pending post-commit recording

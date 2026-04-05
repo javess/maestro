@@ -2,15 +2,8 @@
 
 ## Purpose
 
-`STEP-003` adds a typed evidence bundle contract for approval and auditability without yet
-generating concrete bundles from the execution flow.
-
-This step is intentionally contract-first:
-
-- define the bundle shape
-- extend the artifact manifest so bundles are discoverable
-- add local storage support for writing bundle artifacts
-- defer bundle generation to `STEP-004`
+`STEP-003` and `STEP-004` establish a typed evidence bundle contract and then wire it into the
+current execution flow.
 
 ## Contracts
 
@@ -28,10 +21,10 @@ Key types:
 - `artifacts`: generic run artifacts
 - `evidence_bundles`: explicit references to persisted evidence bundle artifacts
 
-## Placeholder Sections
+## Populated Sections
 
-The contract intentionally includes placeholder-first sections so later steps can fill them with
-real execution data:
+Each evidence bundle now records deterministic data from a single implementation and review
+attempt:
 
 - diff summary
 - checks
@@ -44,8 +37,21 @@ real execution data:
 [LocalArtifactStore](/Users/javiersierra/dev/maestro/src/maestro/storage/local.py) now exposes
 `write_evidence_bundle(...)` to persist bundle JSON and register it in the manifest.
 
+## Generation Path
+
+[OrchestratorEngine](/Users/javiersierra/dev/maestro/src/maestro/core/engine.py) now emits one
+bundle per ticket attempt after review input is available and before the ticket transitions to
+`COMPLETE_TICKET`, `REVISE`, or `ESCALATE`.
+
+The bundle builder uses:
+
+- `CodeResult.changed_files` and `CodeResult.summary` for diff context
+- `CheckResult` records for validation evidence
+- deterministic policy evaluation results
+- `ReviewResult` for approval state and findings
+- generated rollback guidance when changed files, failed checks, or review rejection are present
+
 ## Follow-On Work
 
-- `STEP-004` will populate evidence bundles from the current implementation/review flow
 - later approval and audit steps can consume the bundle contract directly
-
+- risk scoring and approval gates can treat bundle contents as their evidence input surface

@@ -123,14 +123,20 @@ def eval(json_output: bool = False) -> None:
                 "status": state.status,
                 "current_state": state.current_state,
                 "expected_state": scenario.expected_final_state.value,
+                "evidence_bundles": str(len(state.artifacts.evidence_bundles)),
             }
         )
     if json_output:
         console.print_json(json.dumps(report, indent=2))
         return
-    table = Table("scenario", "status", "state")
+    table = Table("scenario", "status", "state", "evidence bundles")
     for row in report:
-        table.add_row(row["scenario"], row["status"], row["current_state"])
+        table.add_row(
+            row["scenario"],
+            row["status"],
+            row["current_state"],
+            row["evidence_bundles"],
+        )
     console.print(table)
 
 

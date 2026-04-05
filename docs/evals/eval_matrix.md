@@ -26,3 +26,8 @@
 ## STEP-003 Note
 
 - No eval scenarios changed in STEP-003 because evidence bundle work is contract/storage-only and does not yet change runtime behavior.
+
+## STEP-004 Note
+
+- The deterministic scenario set is unchanged, but eval reporting now includes emitted evidence bundle counts for each scenario.
+- Existing scenarios continue to validate both happy-path and escalation flows while making evidence generation visible.

@@ -144,6 +144,52 @@
 - Stop reason: step complete; waiting for user confirmation before returning to `STEP-003`
 - Next recommended step: `STEP-003` after explicit user confirmation
 
+## 2026-04-05 12:05 UTC
+
+- Session goal: emit evidence bundles from the existing implementation, validation, and review flow
+- Selected step: `STEP-004`
+- Files changed:
+  - `README.md`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/core/evidence.py`
+  - `tests/test_engine.py`
+  - `tests/test_evidence.py`
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-004.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,280p' src/maestro/core/engine.py`
+  - `sed -n '1,280p' src/maestro/storage/local.py`
+  - `sed -n '1,320p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `sed -n '1,280p' src/maestro/evals/harness.py`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `sed -n '1,240p' src/maestro/cli/main.py`
+  - `uv run pytest tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py`
+  - `uv run ruff check src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py` passed
+  - `uv run ruff check src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_evidence.py tests/test_engine.py tests/test_storage.py tests/test_schemas.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-004`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-005`
+- Next recommended step: `STEP-005` after explicit user confirmation
+
 ## 2026-04-05 11:35 UTC
 
 - Session goal: add typed evidence bundle contracts and manifest/storage references without wiring generation yet

@@ -11,6 +11,7 @@ from maestro.agents.roles import (
     ReviewerAgent,
 )
 from maestro.config import load_config
+from maestro.core.evidence import build_evidence_bundle, collect_policy_findings
 from maestro.core.models import OrchestratorState
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
 from maestro.core.run_graph_runtime import (
@@ -205,6 +206,36 @@ class OrchestratorEngine:
         self._append_event(state, OrchestratorState.REVIEW, ticket.id)
         return review
 
+    def write_evidence_bundle(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        code_result: CodeResult,
+        checks: list[CheckResult],
+        review: ReviewResult,
+    ) -> list[str]:
+        review_cycle = state.review_cycles + 1
+        violations, policy_findings = collect_policy_findings(
+            policy=self.deps.policy,
+            review_cycles=state.review_cycles,
+            code_result=code_result,
+            checks=checks,
+            review=review,
+        )
+        bundle = build_evidence_bundle(
+            run_id=state.run_id,
+            ticket=ticket,
+            review_cycle=review_cycle,
+            code_result=code_result,
+            checks=checks,
+            review=review,
+            violations=violations,
+            policy_findings=policy_findings,
+        )
+        self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
+        self.deps.state_store.save(state)
+        return violations
+
     def advance_ticket(
         self,
         state: RunState,
@@ -212,14 +243,16 @@ class OrchestratorEngine:
         code_result: CodeResult,
         checks: list[CheckResult],
         review: ReviewResult,
+        violations: list[str] | None = None,
     ) -> OrchestratorState:
-        violations = enforce_code_policy(self.deps.policy, code_result)
-        violations.extend(enforce_review_policy(self.deps.policy, state.review_cycles, review))
-        failing_checks = [check.command for check in checks if not check.success]
-        if not review.approved:
-            violations.append("review_rejected")
-        if failing_checks:
-            violations.append("checks_failed")
+        if violations is None:
+            violations = enforce_code_policy(self.deps.policy, code_result)
+            violations.extend(enforce_review_policy(self.deps.policy, state.review_cycles, review))
+            failing_checks = [check.command for check in checks if not check.success]
+            if not review.approved:
+                violations.append("review_rejected")
+            if failing_checks:
+                violations.append("checks_failed")
         if violations:
             if state.review_cycles >= self.deps.policy.max_review_cycles:
                 ticket.status = TicketStatus.escalated
@@ -249,7 +282,15 @@ class OrchestratorEngine:
             commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
             checks = self.validate(state, commands)
             review = self.review(state, ticket, code_result, checks)
-            result = self.advance_ticket(state, ticket, code_result, checks, review)
+            violations = self.write_evidence_bundle(state, ticket, code_result, checks, review)
+            result = self.advance_ticket(
+                state,
+                ticket,
+                code_result,
+                checks,
+                review,
+                violations=violations,
+            )
             if result is OrchestratorState.ESCALATE:
                 break
             if result is OrchestratorState.COMPLETE_TICKET:
