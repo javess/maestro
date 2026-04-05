@@ -1,0 +1,13 @@
+name: prototype
+max_review_cycles: 3
+require_tests: false
+require_lint: true
+require_format: true
+max_files_changed: 50
+protected_paths: []
+dependency_change_rules:
+  allow_lockfile_updates: true
+escalation_rules:
+  on_protected_path_change: false
+  on_retry_exhausted: true
+

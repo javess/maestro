@@ -1,0 +1,18 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class OrchestratorState(StrEnum):
+    DISCOVER_REPO = "DISCOVER_REPO"
+    DEFINE_PRODUCT = "DEFINE_PRODUCT"
+    PLAN_TICKETS = "PLAN_TICKETS"
+    PICK_TICKET = "PICK_TICKET"
+    IMPLEMENT = "IMPLEMENT"
+    VALIDATE = "VALIDATE"
+    REVIEW = "REVIEW"
+    REVISE = "REVISE"
+    COMPLETE_TICKET = "COMPLETE_TICKET"
+    NEXT_TICKET = "NEXT_TICKET"
+    DONE = "DONE"
+    ESCALATE = "ESCALATE"

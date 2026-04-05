@@ -1,0 +1,14 @@
+name: legacy
+max_review_cycles: 2
+require_tests: true
+require_lint: false
+require_format: false
+max_files_changed: 100
+protected_paths:
+  - vendor/
+dependency_change_rules:
+  allow_lockfile_updates: true
+escalation_rules:
+  on_protected_path_change: true
+  on_retry_exhausted: true
+

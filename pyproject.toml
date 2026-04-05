@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "maestro-framework"
+version = "0.1.0"
+description = "Deterministic multi-agent software delivery orchestration framework"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "OpenAI Codex" }]
+dependencies = [
+  "pydantic>=2.11.0",
+  "pyyaml>=6.0.2",
+  "typer>=0.16.0",
+  "rich>=14.0.0",
+]
+
+[project.optional-dependencies]
+providers = [
+  "openai>=2.0.0",
+  "anthropic>=0.52.0",
+  "google-genai>=1.12.0",
+]
+build = [
+  "pyinstaller>=6.15.0",
+]
+
+[project.scripts]
+maestro = "maestro.cli.main:app"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.0",
+  "pytest-cov>=6.1.1",
+  "ruff>=0.11.0",
+  "ty>=0.0.1a18",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/maestro"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q --cov=maestro --cov-report=term-missing"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ty.src]
+include = ["src", "tests"]
+

@@ -1,0 +1,34 @@
+providers:
+  fake:
+    type: fake
+  openai:
+    type: openai
+    api_key_env: OPENAI_API_KEY
+  gemini:
+    type: gemini
+    api_key_env: GEMINI_API_KEY
+  claude:
+    type: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+
+llm:
+  product_designer:
+    provider: fake
+    model: fake-product
+  ceremony_master:
+    provider: fake
+    model: fake-ceremony
+  coder:
+    provider: fake
+    model: fake-coder
+  reviewer:
+    provider: fake
+    model: fake-reviewer
+
+fallbacks:
+  reviewer:
+    - provider: openai
+      model: gpt-5
+
+policy: default
+

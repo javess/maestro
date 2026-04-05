@@ -1,0 +1,15 @@
+name: strict
+max_review_cycles: 1
+require_tests: true
+require_lint: true
+require_format: true
+max_files_changed: 10
+protected_paths:
+  - .github/
+  - infra/
+dependency_change_rules:
+  allow_lockfile_updates: false
+escalation_rules:
+  on_protected_path_change: true
+  on_retry_exhausted: true
+

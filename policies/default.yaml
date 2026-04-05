@@ -1,0 +1,14 @@
+name: default
+max_review_cycles: 2
+require_tests: true
+require_lint: true
+require_format: true
+max_files_changed: 20
+protected_paths:
+  - .github/
+dependency_change_rules:
+  allow_lockfile_updates: true
+escalation_rules:
+  on_protected_path_change: true
+  on_retry_exhausted: true
+
