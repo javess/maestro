@@ -20,7 +20,7 @@ machine. The baseline includes:
 ## Quick start
 
 ```bash
-uv sync
+uv sync --all-extras
 uv run maestro doctor
 uv run pytest
 uv run maestro eval
@@ -32,13 +32,14 @@ uv run maestro ui
 ```bash
 uv run maestro init
 uv run maestro discover
-uv run maestro plan --brief examples/brief.md
+uv run maestro plan examples/brief.md
 uv run maestro run-ticket TICKET-1
 uv run maestro review TICKET-1
 uv run maestro status
 uv run maestro resume <RUN_ID>
 uv run maestro eval
 uv run maestro doctor
+uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
 uv run maestro ui
 ```
 
@@ -46,6 +47,7 @@ See `docs/usage.md` for local, container, eval, UI, and binary workflows.
 Workflow control-plane and resume state live in `AGENTS.md`, `docs/codex/`,
 `docs/roadmap/`, and `docs/progress/`.
 VS Code workspace setup lives under `.vscode/` and is described in `docs/runbooks/vscode_setup.md`.
+The first user-testable preview path is documented in `docs/runbooks/hello_world_openai.md`.
 
 ## Tooling
 
@@ -80,6 +82,26 @@ fallbacks:
 The OpenAI adapter is now runtime-wired for text and structured generation. Secure key storage is
 still future work; the current supported local-development path is `.env` plus environment
 variables.
+
+## Hello World
+
+Use the bundled Python example in `examples/hello_world_cli_game/` for the first end-to-end
+framework test:
+
+```bash
+uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
+uv run maestro plan examples/hello_world_cli_game_brief.md --repo examples/hello_world_cli_game
+```
+
+To switch the same flow to OpenAI-backed planning, create a `.env` file next to
+`examples/maestro.openai.yaml`, set `OPENAI_API_KEY`, then run:
+
+```bash
+uv run maestro plan examples/hello_world_cli_game_brief.md --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game
+```
+
+The local preview path above was validated in this repository. The OpenAI-backed plan command
+requires your API key and was documented but not executed in this session.
 
 ## UI
 

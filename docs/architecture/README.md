@@ -11,6 +11,7 @@ Planned additions include:
 - architecture synthesis
 - backlog graph
 - repo-aware impact analysis
+- preview environment abstraction
 - synthesis and planning notes
 
 Add one focused note per roadmap step or substep when architecture changes.

@@ -12,8 +12,10 @@ from rich.table import Table
 from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.evals.harness import build_eval_engine, default_scenarios
+from maestro.preview.factory import build_preview_adapter
 from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import TicketStatus
+from maestro.schemas.preview import PreviewRequest
 from maestro.storage.local import LocalStateStore
 from maestro.tools.git import GitWorktreeManager
 
@@ -168,6 +170,38 @@ def doctor(config: Path | None = None, repo: Path = Path(".")) -> None:
             "git_dirty": repo_manager.is_dirty() if (repo / ".git").exists() else False,
             "repo_type": discovery.repo_info.repo_type,
         }
+    )
+
+
+@app.command()
+def preview(
+    repo: Path = Path("."),
+    command: str | None = None,
+    adapter: str = "noop",
+    config: Path | None = None,
+) -> None:
+    deps = build_engine_deps(_project_root(), _config_path(config))
+    repo_path = repo.resolve()
+    discovery = discover_repo(repo_path)
+    preview_adapter = build_preview_adapter(adapter, shell=deps.shell)
+    artifact = preview_adapter.build_preview(
+        PreviewRequest(repo_path=repo_path, repo_info=discovery.repo_info, command=command)
+    )
+    manifest = deps.artifact_store.create_run()
+    path = deps.artifact_store.write_json(
+        manifest,
+        f"preview_{adapter}",
+        artifact.model_dump(mode="json"),
+    )
+    console.print_json(
+        json.dumps(
+            {
+                "run_id": manifest.run_id,
+                "artifact_path": str(path),
+                "preview": artifact.model_dump(mode="json"),
+            },
+            indent=2,
+        )
     )
 
 

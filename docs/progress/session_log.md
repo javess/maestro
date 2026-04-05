@@ -767,3 +767,61 @@
 - Commit hash: none yet
 - Stop reason: tiny prerequisite complete; continue with `STEP-013`
 - Next recommended step: `STEP-013`
+
+## 2026-04-05 22:23 UTC
+
+- Session goal: complete `STEP-013` by exposing a user-testable preview surface and documenting a
+  minimal hello-world OpenAI flow
+- Selected step: `STEP-013`
+- Files changed:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/README.md`
+  - `docs/architecture/preview_abstraction.md`
+  - `docs/runbooks/preview_environments.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013.md`
+  - `examples/hello_world_cli_game/README.md`
+  - `examples/hello_world_cli_game/pyproject.toml`
+  - `examples/hello_world_cli_game/game.py`
+  - `examples/hello_world_cli_game/tests/test_game.py`
+  - `examples/hello_world_cli_game_brief.md`
+  - `examples/maestro.openai.yaml`
+  - `src/maestro/schemas/preview.py`
+  - `src/maestro/preview/base.py`
+  - `src/maestro/preview/local.py`
+  - `src/maestro/preview/noop.py`
+  - `src/maestro/preview/factory.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_preview.py`
+- Commands run:
+  - `sed -n '1,260p' docs/progress/steps/STEP-012A.md`
+  - `cd examples/hello_world_cli_game && uv run pytest`
+  - `cd examples/hello_world_cli_game && uv run ruff check .`
+  - `cd examples/hello_world_cli_game && uv run ty check`
+  - `uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command 'python game.py --demo'`
+  - `uv run maestro plan examples/hello_world_cli_game_brief.md --repo examples/hello_world_cli_game`
+  - `uv run maestro doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game`
+  - `uv run ruff check .`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `cd examples/hello_world_cli_game && uv run pytest` passed
+  - `cd examples/hello_world_cli_game && uv run ruff check .` passed
+  - `cd examples/hello_world_cli_game && uv run ty check` passed
+  - `uv run ruff check .` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-013`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-014`
+- Next recommended step: `STEP-014`

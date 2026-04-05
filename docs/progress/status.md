@@ -5,7 +5,7 @@
 | STEP-000 | Workflow bootstrap and prompt capture | done | 2026-04-05 10:26 UTC | [STEP-000](steps/STEP-000.md) | `6e1fe7e` | `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-000A` |
 | STEP-000A | VS Code workspace bootstrap | done | 2026-04-05 10:49 UTC | [STEP-000A](steps/STEP-000A.md) | `9cfd36b` | JSON validation pass; `pytest` pass; UI build pass | `STEP-001` |
 | STEP-000B | Workflow batching policy update | done | 2026-04-05 20:17 UTC | [STEP-000B](steps/STEP-000B.md) | `bc0c49b` | `git diff --check` pass | Follow user-approved batch starting from `STEP-010` |
-| STEP-000C | VS Code settings finalization | done | 2026-04-05 22:13 UTC | [STEP-000C](steps/STEP-000C.md) | pending post-commit recording | `git diff --check` pass | Continue with `STEP-013` |
+| STEP-000C | VS Code settings finalization | done | 2026-04-05 22:13 UTC | [STEP-000C](steps/STEP-000C.md) | `20a923f` | `git diff --check` pass | Continue with `STEP-013` |
 | STEP-001 | Canonical run graph contracts | done | 2026-04-05 11:02 UTC | [STEP-001](steps/STEP-001.md) | `e0bed4a` | `test_run_graph` pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-002` |
 | STEP-002 | Run graph persistence, replay, and resume support | done | 2026-04-05 11:14 UTC | [STEP-002](steps/STEP-002.md) | `441523c` | targeted persistence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-003` |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | 2026-04-05 11:35 UTC | [STEP-003](steps/STEP-003.md) | `ddcdd03` | targeted schema/storage pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-004` |
@@ -19,7 +19,7 @@
 | STEP-011 | Backlog graph | done | 2026-04-05 21:48 UTC | [STEP-011](steps/STEP-011.md) | `4ba709b` | targeted backlog-graph pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Continue approved batch with `STEP-012` |
 | STEP-012 | Repo-aware impact analysis | done | 2026-04-05 21:55 UTC | [STEP-012](steps/STEP-012.md) | `ef62e29` | targeted impact-analysis pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-012A` |
 | STEP-012A | OpenAI provider wiring and local env loading | done | 2026-04-05 22:10 UTC | [STEP-012A](steps/STEP-012A.md) | `f9c1444` | targeted provider/env pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Resume with `STEP-013` |
-| STEP-013 | Preview environment abstraction | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-012A |
+| STEP-013 | Preview environment abstraction | done | 2026-04-05 22:23 UTC | [STEP-013](steps/STEP-013.md) | pending post-commit recording | preview tests pass; example repo checks pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-014` |
 | STEP-014 | Migration planner | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-013 |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |
 | STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |
@@ -28,7 +28,7 @@
 
 ## Baseline
 
-- Repository state at session start: clean `main`
+- Repository state at session start: clean `main` after `STEP-000C`
 - Validation baseline recorded during STEP-000:
   - `uv run ruff check .` passed
   - `uv run ty check` passed

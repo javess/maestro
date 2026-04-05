@@ -97,3 +97,9 @@
 
 - Decision: preserve the outstanding `.vscode/settings.json` change in its own tiny setup commit before `STEP-013`.
 - Rationale: the user explicitly requested that the workspace setting change be committed, and isolating it avoids mixing editor setup with preview-runtime work.
+
+- Decision: implement `STEP-013` as a CLI-level preview surface with `noop` and local smoke-command adapters before wiring preview behavior into orchestration.
+- Rationale: the roadmap calls for a generic preview abstraction, and a separate CLI entrypoint is the smallest user-testable path that preserves deterministic core orchestration while avoiding early deployment-stack coupling.
+
+- Decision: use the bundled `examples/hello_world_cli_game` fixture as the first documented user test path.
+- Rationale: the user explicitly asked for a trivially simple hello-world test run, and a tiny Python CLI game provides a stable preview target and planning example with minimal moving parts.

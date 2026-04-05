@@ -1,0 +1,22 @@
+providers:
+  openai:
+    type: openai
+    api_key_env: OPENAI_API_KEY
+
+llm:
+  product_designer:
+    provider: openai
+    model: gpt-5
+  ceremony_master:
+    provider: openai
+    model: gpt-5
+  coder:
+    provider: openai
+    model: gpt-5
+  reviewer:
+    provider: openai
+    model: gpt-5
+
+fallbacks: {}
+
+policy: default

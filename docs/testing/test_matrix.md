@@ -114,3 +114,11 @@
 - Added `tests/test_config.py` for `.env` loading behavior and config-directory env discovery.
 - Full backend test baseline and UI build were rerun after OpenAI provider and env-loading
   integration.
+
+## STEP-013 Note
+
+- Added `tests/test_preview.py` for preview adapter behavior and preview CLI artifact persistence.
+- Added `examples/hello_world_cli_game/tests/test_game.py` as a fixture-repo validation test for
+  the first user-testable example target.
+- Validated the example repo directly with `pytest`, `ruff`, and `ty`.
+- Full backend test baseline and UI build were rerun after preview abstraction integration.

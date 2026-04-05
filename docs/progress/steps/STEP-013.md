@@ -1,0 +1,99 @@
+# STEP-013
+
+- Step id: `STEP-013`
+- Title: Preview environment abstraction
+- Status: done
+- Objective:
+  - Create a generic preview surface with a local user-testable path.
+- Scope:
+  - Add preview contracts.
+  - Implement `noop` and local smoke-command preview adapters.
+  - Expose preview generation through the CLI.
+  - Add a trivial hello-world target repo and document fake-provider and OpenAI-backed test flows.
+- Non-goals:
+  - No hosted preview provider.
+  - No browser automation or screenshot capture.
+  - No preview-aware orchestration state changes.
+- Prerequisites:
+  - STEP-012A complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add preview schemas and adapter interfaces.
+  - Add a local smoke-command adapter and CLI entrypoint.
+  - Create a tiny fixture repo for the first user-testable path.
+  - Add targeted tests, rerun the full baseline, update docs, and commit.
+- Files changed:
+  - `src/maestro/schemas/preview.py`
+  - `src/maestro/preview/base.py`
+  - `src/maestro/preview/local.py`
+  - `src/maestro/preview/noop.py`
+  - `src/maestro/preview/factory.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_preview.py`
+  - `examples/hello_world_cli_game/README.md`
+  - `examples/hello_world_cli_game/pyproject.toml`
+  - `examples/hello_world_cli_game/game.py`
+  - `examples/hello_world_cli_game/tests/test_game.py`
+  - `examples/hello_world_cli_game_brief.md`
+  - `examples/maestro.openai.yaml`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/README.md`
+  - `docs/architecture/preview_abstraction.md`
+  - `docs/runbooks/preview_environments.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013.md`
+- Tests added or updated:
+  - `tests/test_preview.py`
+  - `examples/hello_world_cli_game/tests/test_game.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun because preview generation is
+    exposed through a separate CLI surface and does not yet change the orchestrator state machine.
+- Commands run:
+  - `cd examples/hello_world_cli_game && uv run pytest`
+  - `cd examples/hello_world_cli_game && uv run ruff check .`
+  - `cd examples/hello_world_cli_game && uv run ty check`
+  - `uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command 'python game.py --demo'`
+  - `uv run maestro plan examples/hello_world_cli_game_brief.md --repo examples/hello_world_cli_game`
+  - `uv run maestro doctor --config examples/maestro.openai.yaml --repo examples/hello_world_cli_game`
+  - `uv run ruff check .`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added a generic preview contract and adapter factory.
+  - Added a local preview command that executes a smoke command and persists a preview artifact.
+  - Added a tiny Python hello-world CLI game as the first documented user-testable repo target.
+  - Documented both deterministic and OpenAI-backed hello-world test flows.
+- Docs updated:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/README.md`
+  - `docs/architecture/preview_abstraction.md`
+  - `docs/runbooks/preview_environments.md`
+  - `docs/runbooks/hello_world_openai.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-013.md`
+- Decisions made:
+  - Expose preview generation through a separate CLI command before integrating it into the
+    orchestrator state machine.
+  - Use a trivial CLI game as the first user-facing test target to keep the path small and stable.
+- Known limitations:
+  - OpenAI-backed planning for the hello-world path still requires a real local API key and was not
+    executed during this step.
+  - Preview artifacts currently support local smoke output and placeholders only.
+  - No screenshots, preview URLs, or deployment lifecycle management yet.
+- Next recommended step:
+  - `STEP-014`
+- Commit hash:
+  - pending post-commit recording

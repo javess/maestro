@@ -94,3 +94,10 @@
   loading do not change deterministic eval coverage, which continues to use `FakeProvider`.
 - Existing scenarios were rerun to confirm the provider-layer changes do not alter current
   deterministic orchestration behavior.
+
+## STEP-013 Note
+
+- No eval scenario set changes were required in STEP-013 because preview generation is exposed
+  through a separate CLI surface and does not yet alter the orchestrator state machine.
+- Existing scenarios were rerun to confirm the preview abstraction does not change deterministic
+  planning, approval, fallback, or backlog-ordering behavior.
