@@ -1,0 +1,93 @@
+# STEP-010
+
+- Step id: `STEP-010`
+- Title: Architecture synthesizer
+- Status: done
+- Objective:
+  - Generate architecture artifacts from product model plus repo discovery.
+- Scope:
+  - Add a deterministic architecture synthesis module.
+  - Persist synthesized architecture as a run artifact.
+  - Attach synthesized architecture to planning outputs.
+  - Add fixture-based tests and fake-provider planning coverage.
+- Non-goals:
+  - No model-driven architecture generation loop.
+  - No backlog dependency graph changes yet.
+  - No repo-impact analysis yet.
+- Prerequisites:
+  - STEP-009 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Add a deterministic synthesizer from `ProductSpec` and `RepoDiscovery`.
+  - Wire synthesized architecture into planning artifacts and persistence.
+  - Update fake-provider backlog behavior to preserve the architecture payload.
+  - Add focused tests, rerun the full baseline, and commit.
+- Files changed:
+  - `src/maestro/core/architecture_synthesizer.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/providers/fake.py`
+  - `src/maestro/schemas/contracts.py`
+  - `tests/test_architecture_synthesizer.py`
+  - `tests/test_engine.py`
+  - `tests/test_schemas.py`
+  - `docs/architecture/README.md`
+  - `docs/architecture/architecture_synthesis.md`
+  - `docs/runbooks/architecture_synthesis.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-010.md`
+- Tests added or updated:
+  - `tests/test_architecture_synthesizer.py`
+  - `tests/test_engine.py`
+  - `tests/test_schemas.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun because synthesis enriches
+    planning artifacts without changing the current orchestration transitions.
+- Commands run:
+  - `sed -n '1,360p' src/maestro/core/engine.py`
+  - `sed -n '1,260p' src/maestro/repo/adapters.py`
+  - `sed -n '1,240p' src/maestro/repo/discovery.py`
+  - `sed -n '1,260p' src/maestro/providers/fake.py`
+  - `sed -n '1,260p' tests/test_engine.py`
+  - `sed -n '1,260p' tests/test_fixture_adapters.py`
+  - `sed -n '1,260p' src/maestro/cli/main.py`
+  - `find tests/fixtures -maxdepth 3 -type f | sort`
+  - `sed -n '1,240p' examples/brief.md`
+  - `sed -n '1,220p' src/maestro/evals/harness.py`
+  - `uv run pytest tests/test_architecture_synthesizer.py tests/test_engine.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ruff check src/maestro/core/architecture_synthesizer.py src/maestro/core/engine.py src/maestro/providers/fake.py src/maestro/schemas/contracts.py tests/test_architecture_synthesizer.py tests/test_engine.py tests/test_schemas.py tests/test_fake_provider.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added a deterministic architecture synthesizer driven by `ProductSpec` and `RepoDiscovery`.
+  - Persisted `architecture_synthesizer` artifacts for each run.
+  - Attached synthesized architecture to `Backlog.architecture_artifacts`.
+  - Kept the current orchestration state machine unchanged while enriching planning context.
+- Docs updated:
+  - `docs/architecture/README.md`
+  - `docs/architecture/architecture_synthesis.md`
+  - `docs/runbooks/architecture_synthesis.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-010.md`
+- Decisions made:
+  - Keep the initial synthesizer local and deterministic.
+  - Attach architecture directly to planning outputs so later steps can consume it without another
+    schema migration.
+- Known limitations:
+  - Synthesis is heuristic and adapter-driven.
+  - Repo structure inference is still shallow and does not inspect real module layouts yet.
+- Next recommended step:
+  - Continue the approved batch with `STEP-011`.
+- Commit hash:
+  - pending post-commit recording

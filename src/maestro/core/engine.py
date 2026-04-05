@@ -11,6 +11,7 @@ from maestro.agents.roles import (
     ReviewerAgent,
 )
 from maestro.config import load_config
+from maestro.core.architecture_synthesizer import synthesize_architecture
 from maestro.core.evidence import (
     build_evidence_bundle,
     collect_policy_findings,
@@ -34,6 +35,7 @@ from maestro.schemas.contracts import (
     CodeResult,
     MaestroConfig,
     PolicyPack,
+    ProductSpec,
     RepoInfo,
     ReviewResult,
     RunEvent,
@@ -141,7 +143,22 @@ class OrchestratorEngine:
 
     def plan_tickets(self, state: RunState, spec_payload: dict):
         agent = CeremonyMasterAgent(self.deps.router, self.deps.prompt_root, "ceremony_master")
-        backlog = agent.run_backlog({"product_spec": spec_payload})
+        repo = discover_repo(state.repo_path)
+        spec = ProductSpec.model_validate(spec_payload)
+        architecture = synthesize_architecture(spec, repo)
+        backlog = agent.run_backlog(
+            {
+                "product_spec": spec_payload,
+                "architecture_artifacts": architecture.model_dump(mode="json"),
+                "repo_context": repo.model_dump(mode="json"),
+            }
+        )
+        backlog.architecture_artifacts = backlog.architecture_artifacts or architecture
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            "architecture_synthesizer",
+            architecture.model_dump(mode="json"),
+        )
         state.backlog = backlog
         self.deps.artifact_store.write_json(
             state.artifacts,

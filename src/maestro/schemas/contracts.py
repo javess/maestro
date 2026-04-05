@@ -6,6 +6,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.run_graph import RunGraph
 
 
@@ -96,6 +97,7 @@ class Backlog(BaseModel):
     tickets: list[Ticket]
     assumption_log: list[AssumptionRecord] = Field(default_factory=list)
     unresolved_questions: list[str] = Field(default_factory=list)
+    architecture_artifacts: ArchitectureArtifacts | None = None
 
 
 class CodeChange(BaseModel):

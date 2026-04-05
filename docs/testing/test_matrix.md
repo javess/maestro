@@ -84,3 +84,11 @@
   integrity, and serialization round-trips.
 - Full backend test baseline and UI build were rerun after introducing the schema-only
   architecture contracts.
+
+## STEP-010 Note
+
+- Added `tests/test_architecture_synthesizer.py` for deterministic synthesis across fixture repos
+  and fake-provider planning propagation.
+- Updated `tests/test_engine.py` and `tests/test_schemas.py` to cover persisted planning-time
+  architecture artifacts.
+- Full backend test baseline and UI build were rerun after synthesis integration.

@@ -1,3 +1,4 @@
+from maestro.schemas.architecture import ArchitectureArtifacts, SystemContext
 from maestro.schemas.contracts import (
     ArtifactManifest,
     AssumptionKind,
@@ -62,9 +63,13 @@ def test_backlog_requires_tickets() -> None:
                 source="planning",
             )
         ],
+        architecture_artifacts=ArchitectureArtifacts(
+            system_context=SystemContext(system_name="maestro", summary="x")
+        ),
     )
     assert backlog.tickets[0].id == "T-1"
     assert backlog.assumption_log[0].source == "planning"
+    assert backlog.architecture_artifacts is not None
 
 
 def test_evidence_bundle_defaults_and_manifest_reference() -> None:

@@ -36,6 +36,7 @@ def test_run_plan_emits_evidence_bundle_for_completed_ticket(tmp_path: Path) -> 
     assert bundle["review_result"]["approved"] is True
     assert bundle["risk_score"]["level"] in {"low", "medium", "high", "critical"}
     assert bundle["metadata"]["review_cycle"] == 1
+    assert state.backlog.architecture_artifacts is not None
 
 
 def test_run_plan_emits_evidence_bundle_for_escalated_ticket(tmp_path: Path) -> None:
@@ -81,3 +82,19 @@ def test_run_plan_waits_for_approval_when_policy_requires_it(tmp_path: Path) -> 
     assert state.approval_request is not None
     assert state.approval_request.required_approvals == 1
     assert state.current_ticket_id == "TICKET-1"
+
+
+def test_run_plan_persists_architecture_artifact(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    scenario = EvalScenario(
+        name="architecture-synthesis",
+        provider=FakeProvider(),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "architecture_synthesizer" in artifact_names
+    assert state.backlog.architecture_artifacts is not None

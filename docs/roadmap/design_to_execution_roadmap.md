@@ -23,8 +23,8 @@
 | STEP-006 | Approval gate framework | done | Deterministic approval policy modes |
 | STEP-007 | Product brief compiler | done | Normalized product model from brief input |
 | STEP-008 | Assumption tracker | done | Persisted assumptions and unresolved questions |
-| STEP-009 | Architecture artifact model | planned | Typed architecture contracts |
-| STEP-010 | Architecture synthesizer | planned | Artifact synthesis from product model and repo discovery |
+| STEP-009 | Architecture artifact model | done | Typed architecture contracts |
+| STEP-010 | Architecture synthesizer | done | Artifact synthesis from product model and repo discovery |
 | STEP-011 | Backlog graph | planned | Dependency-aware execution graph |
 | STEP-012 | Repo-aware impact analysis | planned | Deterministic repo-local context slicing |
 | STEP-013 | Preview environment abstraction | planned | Generic preview surface with local/noop adapter |

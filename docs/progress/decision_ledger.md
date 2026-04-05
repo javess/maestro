@@ -76,3 +76,6 @@
 
 - Decision: relax the repo-local execution policy from strictly one step per session to user-directed bounded batches.
 - Rationale: the user wants to choose whether a session should stop after one step, advance the next `N` steps, or continue through a named target step while still preserving explicit boundaries and resumability.
+
+- Decision: implement STEP-010 with a deterministic local synthesizer instead of another model-driven role.
+- Rationale: the first architecture synthesis path needs fixture-level determinism and provider neutrality before richer synthesis logic is introduced.

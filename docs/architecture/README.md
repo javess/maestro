@@ -8,7 +8,7 @@ Planned additions include:
 - run graph persistence and resume mechanics
 - evidence bundle model
 - architecture artifact contracts
+- architecture synthesis
 - synthesis and planning notes
 
 Add one focused note per roadmap step or substep when architecture changes.
-

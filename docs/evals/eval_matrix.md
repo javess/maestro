@@ -66,3 +66,10 @@
   schema-only and are not consumed by orchestration yet.
 - Existing scenarios were rerun to confirm the new contract module does not alter current
   deterministic outcomes.
+
+## STEP-010 Note
+
+- No scenario set changes were required in STEP-010 because architecture synthesis enriches
+  planning artifacts without changing the current orchestration state flow.
+- Existing scenarios were rerun to confirm synthesized architecture remains attached without
+  changing deterministic completion, escalation, or approval-hold outcomes.

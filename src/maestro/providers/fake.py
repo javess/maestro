@@ -6,6 +6,7 @@ from typing import Any, cast
 from pydantic import BaseModel
 
 from maestro.providers.base import LlmProvider, SchemaT
+from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.contracts import (
     AssumptionKind,
     AssumptionRecord,
@@ -111,6 +112,13 @@ class FakeProvider(LlmProvider):
                         for item in product_spec.get("assumption_log", [])
                     ],
                     unresolved_questions=list(product_spec.get("unresolved_questions", [])),
+                    architecture_artifacts=(
+                        ArchitectureArtifacts.model_validate(item)
+                        if (
+                            item := (metadata or {}).get("architecture_artifacts")
+                        )
+                        else None
+                    ),
                 ),
             )
         if schema is CodeResult:
