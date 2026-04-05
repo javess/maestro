@@ -113,6 +113,7 @@ def eval(json_output: bool = False) -> None:
                 "scenario": scenario.name,
                 "status": state.status,
                 "current_state": state.current_state,
+                "expected_state": scenario.expected_final_state.value,
             }
         )
     if json_output:

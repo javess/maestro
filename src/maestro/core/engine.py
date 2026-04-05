@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from maestro.core.models import OrchestratorState
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
 from maestro.providers.base import LlmProvider
 from maestro.providers.factory import build_provider
+from maestro.providers.router import ProviderRouter
 from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import (
     CheckResult,
@@ -38,7 +40,8 @@ class EngineDeps:
     artifact_store: LocalArtifactStore
     state_store: LocalStateStore
     shell: LocalShellRunner
-    providers: dict[str, LlmProvider]
+    providers: Mapping[str, LlmProvider]
+    router: ProviderRouter
     prompt_root: Path
 
 
@@ -48,6 +51,7 @@ def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
         name: build_provider(provider_cfg["type"])
         for name, provider_cfg in config.providers.items()
     }
+    router = ProviderRouter(config=config, providers=providers)
     policy = load_policy(config.policy, project_root / "policies")
     return EngineDeps(
         config=config,
@@ -56,6 +60,7 @@ def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
         state_store=LocalStateStore(project_root / "runs" / "state"),
         shell=LocalShellRunner(),
         providers=providers,
+        router=router,
         prompt_root=project_root / "prompts",
     )
 
@@ -82,10 +87,6 @@ class OrchestratorEngine:
         state.events.append(RunEvent(state=current.value, detail=detail))
         self.deps.state_store.save(state)
 
-    def _role_provider(self, role: str) -> tuple[LlmProvider, str]:
-        role_cfg = self.deps.config.llm[role]
-        return self.deps.providers[role_cfg.provider], role_cfg.model
-
     def discover(self, state: RunState):
         repo = discover_repo(state.repo_path)
         self.deps.artifact_store.write_json(
@@ -97,8 +98,7 @@ class OrchestratorEngine:
         return repo
 
     def define_product(self, state: RunState, brief_text: str):
-        provider, model = self._role_provider("product_designer")
-        agent = ProductDesignerAgent(provider, model, self.deps.prompt_root, "product_designer")
+        agent = ProductDesignerAgent(self.deps.router, self.deps.prompt_root, "product_designer")
         spec = agent.run_spec({"brief": brief_text})
         self.deps.artifact_store.write_json(
             state.artifacts,
@@ -109,8 +109,7 @@ class OrchestratorEngine:
         return spec
 
     def plan_tickets(self, state: RunState, spec_payload: dict):
-        provider, model = self._role_provider("ceremony_master")
-        agent = CeremonyMasterAgent(provider, model, self.deps.prompt_root, "ceremony_master")
+        agent = CeremonyMasterAgent(self.deps.router, self.deps.prompt_root, "ceremony_master")
         backlog = agent.run_backlog({"product_spec": spec_payload})
         state.backlog = backlog
         self.deps.artifact_store.write_json(
@@ -133,8 +132,7 @@ class OrchestratorEngine:
         return None
 
     def implement(self, state: RunState, ticket: Ticket, repo_context: dict) -> CodeResult:
-        provider, model = self._role_provider("coder")
-        agent = CoderAgent(provider, model, self.deps.prompt_root, "coder")
+        agent = CoderAgent(self.deps.router, self.deps.prompt_root, "coder")
         result = agent.run_code(
             {
                 "ticket_id": ticket.id,
@@ -176,8 +174,7 @@ class OrchestratorEngine:
         code_result: CodeResult,
         checks: list[CheckResult],
     ) -> ReviewResult:
-        provider, model = self._role_provider("reviewer")
-        agent = ReviewerAgent(provider, model, self.deps.prompt_root, "reviewer")
+        agent = ReviewerAgent(self.deps.router, self.deps.prompt_root, "reviewer")
         review = agent.run_review(
             {
                 "ticket_id": ticket.id,

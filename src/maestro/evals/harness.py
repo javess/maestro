@@ -3,19 +3,38 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from pydantic import BaseModel
+
 from maestro.core.engine import EngineDeps, OrchestratorEngine
 from maestro.core.models import OrchestratorState
 from maestro.providers.fake import FakeProvider
-from maestro.schemas.contracts import MaestroConfig, PolicyPack, RoleConfig
+from maestro.providers.router import ProviderRouter
+from maestro.schemas.contracts import FallbackConfig, MaestroConfig, PolicyPack, RoleConfig
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.tools.shell import LocalShellRunner
 
 
 class PassingShellRunner(LocalShellRunner):
+    def __init__(self, failures: set[str] | None = None) -> None:
+        self.failures = failures or set()
+
     def run(self, command: str, cwd: Path):  # type: ignore[override]
         from maestro.tools.shell import ShellResult
 
+        if command in self.failures:
+            return ShellResult(command=command, returncode=1, stdout="", stderr="forced failure")
         return ShellResult(command=command, returncode=0, stdout="ok", stderr="")
+
+
+def _reviewer_failure_provider() -> FakeProvider:
+    delegate = FakeProvider()
+
+    def resolver(prompt: str, schema: type[BaseModel]) -> BaseModel:
+        if schema.__name__ == "ReviewResult":
+            raise ValueError("primary failed")
+        return delegate.generate_structured(prompt=prompt, model="delegate", schema=schema)
+
+    return FakeProvider(resolver=resolver)
 
 
 @dataclass
@@ -24,6 +43,8 @@ class EvalScenario:
     provider: FakeProvider
     expected_final_state: OrchestratorState
     expected_status: str
+    fallback_provider: FakeProvider | None = None
+    shell_failures: set[str] | None = None
 
 
 def build_eval_engine(project_root: Path, scenario: EvalScenario) -> OrchestratorEngine:
@@ -38,13 +59,21 @@ def build_eval_engine(project_root: Path, scenario: EvalScenario) -> Orchestrato
         fallbacks={},
         policy="default",
     )
+    providers = {"fake": scenario.provider}
+    if scenario.fallback_provider is not None:
+        config.providers["fallback"] = {"type": "fake"}
+        config.fallbacks["reviewer"] = [
+            FallbackConfig(provider="fallback", model="fake-fallback-reviewer")
+        ]
+        providers["fallback"] = scenario.fallback_provider
     deps = EngineDeps(
         config=config,
         policy=PolicyPack(name="default"),
         artifact_store=LocalArtifactStore(project_root / "runs"),
         state_store=LocalStateStore(project_root / "runs" / "state"),
-        shell=PassingShellRunner(),
-        providers={"fake": scenario.provider},
+        shell=PassingShellRunner(scenario.shell_failures),
+        providers=providers,
+        router=ProviderRouter(config=config, providers=providers),
         prompt_root=project_root / "prompts",
     )
     return OrchestratorEngine(project_root, deps)
@@ -63,5 +92,19 @@ def default_scenarios() -> list[EvalScenario]:
             provider=FakeProvider({"force_review_issue": True}),
             expected_final_state=OrchestratorState.ESCALATE,
             expected_status="escalated",
+        ),
+        EvalScenario(
+            name="test-failure-blocks-approval",
+            provider=FakeProvider(),
+            expected_final_state=OrchestratorState.ESCALATE,
+            expected_status="escalated",
+            shell_failures={"uv run pytest"},
+        ),
+        EvalScenario(
+            name="fallback-provider-behavior",
+            provider=_reviewer_failure_provider(),
+            fallback_provider=FakeProvider(),
+            expected_final_state=OrchestratorState.DONE,
+            expected_status="done",
         ),
     ]

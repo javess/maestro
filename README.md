@@ -10,6 +10,7 @@ machine. The baseline includes:
 - repo adapters for common ecosystems
 - provider abstraction with fake and real provider adapters
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
+- provider fallback routing and structured output repair paths
 
 ## Quick start
 
@@ -48,6 +49,20 @@ uv run maestro ui
 Configure providers in `examples/maestro.example.yaml`. The default test and eval path
 uses `FakeProvider` for deterministic execution without secrets.
 
+Provider routing is per role and supports fallbacks:
+
+```yaml
+llm:
+  reviewer:
+    provider: claude
+    model: claude-sonnet
+
+fallbacks:
+  reviewer:
+    - provider: openai
+      model: gpt-5
+```
+
 ## UI
 
 The UI lives in `ui/` and uses React, Vite, TypeScript, and Material UI. It visualizes
@@ -61,4 +76,3 @@ binary can be produced with:
 ```bash
 uv run pyinstaller -m maestro.cli.main
 ```
-

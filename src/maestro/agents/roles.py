@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any
 
 from pydantic import BaseModel
 
-from maestro.providers.base import LlmProvider
+from maestro.providers.router import ProviderRouter
 from maestro.schemas.contracts import Backlog, CodeResult, ProductSpec, ReviewResult
-
-SchemaT = TypeVar("SchemaT", bound=BaseModel)
 
 
 def _prompt_text(prompt_root: Path, name: str) -> str:
@@ -16,43 +14,37 @@ def _prompt_text(prompt_root: Path, name: str) -> str:
 
 
 class StructuredAgent:
-    def __init__(
-        self,
-        provider: LlmProvider,
-        model: str,
-        prompt_root: Path,
-        prompt_name: str,
-    ) -> None:
-        self.provider = provider
-        self.model = model
+    def __init__(self, router: ProviderRouter, prompt_root: Path, prompt_name: str) -> None:
+        self.router = router
         self.prompt_root = prompt_root
         self.prompt_name = prompt_name
 
-    def run(self, schema: type[SchemaT], payload: dict[str, Any]) -> SchemaT:
+    def run(self, role: str, schema: type[BaseModel], payload: dict[str, Any]) -> BaseModel:
         prompt = _prompt_text(self.prompt_root, self.prompt_name)
-        return self.provider.generate_structured(
+        result, _route = self.router.generate_structured(
+            role=role,
             prompt=f"{prompt}\nINPUT={payload}",
-            model=self.model,
             schema=schema,
             metadata=payload,
         )
+        return result
 
 
 class ProductDesignerAgent(StructuredAgent):
     def run_spec(self, payload: dict[str, Any]) -> ProductSpec:
-        return self.run(ProductSpec, payload)
+        return ProductSpec.model_validate(self.run("product_designer", ProductSpec, payload))
 
 
 class CeremonyMasterAgent(StructuredAgent):
     def run_backlog(self, payload: dict[str, Any]) -> Backlog:
-        return self.run(Backlog, payload)
+        return Backlog.model_validate(self.run("ceremony_master", Backlog, payload))
 
 
 class CoderAgent(StructuredAgent):
     def run_code(self, payload: dict[str, Any]) -> CodeResult:
-        return self.run(CodeResult, payload)
+        return CodeResult.model_validate(self.run("coder", CodeResult, payload))
 
 
 class ReviewerAgent(StructuredAgent):
     def run_review(self, payload: dict[str, Any]) -> ReviewResult:
-        return self.run(ReviewResult, payload)
+        return ReviewResult.model_validate(self.run("reviewer", ReviewResult, payload))
