@@ -11,4 +11,21 @@ dependency_change_rules:
 escalation_rules:
   on_protected_path_change: true
   on_retry_exhausted: true
-
+risk_weights:
+  blast_radius_medium: 1
+  blast_radius_large: 2
+  protected_path: 3
+  repo_risky_path: 2
+  dependency_change: 1
+  dependency_change_restricted: 2
+  migration_change: 3
+  sensitive_area: 2
+  ticket_sensitive_domain: 1
+risk_thresholds:
+  medium: 4
+  high: 7
+  critical: 11
+sensitive_path_patterns:
+  - auth/
+  - billing/
+  - infra/

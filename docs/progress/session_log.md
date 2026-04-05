@@ -144,6 +144,57 @@
 - Stop reason: step complete; waiting for user confirmation before returning to `STEP-003`
 - Next recommended step: `STEP-003` after explicit user confirmation
 
+## 2026-04-05 12:31 UTC
+
+- Session goal: add a deterministic policy-driven risk scoring layer and attach it to evidence bundles
+- Selected step: `STEP-005`
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/risk.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_risk.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `docs/architecture/risk_model.md`
+  - `docs/runbooks/risk_scoring.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-005.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,220p' tests/test_policy.py`
+  - `sed -n '1,240p' examples/maestro.example.yaml`
+  - `sed -n '1,260p' src/maestro/storage/policies.py`
+  - `sed -n '1,240p' src/maestro/repo/adapters.py`
+  - `uv run pytest tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py`
+  - `uv run ruff check src/maestro/core/risk.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/schemas/contracts.py src/maestro/cli/main.py tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py` passed
+  - `uv run ruff check src/maestro/core/risk.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/schemas/contracts.py src/maestro/cli/main.py tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-005`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-006`
+- Next recommended step: `STEP-006` after explicit user confirmation
+
 ## 2026-04-05 12:05 UTC
 
 - Session goal: emit evidence bundles from the existing implementation, validation, and review flow

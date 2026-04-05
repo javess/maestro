@@ -34,6 +34,7 @@ def test_run_plan_emits_evidence_bundle_for_completed_ticket(tmp_path: Path) -> 
     bundle = json.loads(bundle_path.read_text())
     assert bundle["ticket_id"] == "TICKET-1"
     assert bundle["review_result"]["approved"] is True
+    assert bundle["risk_score"]["level"] in {"low", "medium", "high", "critical"}
     assert bundle["metadata"]["review_cycle"] == 1
 
 
@@ -52,5 +53,6 @@ def test_run_plan_emits_evidence_bundle_for_escalated_ticket(tmp_path: Path) -> 
     bundle_path = Path(state.artifacts.evidence_bundles[-1].path)
     bundle = json.loads(bundle_path.read_text())
     assert bundle["review_result"]["approved"] is False
+    assert bundle["risk_score"]["score"] >= 0
     assert "review_rejected" in bundle["metadata"]["violations"]
     assert bundle["rollback_notes"]

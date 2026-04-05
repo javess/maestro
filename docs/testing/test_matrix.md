@@ -48,3 +48,11 @@
 - Added `tests/test_evidence.py` for policy-finding aggregation and bundle content generation.
 - Updated `tests/test_engine.py` to assert evidence bundle emission in completed and escalated flows.
 - Full backend test baseline and UI build were rerun after runtime artifact generation changes.
+
+## STEP-005 Note
+
+- Added `tests/test_risk.py` for deterministic scoring, migration/protected-path detection, and
+  policy-driven score differences.
+- Updated `tests/test_evidence.py` and `tests/test_engine.py` to assert persisted risk scores in
+  generated evidence bundles.
+- Full backend test baseline and UI build were rerun after policy and artifact changes.

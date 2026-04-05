@@ -31,3 +31,10 @@
 
 - The deterministic scenario set is unchanged, but eval reporting now includes emitted evidence bundle counts for each scenario.
 - Existing scenarios continue to validate both happy-path and escalation flows while making evidence generation visible.
+
+## STEP-005 Note
+
+- No scenario set changes were required in STEP-005 because risk scoring does not yet alter
+  orchestration transitions.
+- Existing scenarios were rerun to confirm that risk scoring is persisted without changing the
+  current happy-path and escalation outcomes.

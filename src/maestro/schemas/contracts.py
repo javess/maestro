@@ -16,6 +16,13 @@ class Severity(StrEnum):
     critical = "critical"
 
 
+class RiskLevel(StrEnum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
 class TicketStatus(StrEnum):
     pending = "pending"
     in_progress = "in_progress"
@@ -108,6 +115,25 @@ class PolicyPack(BaseModel):
     protected_paths: list[str] = Field(default_factory=list)
     dependency_change_rules: dict[str, Any] = Field(default_factory=dict)
     escalation_rules: dict[str, Any] = Field(default_factory=dict)
+    risk_weights: dict[str, int] = Field(
+        default_factory=lambda: {
+            "blast_radius_medium": 2,
+            "blast_radius_large": 4,
+            "protected_path": 4,
+            "repo_risky_path": 3,
+            "dependency_change": 2,
+            "dependency_change_restricted": 4,
+            "migration_change": 4,
+            "sensitive_area": 3,
+            "ticket_sensitive_domain": 2,
+        }
+    )
+    risk_thresholds: dict[str, int] = Field(
+        default_factory=lambda: {"medium": 3, "high": 6, "critical": 10}
+    )
+    sensitive_path_patterns: list[str] = Field(
+        default_factory=lambda: ["auth/", "billing/", "payments/", "infra/", "deploy/", "k8s/"]
+    )
 
 
 class ArtifactEntry(BaseModel):
@@ -133,6 +159,19 @@ class PolicyFinding(BaseModel):
     detail: str = ""
 
 
+class RiskFactor(BaseModel):
+    name: str
+    triggered: bool
+    weight: int
+    detail: str = ""
+
+
+class RiskScore(BaseModel):
+    score: int
+    level: RiskLevel
+    factors: list[RiskFactor] = Field(default_factory=list)
+
+
 class EvidenceBundle(BaseModel):
     bundle_id: str
     run_id: str
@@ -142,6 +181,7 @@ class EvidenceBundle(BaseModel):
     policy_findings: list[PolicyFinding] = Field(default_factory=list)
     rollback_notes: list[RollbackNote] = Field(default_factory=list)
     review_result: ReviewResult | None = None
+    risk_score: RiskScore | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 

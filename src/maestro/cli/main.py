@@ -73,7 +73,22 @@ def run_ticket(ticket_id: str, config: Path | None = None, repo: Path = Path("."
     commands = discovery.repo_info.lint_commands + discovery.repo_info.test_commands
     checks = engine.validate(state, commands)
     review = engine.review(state, ticket, code_result, checks)
-    result = engine.advance_ticket(state, ticket, code_result, checks, review)
+    violations = engine.write_evidence_bundle(
+        state,
+        ticket,
+        code_result,
+        checks,
+        review,
+        discovery.repo_info,
+    )
+    result = engine.advance_ticket(
+        state,
+        ticket,
+        code_result,
+        checks,
+        review,
+        violations=violations,
+    )
     console.print_json(
         json.dumps(
             {"final_state": result.value, "ticket": ticket.model_dump(mode="json")},

@@ -7,8 +7,8 @@
 | STEP-001 | Canonical run graph contracts | done | 2026-04-05 11:02 UTC | [STEP-001](steps/STEP-001.md) | `e0bed4a` | `test_run_graph` pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-002` |
 | STEP-002 | Run graph persistence, replay, and resume support | done | 2026-04-05 11:14 UTC | [STEP-002](steps/STEP-002.md) | `441523c` | targeted persistence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-003` |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | 2026-04-05 11:35 UTC | [STEP-003](steps/STEP-003.md) | `ddcdd03` | targeted schema/storage pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-004` |
-| STEP-004 | Evidence bundle generation in the existing flow | done | 2026-04-05 12:05 UTC | [STEP-004](steps/STEP-004.md) | pending post-commit recording | targeted evidence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-005` |
-| STEP-005 | Risk scoring engine | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-004 |
+| STEP-004 | Evidence bundle generation in the existing flow | done | 2026-04-05 12:05 UTC | [STEP-004](steps/STEP-004.md) | `cae3de4` | targeted evidence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-005` |
+| STEP-005 | Risk scoring engine | done | 2026-04-05 12:31 UTC | [STEP-005](steps/STEP-005.md) | pending post-commit recording | targeted risk pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-006` |
 | STEP-006 | Approval gate framework | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-005 |
 | STEP-007 | Product brief compiler | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-006 |
 | STEP-008 | Assumption tracker | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-007 |

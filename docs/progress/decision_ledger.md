@@ -43,3 +43,9 @@
 
 - Decision: derive policy findings in evidence bundles from existing deterministic policy checks and review outcomes.
 - Rationale: STEP-004 should expose current enforcement results without introducing new risk or approval logic ahead of the roadmap.
+
+- Decision: make risk scoring policy-configurable through explicit weights, thresholds, and sensitive path patterns on `PolicyPack`.
+- Rationale: STEP-005 needs policy-driven scores without hardcoding one universal risk profile.
+
+- Decision: persist `RiskScore` in evidence bundles instead of creating a separate artifact stream.
+- Rationale: the score is part of the per-attempt audit record and will be consumed by later approval work.

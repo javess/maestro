@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
+from maestro.core.risk import compute_risk_score
 from maestro.schemas.contracts import (
     CheckResult,
     CodeResult,
@@ -8,6 +9,7 @@ from maestro.schemas.contracts import (
     EvidenceBundle,
     PolicyFinding,
     PolicyPack,
+    RepoInfo,
     ReviewResult,
     RollbackNote,
     Ticket,
@@ -88,8 +90,10 @@ def build_evidence_bundle(
     code_result: CodeResult,
     checks: list[CheckResult],
     review: ReviewResult,
+    repo_info: RepoInfo,
     violations: list[str],
     policy_findings: list[PolicyFinding],
+    policy: PolicyPack,
 ) -> EvidenceBundle:
     changed_files = [change.path for change in code_result.changed_files]
     rollback_steps: list[str] = []
@@ -105,6 +109,12 @@ def build_evidence_bundle(
         if rollback_steps
         else []
     )
+    risk_score = compute_risk_score(
+        policy=policy,
+        ticket=ticket,
+        code_result=code_result,
+        repo_info=repo_info,
+    )
     return EvidenceBundle(
         bundle_id=f"{ticket.id}_evidence_{review_cycle}",
         run_id=run_id,
@@ -118,6 +128,7 @@ def build_evidence_bundle(
         policy_findings=policy_findings,
         rollback_notes=rollback_notes,
         review_result=review,
+        risk_score=risk_score,
         metadata={
             "review_cycle": review_cycle,
             "violations": violations,

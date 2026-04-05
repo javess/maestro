@@ -28,6 +28,7 @@ from maestro.schemas.contracts import (
     CodeResult,
     MaestroConfig,
     PolicyPack,
+    RepoInfo,
     ReviewResult,
     RunEvent,
     RunState,
@@ -213,6 +214,7 @@ class OrchestratorEngine:
         code_result: CodeResult,
         checks: list[CheckResult],
         review: ReviewResult,
+        repo_info: RepoInfo,
     ) -> list[str]:
         review_cycle = state.review_cycles + 1
         violations, policy_findings = collect_policy_findings(
@@ -229,8 +231,10 @@ class OrchestratorEngine:
             code_result=code_result,
             checks=checks,
             review=review,
+            repo_info=repo_info,
             violations=violations,
             policy_findings=policy_findings,
+            policy=self.deps.policy,
         )
         self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
         self.deps.state_store.save(state)
@@ -282,7 +286,14 @@ class OrchestratorEngine:
             commands = repo.repo_info.lint_commands + repo.repo_info.test_commands
             checks = self.validate(state, commands)
             review = self.review(state, ticket, code_result, checks)
-            violations = self.write_evidence_bundle(state, ticket, code_result, checks, review)
+            violations = self.write_evidence_bundle(
+                state,
+                ticket,
+                code_result,
+                checks,
+                review,
+                repo.repo_info,
+            )
             result = self.advance_ticket(
                 state,
                 ticket,

@@ -1,0 +1,94 @@
+# STEP-005
+
+- Step id: `STEP-005`
+- Title: Risk scoring engine
+- Status: done
+- Objective:
+  - Compute deterministic policy-driven risk scores for work items and change sets.
+- Scope:
+  - Add typed risk score contracts and policy configuration fields.
+  - Implement a deterministic scorer for blast radius, protected paths, dependency changes,
+    migrations, sensitive paths, and ticket sensitivity.
+  - Attach computed risk scores to emitted evidence bundles.
+  - Add unit and integration coverage for scoring rules and policy influence.
+- Non-goals:
+  - No approval gating or pause behavior changes.
+  - No provider logic changes.
+  - No new persistence backend beyond existing JSON artifacts.
+- Prerequisites:
+  - STEP-004 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Extend contracts and policy packs with explicit risk configuration.
+  - Implement a deterministic scoring module.
+  - Wire the score into evidence bundle generation and CLI run-ticket flow.
+  - Add focused tests, rerun validation, update docs, and commit.
+- Files changed:
+  - `README.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/risk.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_risk.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `docs/architecture/risk_model.md`
+  - `docs/runbooks/risk_scoring.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-005.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_risk.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun to confirm risk scoring does not
+    alter current orchestration outcomes.
+- Commands run:
+  - `sed -n '1,220p' tests/test_policy.py`
+  - `sed -n '1,240p' examples/maestro.example.yaml`
+  - `sed -n '1,260p' src/maestro/storage/policies.py`
+  - `sed -n '1,240p' src/maestro/repo/adapters.py`
+  - `uv run pytest tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py`
+  - `uv run ruff check src/maestro/core/risk.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/schemas/contracts.py src/maestro/cli/main.py tests/test_risk.py tests/test_evidence.py tests/test_engine.py tests/test_policy.py`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - Added typed risk contracts and policy-configurable risk weights and thresholds.
+  - Implemented deterministic scoring for changed-file blast radius, protected and risky paths,
+    dependency files, migrations, sensitive paths, and sensitive ticket domains.
+  - Persisted computed risk scores inside evidence bundles for each ticket attempt.
+  - Verified that existing deterministic eval scenarios still complete with the same outcomes.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/risk_model.md`
+  - `docs/runbooks/risk_scoring.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-005.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Compute risk from deterministic ticket and change metadata only, not from model judgment.
+  - Persist the score in evidence bundles now so later approval work can consume a stable artifact.
+- Known limitations:
+  - The current score is advisory only and does not yet pause or gate execution.
+  - Risk input heuristics are path- and keyword-based until later roadmap steps add richer context.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-006`.
+- Commit hash:
+  - pending post-commit recording

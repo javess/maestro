@@ -1,9 +1,12 @@
+from pathlib import Path
+
 from maestro.core.evidence import build_evidence_bundle, collect_policy_findings
 from maestro.schemas.contracts import (
     CheckResult,
     CodeChange,
     CodeResult,
     PolicyPack,
+    RepoInfo,
     ReviewResult,
     Ticket,
 )
@@ -66,12 +69,15 @@ def test_build_evidence_bundle_includes_review_and_rollback_guidance() -> None:
         code_result=code_result,
         checks=checks,
         review=review,
+        repo_info=RepoInfo(root=Path("."), repo_type="python", risky_paths=["src/"]),
         violations=["checks_failed", "review_rejected"],
         policy_findings=[],
+        policy=PolicyPack(name="default"),
     )
 
     assert bundle.bundle_id == "T-1_evidence_2"
     assert bundle.diff_summary.changed_files == ["src/app.py"]
     assert bundle.review_result is not None
+    assert bundle.risk_score is not None
     assert bundle.metadata["violations"] == ["checks_failed", "review_rejected"]
     assert bundle.rollback_notes[0].steps[0].startswith("Revert changed files:")

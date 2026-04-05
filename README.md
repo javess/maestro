@@ -8,6 +8,7 @@ machine. The baseline includes:
 - deterministic orchestrator
 - typed schemas and artifact persistence
 - evidence bundle emission for implementation and review attempts
+- deterministic policy-driven risk scoring for ticket changes
 - repo adapters for common ecosystems
 - provider abstraction with fake and real provider adapters
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
@@ -76,7 +77,8 @@ run state, policies, ticket status, and artifacts from local JSON data.
 
 Runs now persist evidence bundle artifacts alongside other run outputs. These bundles capture
 changed-file summaries, validation checks, policy findings, review outcomes, and rollback
-guidance for each ticket attempt.
+guidance for each ticket attempt, along with a deterministic risk score derived from policy and
+change context.
 
 ## Binary packaging
 
