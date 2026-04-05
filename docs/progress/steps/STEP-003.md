@@ -1,0 +1,81 @@
+# STEP-003
+
+- Step id: `STEP-003`
+- Title: Evidence bundle contracts and artifact manifest extensions
+- Status: done
+- Objective:
+  - Add typed evidence bundle artifacts for approval and auditability.
+- Scope:
+  - Define evidence bundle schemas and placeholder sections.
+  - Extend artifact manifest contracts to reference persisted evidence bundles explicitly.
+  - Add local storage support for persisting evidence bundle JSON.
+  - Add focused schema and storage tests.
+- Non-goals:
+  - No evidence bundle generation from execution flow yet.
+  - No approval gate changes.
+  - No review-loop behavior changes.
+- Prerequisites:
+  - STEP-002 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Inspect current artifact manifest and storage interfaces.
+  - Add contract-first evidence bundle schemas with placeholder sections.
+  - Extend manifest and local artifact store with explicit bundle references.
+  - Add tests and documentation.
+  - Rerun full validation baseline, update progress docs, and commit.
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/storage/local.py`
+  - `tests/test_schemas.py`
+  - `tests/test_storage.py`
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-003.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Tests added or updated:
+  - `tests/test_schemas.py`
+  - `tests/test_storage.py`
+- Evals added or updated:
+  - None. This step is contract/storage preparation only.
+- Commands run:
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,220p' src/maestro/storage/local.py`
+  - `sed -n '1,260p' tests/test_schemas.py`
+  - `sed -n '1,260p' tests/test_storage.py`
+  - `rg -n "ArtifactManifest|ArtifactEntry|artifact" src tests docs`
+  - `uv run pytest tests/test_schemas.py tests/test_storage.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/storage/local.py tests/test_schemas.py tests/test_storage.py docs/architecture/evidence_bundle_model.md docs/runbooks/evidence_bundles.md`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Results:
+  - Added typed `EvidenceBundle`, `DiffSummary`, `PolicyFinding`, and `RollbackNote` contracts.
+  - Extended `ArtifactManifest` with explicit `evidence_bundles` references.
+  - Added `LocalArtifactStore.write_evidence_bundle(...)`.
+  - Added schema and storage tests for placeholder bundle sections and manifest registration.
+- Docs updated:
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-003.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Decisions made:
+  - Keep the evidence bundle contract placeholder-first and generation-free in this step.
+  - Extend the manifest with a dedicated bundle reference list instead of overloading generic artifact entries alone.
+- Known limitations:
+  - No runs emit evidence bundles yet; generation is deferred to `STEP-004`.
+  - The exact commit hash for the atomic step-closing commit cannot be embedded into the same commit without a follow-up amend; it is reported in session output instead.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-004`.
+- Commit hash:
+  - pending post-commit recording
+

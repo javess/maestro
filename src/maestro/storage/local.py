@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from maestro.schemas.contracts import ArtifactEntry, ArtifactManifest, RunState
+from maestro.schemas.contracts import ArtifactEntry, ArtifactManifest, EvidenceBundle, RunState
 
 
 class LocalArtifactStore:
@@ -25,6 +25,16 @@ class LocalArtifactStore:
         path = run_dir / f"{name}.json"
         path.write_text(json.dumps(payload, indent=2, default=str))
         manifest.artifacts.append(ArtifactEntry(name=name, path=str(path), kind="json"))
+        return path
+
+    def write_evidence_bundle(self, manifest: ArtifactManifest, bundle: EvidenceBundle) -> Path:
+        run_dir = self.root / manifest.run_id
+        run_dir.mkdir(parents=True, exist_ok=True)
+        path = run_dir / f"{bundle.bundle_id}.json"
+        path.write_text(bundle.model_dump_json(indent=2))
+        manifest.evidence_bundles.append(
+            ArtifactEntry(name=bundle.bundle_id, path=str(path), kind="evidence_bundle")
+        )
         return path
 
 

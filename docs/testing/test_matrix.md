@@ -36,3 +36,9 @@
 - Added `tests/test_run_graph_runtime.py` for graph initialization, advancement, and resume-point helpers.
 - Updated `tests/test_storage.py` for graph persistence round-trip and legacy state compatibility.
 - Full backend test baseline and UI build were rerun after persistence changes.
+
+## STEP-003 Note
+
+- Updated `tests/test_schemas.py` for evidence bundle contracts and placeholders.
+- Updated `tests/test_storage.py` for evidence bundle persistence and manifest references.
+- Full backend test baseline and UI build were rerun after artifact contract changes.

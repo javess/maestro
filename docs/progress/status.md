@@ -5,9 +5,9 @@
 | STEP-000 | Workflow bootstrap and prompt capture | done | 2026-04-05 10:26 UTC | [STEP-000](steps/STEP-000.md) | `6e1fe7e` | `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-000A` |
 | STEP-000A | VS Code workspace bootstrap | done | 2026-04-05 10:49 UTC | [STEP-000A](steps/STEP-000A.md) | `9cfd36b` | JSON validation pass; `pytest` pass; UI build pass | `STEP-001` |
 | STEP-001 | Canonical run graph contracts | done | 2026-04-05 11:02 UTC | [STEP-001](steps/STEP-001.md) | `e0bed4a` | `test_run_graph` pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-002` |
-| STEP-002 | Run graph persistence, replay, and resume support | done | 2026-04-05 11:14 UTC | [STEP-002](steps/STEP-002.md) | pending post-commit recording | targeted persistence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-003` |
-| STEP-003 | Evidence bundle contracts and artifact manifest extensions | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-002 completion |
-| STEP-004 | Evidence bundle generation in the existing flow | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-003 |
+| STEP-002 | Run graph persistence, replay, and resume support | done | 2026-04-05 11:14 UTC | [STEP-002](steps/STEP-002.md) | `441523c` | targeted persistence pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-003` |
+| STEP-003 | Evidence bundle contracts and artifact manifest extensions | done | 2026-04-05 11:35 UTC | [STEP-003](steps/STEP-003.md) | pending post-commit recording | targeted schema/storage pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Request confirmation before `STEP-004` |
+| STEP-004 | Evidence bundle generation in the existing flow | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-003 completion |
 | STEP-005 | Risk scoring engine | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-004 |
 | STEP-006 | Approval gate framework | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-005 |
 | STEP-007 | Product brief compiler | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-006 |

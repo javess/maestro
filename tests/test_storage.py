@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from maestro.core.run_graph_runtime import determine_resume_node_id, initialize_run_graph
-from maestro.schemas.contracts import ArtifactManifest, RunState
+from maestro.schemas.contracts import ArtifactManifest, EvidenceBundle, RunState
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 
 
@@ -11,6 +11,16 @@ def test_artifact_store_writes_json(tmp_path: Path) -> None:
     path = store.write_json(manifest, "payload", {"ok": True})
     assert path.exists()
     assert manifest.artifacts[0].name == "payload"
+
+
+def test_artifact_store_writes_evidence_bundle(tmp_path: Path) -> None:
+    store = LocalArtifactStore(tmp_path)
+    manifest = store.create_run()
+    bundle = EvidenceBundle(bundle_id="bundle-1", run_id=manifest.run_id, ticket_id="T-1")
+    path = store.write_evidence_bundle(manifest, bundle)
+    assert path.exists()
+    assert manifest.evidence_bundles[0].name == "bundle-1"
+    assert manifest.evidence_bundles[0].kind == "evidence_bundle"
 
 
 def test_state_store_round_trip(tmp_path: Path) -> None:

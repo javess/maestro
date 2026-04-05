@@ -144,6 +144,48 @@
 - Stop reason: step complete; waiting for user confirmation before returning to `STEP-003`
 - Next recommended step: `STEP-003` after explicit user confirmation
 
+## 2026-04-05 11:35 UTC
+
+- Session goal: add typed evidence bundle contracts and manifest/storage references without wiring generation yet
+- Selected step: `STEP-003`
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/storage/local.py`
+  - `tests/test_schemas.py`
+  - `tests/test_storage.py`
+  - `docs/architecture/evidence_bundle_model.md`
+  - `docs/runbooks/evidence_bundles.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-003.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+- Commands run:
+  - `sed -n '1,260p' src/maestro/schemas/contracts.py`
+  - `sed -n '1,220p' src/maestro/storage/local.py`
+  - `sed -n '1,260p' tests/test_schemas.py`
+  - `sed -n '1,260p' tests/test_storage.py`
+  - `rg -n "ArtifactManifest|ArtifactEntry|artifact" src tests docs`
+  - `uv run pytest tests/test_schemas.py tests/test_storage.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/storage/local.py tests/test_schemas.py tests/test_storage.py docs/architecture/evidence_bundle_model.md docs/runbooks/evidence_bundles.md`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Tests run:
+  - `uv run pytest tests/test_schemas.py tests/test_storage.py` passed
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/storage/local.py tests/test_schemas.py tests/test_storage.py docs/architecture/evidence_bundle_model.md docs/runbooks/evidence_bundles.md` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-003`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-004`
+- Next recommended step: `STEP-004` after explicit user confirmation
+
 ## 2026-04-05 10:44 UTC
 
 - Session goal: restore safe repo state and add a repository-scoped VS Code workspace setup before roadmap feature work

@@ -116,9 +116,39 @@ class ArtifactEntry(BaseModel):
     kind: str
 
 
+class DiffSummary(BaseModel):
+    changed_files: list[str] = Field(default_factory=list)
+    file_count: int = 0
+    summary: str = ""
+
+
+class RollbackNote(BaseModel):
+    summary: str
+    steps: list[str] = Field(default_factory=list)
+
+
+class PolicyFinding(BaseModel):
+    rule: str
+    outcome: Literal["pass", "fail", "warn", "not_applicable"]
+    detail: str = ""
+
+
+class EvidenceBundle(BaseModel):
+    bundle_id: str
+    run_id: str
+    ticket_id: str | None = None
+    diff_summary: DiffSummary = Field(default_factory=DiffSummary)
+    checks: list[CheckResult] = Field(default_factory=list)
+    policy_findings: list[PolicyFinding] = Field(default_factory=list)
+    rollback_notes: list[RollbackNote] = Field(default_factory=list)
+    review_result: ReviewResult | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
 class ArtifactManifest(BaseModel):
     run_id: str
     artifacts: list[ArtifactEntry] = Field(default_factory=list)
+    evidence_bundles: list[ArtifactEntry] = Field(default_factory=list)
 
 
 class ProviderCapability(BaseModel):

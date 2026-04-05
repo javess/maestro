@@ -22,3 +22,7 @@
 ## STEP-002 Note
 
 - No eval scenarios changed in STEP-002 because persisted run-graph state and resume helpers do not yet change orchestration outcomes.
+
+## STEP-003 Note
+
+- No eval scenarios changed in STEP-003 because evidence bundle work is contract/storage-only and does not yet change runtime behavior.

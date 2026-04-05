@@ -31,3 +31,9 @@
 
 - Decision: add a final roadmap step for a local SQL persistence backend, with SQLite as the default target and PostgreSQL only as a later consideration if justified.
 - Rationale: SQL-backed indexing and query support will likely be valuable, but the current model is still evolving, so the migration should happen after the core orchestration, artifact, and approval contracts stabilize.
+
+- Decision: keep `STEP-003` contract-first and avoid generating evidence bundles yet.
+- Rationale: generation belongs in `STEP-004`; this step should only stabilize the schema, manifest references, and storage surface.
+
+- Decision: add a dedicated `evidence_bundles` list to `ArtifactManifest`.
+- Rationale: bundles are a first-class audit surface and should be discoverable without filtering generic artifact entries.
