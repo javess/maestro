@@ -89,6 +89,6 @@ On every session, read these files in order before making changes:
 - Tests: `uv run pytest`
 - Evals: `uv run maestro eval --json-output`
 - UI build: `cd ui && npm run build`
+- VS Code JSON validation: `python3 -m json.tool .vscode/settings.json`
 - Local init: `uv run maestro init`
 - Doctor: `uv run maestro doctor`
-

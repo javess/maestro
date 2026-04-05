@@ -11,7 +11,8 @@
 
 | Step ID | Title | Status | Notes |
 | --- | --- | --- | --- |
-| STEP-000 | Workflow bootstrap and prompt capture | in_progress | Durable control-plane bootstrap |
+| STEP-000 | Workflow bootstrap and prompt capture | done | Durable control-plane bootstrap |
+| STEP-000A | VS Code workspace bootstrap | in_progress | User-requested prerequisite developer workflow setup before STEP-001 |
 | STEP-001 | Canonical run graph contracts | planned | Typed DAG contracts and validation |
 | STEP-002 | Run graph persistence, replay, and resume support | planned | Persist and resume canonical run graphs |
 | STEP-003 | Evidence bundle contracts and artifact manifest extensions | planned | Approval and audit evidence contracts |
@@ -33,6 +34,6 @@
 ## Step Sequencing
 
 1. Complete `STEP-000`, stop, and request confirmation.
-2. Complete `STEP-001`, stop, and request confirmation.
-3. Continue one bounded step at a time in roadmap order.
-
+2. Complete `STEP-000A`, stop, and request confirmation.
+3. Complete `STEP-001`, stop, and request confirmation.
+4. Continue one bounded step at a time in roadmap order.

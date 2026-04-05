@@ -13,3 +13,9 @@
 
 - Decision: record commit hash as pending in step-tracking docs for the step-closing commit.
 - Rationale: embedding the exact hash into the same atomic commit would require an extra amend due to self-reference, which this workflow avoids.
+
+- Decision: add `STEP-000A` as a prerequisite developer workflow substep before `STEP-001`.
+- Rationale: the user explicitly requested a proper VS Code workspace setup before further roadmap feature work, and the step is bounded, non-invasive, and separate from runtime functionality.
+
+- Decision: keep `STEP-000A` editor-focused and avoid runtime code changes.
+- Rationale: the goal is a reviewable workspace setup with tasks, launch configs, test discovery, and extension recommendations, not a behavioral change to the product itself.

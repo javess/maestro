@@ -1,0 +1,80 @@
+# STEP-000A
+
+- Step id: `STEP-000A`
+- Title: VS Code workspace bootstrap
+- Status: done
+- Objective:
+  - Add a repository-scoped VS Code workspace configuration for the current Python, pytest, `uv`, UI, Docker, and GitHub Actions workflow.
+- Scope:
+  - Add `.vscode/extensions.json`, `settings.json`, `tasks.json`, and `launch.json`.
+  - Add a runbook for VS Code usage.
+  - Record this prerequisite step in roadmap and progress docs.
+- Non-goals:
+  - No product feature work from `STEP-001` onward.
+  - No changes to runtime application behavior.
+- Prerequisites:
+  - Repository must be clean before changes start.
+  - Existing stray `ui/package-lock.json` modification must be resolved first.
+- Implementation plan:
+  - Restore the repo to a safe state.
+  - Document the prerequisite substep in the roadmap and decision ledger.
+  - Add VS Code workspace files aligned to the current repo commands and CLI entrypoints.
+  - Validate JSON config and lightweight repo baseline commands.
+  - Update progress files and commit the step.
+- Files changed:
+  - `.vscode/extensions.json`
+  - `.vscode/settings.json`
+  - `.vscode/tasks.json`
+  - `.vscode/launch.json`
+  - `docs/runbooks/vscode_setup.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000A.md`
+  - `docs/testing/test_matrix.md`
+  - `README.md`
+  - `AGENTS.md`
+- Tests added or updated:
+  - None expected. This is editor/workflow configuration.
+- Evals added or updated:
+  - None expected. This step does not change orchestration behavior.
+- Commands run:
+  - `git restore -- ui/package-lock.json`
+  - `git status --short --branch`
+  - `rg --files .vscode 2>/dev/null || true`
+  - `sed -n '1,260p' pyproject.toml`
+  - `sed -n '1,220p' ui/package.json`
+  - `sed -n '1,260p' src/maestro/cli/main.py`
+  - `sed -n '1,220p' README.md`
+  - `for f in .vscode/*.json; do python3 -m json.tool "$f" >/dev/null; done`
+  - `uv run pytest`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Results:
+  - Restored the repository to a clean state before starting work.
+  - Added project-scoped VS Code extension recommendations for Python, debugging, Ruff, YAML, Docker, and GitHub Actions.
+  - Added workspace settings for pytest discovery, Python source analysis, Ruff integration, YAML schema validation, and workspace exclusions.
+  - Added VS Code tasks for sync, lint, format check, type check, tests, evals, doctor, init, and UI workflows.
+  - Added launch profiles for `maestro` CLI commands and pytest debugging.
+  - Added a dedicated VS Code runbook.
+- Docs updated:
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000A.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/runbooks/vscode_setup.md`
+- Decisions made:
+  - Added `STEP-000A` as a bounded prerequisite before `STEP-001`.
+  - Kept the step editor-only and non-invasive.
+- Known limitations:
+  - The exact commit hash for the atomic step-closing commit cannot be embedded into the same commit without a follow-up amend; it is reported in session output instead.
+  - `ty` is integrated via a VS Code task rather than a dedicated workspace extension.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-001`.
+- Commit hash:
+  - pending post-commit recording

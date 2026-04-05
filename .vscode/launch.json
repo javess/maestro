@@ -1,0 +1,81 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: maestro doctor",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "maestro.cli.main",
+      "args": [
+        "doctor"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: maestro eval",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "maestro.cli.main",
+      "args": [
+        "eval",
+        "--json-output"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: maestro plan example",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "maestro.cli.main",
+      "args": [
+        "plan",
+        "--brief",
+        "examples/brief.md"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: pytest current file",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: pytest tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "tests"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    }
+  ]
+}
+

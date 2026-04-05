@@ -20,3 +20,8 @@
 
 - No product-code changes were made in STEP-000, so no new tests were added.
 - Existing repository validation was rerun to establish a durable baseline for future sessions.
+
+## STEP-000A Note
+
+- VS Code workspace changes are editor configuration only.
+- Validate JSON structure and rerun lightweight relevant baseline commands before committing.

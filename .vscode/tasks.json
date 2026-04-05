@@ -1,0 +1,99 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "maestro: sync",
+      "type": "shell",
+      "command": "uv sync --all-extras",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: lint",
+      "type": "shell",
+      "command": "uv run ruff check .",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: format-check",
+      "type": "shell",
+      "command": "uv run ruff format --check .",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: typecheck",
+      "type": "shell",
+      "command": "uv run ty check",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: test",
+      "type": "shell",
+      "command": "uv run pytest",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: eval",
+      "type": "shell",
+      "command": "uv run maestro eval --json-output",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: doctor",
+      "type": "shell",
+      "command": "uv run maestro doctor",
+      "problemMatcher": []
+    },
+    {
+      "label": "maestro: init",
+      "type": "shell",
+      "command": "uv run maestro init",
+      "problemMatcher": []
+    },
+    {
+      "label": "ui: install",
+      "type": "shell",
+      "command": "npm install",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "ui: dev",
+      "type": "shell",
+      "command": "npm run dev -- --host 0.0.0.0",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Local:"
+        }
+      }
+    },
+    {
+      "label": "ui: build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
+

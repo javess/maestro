@@ -41,3 +41,42 @@
 - Commit hash: none yet
 - Stop reason: step complete; waiting for user confirmation before `STEP-001`
 - Next recommended step: `STEP-001` after explicit user confirmation
+
+## 2026-04-05 10:44 UTC
+
+- Session goal: restore safe repo state and add a repository-scoped VS Code workspace setup before roadmap feature work
+- Selected step: `STEP-000A`
+- Files changed:
+  - `.vscode/extensions.json`
+  - `.vscode/settings.json`
+  - `.vscode/tasks.json`
+  - `.vscode/launch.json`
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-000A.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/runbooks/vscode_setup.md`
+- Commands run:
+  - `git restore -- ui/package-lock.json && git status --short --branch`
+  - `rg --files .vscode 2>/dev/null || true`
+  - `sed -n '1,260p' pyproject.toml`
+  - `sed -n '1,220p' ui/package.json`
+  - `sed -n '1,260p' src/maestro/cli/main.py`
+  - `sed -n '1,220p' README.md`
+  - `for f in .vscode/*.json; do python3 -m json.tool "$f" >/dev/null; done`
+  - `uv run pytest`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Tests run:
+  - `.vscode` JSON validation passed
+  - `uv run pytest` passed
+- Evals run:
+  - none; not applicable for editor-only configuration
+- Outcome: completed `STEP-000A`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-001`
+- Next recommended step: `STEP-001` after explicit user confirmation
