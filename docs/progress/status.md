@@ -16,8 +16,9 @@
 | STEP-009 | Architecture artifact model | done | 2026-04-05 20:14 UTC | [STEP-009](steps/STEP-009.md) | `82a72f3` | targeted architecture-artifact pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-010` |
 | STEP-010 | Architecture synthesizer | done | 2026-04-05 21:45 UTC | [STEP-010](steps/STEP-010.md) | `f622b2e` | targeted synthesis pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Continue approved batch with `STEP-011` |
 | STEP-011 | Backlog graph | done | 2026-04-05 21:48 UTC | [STEP-011](steps/STEP-011.md) | `4ba709b` | targeted backlog-graph pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Continue approved batch with `STEP-012` |
-| STEP-012 | Repo-aware impact analysis | done | 2026-04-05 21:55 UTC | [STEP-012](steps/STEP-012.md) | pending post-commit recording | targeted impact-analysis pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Start `STEP-013` and expose a user-testable product path |
-| STEP-013 | Preview environment abstraction | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-012 |
+| STEP-012 | Repo-aware impact analysis | done | 2026-04-05 21:55 UTC | [STEP-012](steps/STEP-012.md) | `ef62e29` | targeted impact-analysis pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | `STEP-012A` |
+| STEP-012A | OpenAI provider wiring and local env loading | done | 2026-04-05 22:10 UTC | [STEP-012A](steps/STEP-012A.md) | pending post-commit recording | targeted provider/env pass; `ruff` pass; `ty` pass; `pytest` pass; `eval` pass; UI build pass | Resume with `STEP-013` |
+| STEP-013 | Preview environment abstraction | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-012A |
 | STEP-014 | Migration planner | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-013 |
 | STEP-015 | Observation-to-backlog loop | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-014 |
 | STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |

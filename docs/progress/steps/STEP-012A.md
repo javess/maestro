@@ -1,0 +1,87 @@
+# STEP-012A
+
+- Step id: `STEP-012A`
+- Title: OpenAI provider wiring and local env loading
+- Status: done
+- Objective:
+  - Wire the OpenAI provider for runtime use and load local API keys from a `.env` file.
+- Scope:
+  - Implement the OpenAI adapter with lazy client initialization.
+  - Load `.env` from the config directory for local development.
+  - Pass `api_key_env` through provider construction.
+  - Add mocked tests and document secure-key-storage follow-up work.
+- Non-goals:
+  - No secure secret storage implementation yet.
+  - No Gemini or Claude runtime wiring.
+  - No preview environment work yet.
+- Prerequisites:
+  - STEP-012 complete.
+  - Repository clean before changes start.
+- Implementation plan:
+  - Implement lazy OpenAI client wiring and structured/text generation paths.
+  - Add `.env` loading in config bootstrap without overriding shell-provided env vars.
+  - Update tests, docs, and progress tracking, then rerun the baseline and commit.
+- Files changed:
+  - `.gitignore`
+  - `.env.example`
+  - `README.md`
+  - `src/maestro/config.py`
+  - `src/maestro/providers/factory.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_openai_adapter.py`
+  - `tests/test_config.py`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-012A.md`
+- Tests added or updated:
+  - `tests/test_openai_adapter.py`
+  - `tests/test_config.py`
+  - `tests/test_providers.py`
+- Evals added or updated:
+  - No scenario set changes. Existing eval scenarios were rerun because deterministic evals still
+    use `FakeProvider`.
+- Commands run:
+  - `sed -n '1,260p' src/maestro/config.py`
+  - `sed -n '1,260p' examples/maestro.example.yaml`
+  - `sed -n '1,260p' examples/maestro.real-providers.yaml`
+  - `sed -n '1,260p' src/maestro/core/structured.py`
+  - `rg -n "api_key_env|OPENAI_API_KEY|dotenv|env file|secure" -S src docs examples tests README.md`
+  - `uv run pytest tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py`
+  - `uv run ruff check src/maestro/config.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py`
+  - `python3 - <<'PY' ... .env.example validation ... PY`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Results:
+  - The OpenAI adapter now supports runtime text generation and structured generation paths.
+  - Config loading now reads a local `.env` file next to the config file for provider keys.
+  - Provider construction now respects configured `api_key_env`.
+  - Secure credential storage remains explicitly deferred to future work.
+- Docs updated:
+  - `README.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-012A.md`
+- Decisions made:
+  - Keep OpenAI SDK loading lazy and optional.
+  - Use `.env` only as the local-development credential path.
+  - Defer secure secret storage to a separate bounded step.
+- Known limitations:
+  - The installed environment still needs the `openai` package available to make real runtime calls.
+  - Only OpenAI is wired in this step; other real providers remain stubbed.
+- Next recommended step:
+  - Resume with `STEP-013` and start exposing a user-testable product path.
+- Commit hash:
+  - pending post-commit recording

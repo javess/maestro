@@ -87,3 +87,10 @@
   execution context without changing the current orchestration state machine.
 - Existing scenarios were rerun to confirm repo-aware context slicing preserves deterministic
   completion, escalation, approval-hold, and graph-ordering behavior.
+
+## STEP-012A Note
+
+- No eval scenario set changes were required in STEP-012A because OpenAI runtime wiring and `.env`
+  loading do not change deterministic eval coverage, which continues to use `FakeProvider`.
+- Existing scenarios were rerun to confirm the provider-layer changes do not alter current
+  deterministic orchestration behavior.

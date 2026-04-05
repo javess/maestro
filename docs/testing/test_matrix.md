@@ -106,3 +106,11 @@
 - Updated `tests/test_engine.py` to assert ticket-specific impact analysis is persisted and passed
   into execution context.
 - Full backend test baseline and UI build were rerun after impact-analysis integration.
+
+## STEP-012A Note
+
+- Added `tests/test_openai_adapter.py` for OpenAI text generation, structured parsing, fallback
+  parsing, and error normalization with mocked clients.
+- Added `tests/test_config.py` for `.env` loading behavior and config-directory env discovery.
+- Full backend test baseline and UI build were rerun after OpenAI provider and env-loading
+  integration.

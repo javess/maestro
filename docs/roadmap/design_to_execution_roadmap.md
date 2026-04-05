@@ -27,6 +27,7 @@
 | STEP-010 | Architecture synthesizer | done | Artifact synthesis from product model and repo discovery |
 | STEP-011 | Backlog graph | done | Dependency-aware execution graph |
 | STEP-012 | Repo-aware impact analysis | done | Deterministic repo-local context slicing |
+| STEP-012A | OpenAI provider wiring and local env loading | done | User-requested provider runtime integration before STEP-013 |
 | STEP-013 | Preview environment abstraction | planned | Generic preview surface with local/noop adapter |
 | STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
@@ -42,6 +43,8 @@
 4. Continue one bounded step at a time in roadmap order unless the user explicitly authorizes a
    bounded batch such as the next `N` steps or progress through a target step.
 5. Reserve `STEP-018` for the end of the roadmap because the storage model is still evolving and JSON should remain the simpler source of truth until the contracts stabilize.
+6. User-requested roadmap insertions may be added when needed, but they must be documented in the
+   roadmap and decision ledger before implementation.
 
 ## Product Testability Note
 

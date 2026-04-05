@@ -695,3 +695,50 @@
 - Commit hash: none yet
 - Stop reason: approved batch boundary reached
 - Next recommended step: start `STEP-013` and expose a user-testable product path
+
+## 2026-04-05 22:10 UTC
+
+- Session goal: wire the OpenAI provider for runtime use and load local provider keys from `.env`
+- Selected step: `STEP-012A`
+- Files changed:
+  - `.gitignore`
+  - `.env.example`
+  - `README.md`
+  - `src/maestro/config.py`
+  - `src/maestro/providers/factory.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/core/engine.py`
+  - `tests/test_openai_adapter.py`
+  - `tests/test_config.py`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-012A.md`
+- Commands run:
+  - `sed -n '1,260p' src/maestro/config.py`
+  - `sed -n '1,260p' examples/maestro.example.yaml`
+  - `sed -n '1,260p' examples/maestro.real-providers.yaml`
+  - `sed -n '1,260p' src/maestro/core/structured.py`
+  - `rg -n "api_key_env|OPENAI_API_KEY|dotenv|env file|secure" -S src docs examples tests README.md`
+  - `uv run pytest tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py`
+  - `uv run ruff check src/maestro/config.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py`
+  - `python3 - <<'PY' ... .env.example validation ... PY`
+  - `uv run ty check`
+  - `uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+- Tests run:
+  - `uv run pytest tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py` passed
+  - `uv run ruff check src/maestro/config.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/core/engine.py tests/test_openai_adapter.py tests/test_config.py tests/test_providers.py tests/test_router.py` passed
+  - `uv run ty check` passed
+  - `uv run pytest` passed
+- Evals run:
+  - `uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-012A`
+- Commit hash: none yet
+- Stop reason: step complete; waiting for user confirmation before `STEP-013`
+- Next recommended step: `STEP-013`

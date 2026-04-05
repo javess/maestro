@@ -59,6 +59,10 @@ VS Code workspace setup lives under `.vscode/` and is described in `docs/runbook
 Configure providers in `examples/maestro.example.yaml`. The default test and eval path
 uses `FakeProvider` for deterministic execution without secrets.
 
+For local real-provider development, `maestro` now loads a `.env` file from the same directory as
+your config file. Start from [.env.example](/Users/javiersierra/dev/maestro/.env.example), then set
+`OPENAI_API_KEY` there before using the OpenAI adapter.
+
 Provider routing is per role and supports fallbacks:
 
 ```yaml
@@ -72,6 +76,10 @@ fallbacks:
     - provider: openai
       model: gpt-5
 ```
+
+The OpenAI adapter is now runtime-wired for text and structured generation. Secure key storage is
+still future work; the current supported local-development path is `.env` plus environment
+variables.
 
 ## UI
 

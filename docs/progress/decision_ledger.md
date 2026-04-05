@@ -88,3 +88,9 @@
 
 - Decision: after STEP-012, the next bounded step should start exposing a user-testable product path.
 - Rationale: this was recorded earlier as a roadmap note, and the approved batch now reaches that threshold.
+
+- Decision: insert a user-requested `STEP-012A` for OpenAI provider runtime wiring before `STEP-013`.
+- Rationale: the user explicitly requested real OpenAI support and local `.env` loading before continuing with the preview/testability roadmap work.
+
+- Decision: use `.env` loading only for local development and defer secure secret storage to a later dedicated step.
+- Rationale: provider wiring and secure credential storage are different risk surfaces and should not be bundled into one review step.

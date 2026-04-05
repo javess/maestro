@@ -65,7 +65,7 @@ class EngineDeps:
 def build_engine_deps(project_root: Path, config_path: Path) -> EngineDeps:
     config = load_config(config_path)
     providers = {
-        name: build_provider(provider_cfg["type"])
+        name: build_provider(provider_cfg)
         for name, provider_cfg in config.providers.items()
     }
     router = ProviderRouter(config=config, providers=providers)
