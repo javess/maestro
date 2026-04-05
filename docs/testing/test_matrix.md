@@ -1,0 +1,22 @@
+# Test Matrix
+
+## Current Baseline
+
+| Area | Command | Purpose | Latest Recorded Result |
+| --- | --- | --- | --- |
+| Lint | `uv run ruff check .` | Python lint validation | Passed in STEP-000 |
+| Type checking | `uv run ty check` | Python type validation | Passed in STEP-000 |
+| Unit and integration tests | `uv run pytest` | Backend regression suite | Passed in STEP-000 |
+| Eval harness | `uv run maestro eval --json-output` | Deterministic scenario validation | Passed in STEP-000 |
+| UI build | `cd ui && npm run build` | Frontend compile validation | Passed in STEP-000 |
+
+## Step-Specific Guidance
+
+- Documentation-only steps: run lightweight validation and record why feature tests were not required.
+- Code steps: add or update focused unit tests first, then integration tests and eval scenarios when orchestration changes.
+- If baseline failures appear, record them in the current step file and `docs/progress/status.md` before proceeding.
+
+## STEP-000 Note
+
+- No product-code changes were made in STEP-000, so no new tests were added.
+- Existing repository validation was rerun to establish a durable baseline for future sessions.

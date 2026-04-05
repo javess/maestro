@@ -1,0 +1,68 @@
+# STEP-000
+
+- Step id: `STEP-000`
+- Title: Workflow bootstrap and prompt capture
+- Status: done
+- Objective:
+  - Create the durable workflow control-plane inside the repository so future Codex sessions can resume safely from repo state alone.
+- Scope:
+  - Add the required prompt persistence files.
+  - Add roadmap, progress, testing, eval, architecture, and runbook control-plane files.
+  - Add `AGENTS.md` with repository-local instructions.
+- Non-goals:
+  - No feature work from later roadmap steps.
+  - No core engine or schema changes.
+- Prerequisites:
+  - Repository must be in a clean, safe state before the step starts.
+- Implementation plan:
+  - Inspect current repo state and existing docs.
+  - Create the durable control-plane structure and seed it with initial roadmap and status content.
+  - Validate with lightweight repo checks and baseline test commands.
+  - Update progress files with results and commit the step.
+- Files changed:
+  - `README.md`
+  - `AGENTS.md`
+  - `.codex/README.md`
+  - `docs/codex/MASTER_IMPLEMENTATION_PROMPT.md`
+  - `docs/codex/RESUME_PROMPT.md`
+  - `docs/codex/PROMPT_CHANGELOG.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/TEMPLATE.md`
+  - `docs/progress/steps/STEP-000.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/architecture/README.md`
+  - `docs/runbooks/resume_workflow.md`
+- Tests added or updated:
+  - None. This is a workflow bootstrap step.
+- Evals added or updated:
+  - None. This step does not change orchestration behavior.
+- Commands run:
+  - `git status --short --branch`
+  - `rg --files docs AGENTS.md .codex 2>/dev/null || true`
+  - `sed -n '1,220p' README.md`
+  - `uv run ruff check .`
+  - `uv run ty check`
+  - `rm -f .coverage* && uv run pytest`
+  - `uv run maestro eval --json-output`
+  - `cd ui && npm run build`
+  - `git status --short`
+- Results:
+  - Durable workflow control-plane files created.
+  - Master prompt and resume prompt persisted in-repo.
+  - Roadmap, status tracker, session log, decision ledger, step template, and step record created.
+  - Lightweight and baseline validation completed successfully.
+- Docs updated:
+  - All workflow bootstrap docs listed above.
+- Decisions made:
+  - Use docs-first persistence for future Codex resumability.
+  - Keep `.codex/` minimal and non-authoritative.
+- Known limitations:
+  - The exact commit hash for the atomic step-closing commit cannot be embedded into the same commit without a follow-up amend; it is reported in session output instead.
+- Next recommended step:
+  - Request user confirmation before starting `STEP-001`.
+- Commit hash:
+  - pending post-commit recording

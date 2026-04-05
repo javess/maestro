@@ -38,6 +38,8 @@ uv run maestro ui
 ```
 
 See `docs/usage.md` for local, container, eval, UI, and binary workflows.
+Workflow control-plane and resume state live in `AGENTS.md`, `docs/codex/`,
+`docs/roadmap/`, and `docs/progress/`.
 
 ## Tooling
 
