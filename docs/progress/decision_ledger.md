@@ -266,3 +266,7 @@
 - Decision: start scheduling with an in-process local queue and worker pool.
 - Rationale: this is the smallest extension that supports queued UI-driven runs and cancellation
   while preserving the file-backed state model and avoiding premature distributed infrastructure.
+
+- Decision: keep the first benchmark harness fake-provider and fixture-repo based.
+- Rationale: benchmarking needs to be deterministic and regression-friendly before provider quality
+  comparisons can be trusted.

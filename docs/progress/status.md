@@ -51,7 +51,7 @@
 | STEP-027 | Repo support tiers and readiness scoring | done | 2026-04-06 08:19 UTC | [STEP-027](steps/STEP-027.md) | pending post-commit recording | targeted readiness/discovery pass; `ruff` pass; `ty` pass | `STEP-028` |
 | STEP-028 | Interactive run console UI | done | 2026-04-06 08:29 UTC | [STEP-028](steps/STEP-028.md) | pending post-commit recording | server tests pass; UI build pass; `ruff` pass; `ty` pass | `STEP-029` |
 | STEP-029 | Multi-run scheduler and worker pools | done | 2026-04-06 08:31 UTC | [STEP-029](steps/STEP-029.md) | pending post-commit recording | scheduler/server tests pass; UI build pass; `ruff` pass; `ty` pass | `STEP-030` |
-| STEP-030 | Benchmark repos and execution scoring | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-029` |
+| STEP-030 | Benchmark repos and execution scoring | done | 2026-04-06 08:35 UTC | [STEP-030](steps/STEP-030.md) | pending post-commit recording | benchmark test pass; `ruff` pass; `ty` pass | `STEP-031` |
 | STEP-031 | OSS adoption kit | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-030` |
 | STEP-032 | Commercial control-plane foundation | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-031` |
 

@@ -271,6 +271,40 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-030`
 
+## 2026-04-06 08:35 UTC
+
+- Session goal: add a scored benchmark harness over fixture repos
+- Selected step: `STEP-030`
+- Files changed:
+  - `src/maestro/schemas/benchmark.py`
+  - `src/maestro/benchmarks.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_benchmarks.py`
+  - `README.md`
+  - `docs/architecture/benchmark_scoring.md`
+  - `docs/runbooks/benchmark_scoring.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-030.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_benchmarks.py`
+  - `uv run ruff check src/maestro/benchmarks.py src/maestro/schemas/benchmark.py src/maestro/cli/main.py tests/test_benchmarks.py`
+  - `uv run ty check`
+- Tests run:
+  - benchmark pytest passed
+  - `ruff` passed
+  - `ty` passed
+- Evals run:
+  - none; benchmarks are a separate scoring harness
+- Outcome: completed `STEP-030`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-031`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

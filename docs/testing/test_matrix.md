@@ -269,3 +269,8 @@
 - Added `tests/test_scheduler.py` for queued dispatch and cancellation behavior.
 - Updated `tests/test_server.py` for scheduler-status and cancel endpoints.
 - Reran focused scheduler/server tests plus `ruff`, `ty`, and the UI build.
+
+## STEP-030 Note
+
+- Added `tests/test_benchmarks.py` for scored benchmark-report generation.
+- Reran focused benchmark tests plus `ruff` and `ty`.

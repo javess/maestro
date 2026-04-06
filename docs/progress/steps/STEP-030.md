@@ -1,0 +1,52 @@
+# STEP-030
+
+- Step id: `STEP-030`
+- Title: Benchmark repos and execution scoring
+- Status: done
+- Objective:
+  - Add a scored benchmark harness for representative fixture repos.
+- Scope:
+  - Add benchmark result schemas.
+  - Add a benchmark harness over fixture repo copies.
+  - Expose the harness through the CLI.
+- Non-goals:
+  - Real-provider quality ranking.
+  - Large public benchmark corpora.
+- Prerequisites:
+  - `STEP-029`
+- Implementation plan:
+  - Define benchmark report models.
+  - Score runs over copied fixture repos.
+  - Add a CLI entrypoint and focused tests.
+- Files changed:
+  - `src/maestro/schemas/benchmark.py`
+  - `src/maestro/benchmarks.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_benchmarks.py`
+  - `README.md`
+  - `docs/architecture/benchmark_scoring.md`
+  - `docs/runbooks/benchmark_scoring.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_benchmarks.py`.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - benchmark pytest
+  - `ruff`
+  - `ty`
+- Results:
+  - `maestro benchmark` now produces scored fixture-repo benchmark results.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/benchmark_scoring.md`
+  - `docs/runbooks/benchmark_scoring.md`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Use deterministic fixture repos and fake providers for the first benchmark harness.
+- Known limitations:
+  - The score model is intentionally simple and regression-focused.
+- Next recommended step:
+  - `STEP-031`
+- Commit hash:
+  - pending

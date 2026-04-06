@@ -11,6 +11,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from maestro.benchmarks import run_benchmarks
 from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.credentials import (
@@ -317,6 +318,32 @@ def eval(json_output: bool = False, json_output_path: Path | None = None) -> Non
             "yes" if row.passed else "no",
         )
     console.print(table)
+
+
+@app.command()
+def benchmark(json_output: bool = False) -> None:
+    report = run_benchmarks(_project_root(), _project_root() / ".maestro" / "benchmarks")
+    if json_output:
+        console.print_json(report.model_dump_json(indent=2))
+        return
+    table = Table("scenario", "repo", "provider", "status", "score", "retries")
+    for row in report.scenarios:
+        table.add_row(
+            row.scenario,
+            row.repo_type,
+            row.provider,
+            row.status,
+            str(row.score),
+            str(row.retries),
+        )
+    console.print(table)
+    console.print(
+        {
+            "scenario_count": report.scenario_count,
+            "total_score": report.total_score,
+            "average_score": report.average_score,
+        }
+    )
 
 
 @app.command()

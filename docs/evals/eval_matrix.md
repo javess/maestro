@@ -234,3 +234,8 @@
 
 - No eval scenario set changes were required in STEP-029 because the local scheduler changes
   execution management, not orchestration semantics.
+
+## STEP-030 Note
+
+- Benchmarks are separate from deterministic eval scenarios and therefore did not change the eval
+  scenario matrix.
