@@ -306,6 +306,52 @@
 - Stop reason: continue into the final roadmap step requested by the user
 - Next recommended step: `STEP-032`
 
+## 2026-04-06 08:50 UTC
+
+- Session goal: define the hosted-product seam while keeping the OSS engine local-first
+- Selected step: `STEP-032`
+- Files changed:
+  - `src/maestro/schemas/control_plane.py`
+  - `src/maestro/control_plane.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_control_plane.py`
+  - `tests/test_server.py`
+  - `ui/src/main.tsx`
+  - `docs/commercial_control_plane.md`
+  - `docs/architecture/commercial_control_plane.md`
+  - `docs/runbooks/control_plane.md`
+  - `docs/reference/cli.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `README.md`
+  - `mkdocs.yml`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-032.md`
+- Commands run:
+  - `uv run ruff check src/maestro/control_plane.py src/maestro/schemas/control_plane.py src/maestro/cli/main.py src/maestro/server/app.py tests/test_control_plane.py tests/test_server.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_control_plane.py tests/test_server.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp-final-all`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+  - `uv run ty check`
+  - `uv run --group docs mkdocs build --strict`
+  - `cd ui && npm run build`
+- Tests run:
+  - focused control-plane and server tests passed
+  - full `pytest` passed
+  - `ruff` passed
+  - `ty` passed
+  - UI build passed
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-032`
+- Commit hash: none yet
+- Stop reason: roadmap complete
+- Next recommended step: none
+
 ## 2026-04-06 08:35 UTC
 
 - Session goal: add a scored benchmark harness over fixture repos

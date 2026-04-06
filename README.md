@@ -33,6 +33,7 @@ machine. The baseline includes:
 - a local Material UI run console that can start runs, inspect progress, and act on diff approvals
 - local queued run scheduling with worker limits and cancel support through the UI/API
 - a benchmark harness with scored fixture-repo runs for regression tracking
+- an explicit control-plane foundation for shared history, policy, secrets, analytics, and governance boundaries
 
 The repo is now structured for outside contributors as well:
 
@@ -67,6 +68,7 @@ uv run maestro resume <RUN_ID>
 uv run maestro eval
 uv run maestro creds status openai
 uv run maestro doctor
+uv run maestro control-plane --repo .
 uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
 uv run maestro ui
 ```
@@ -82,10 +84,14 @@ under `.maestro/worktrees/`, syncing approved changes back into the repo root on
 and policy gates pass.
 Repo-local workspaces now also maintain `.maestro/maestro.db` as a SQLite run index for fast run
 and artifact metadata queries while keeping JSON files canonical.
+They can also hold `.maestro/control_plane.yaml` for local organization, policy, secret-backend,
+analytics, and governance metadata that can later map cleanly to a hosted team product.
 Existing files can now be updated through anchored patch hunks as well as whole-file writes, which
 reduces blast radius for localized repo edits.
 When the active policy enables it, successful runs also leave behind a repo-local feature branch
 with either per-ticket checkpoint commits or one final run commit.
+The operator UI now also exposes a control-plane summary card so local users can see credential
+sources, recent runs, and hosted-extension boundaries from the same console.
 
 ## Install as a global CLI
 
@@ -126,6 +132,7 @@ uv run pyinstaller -m maestro.cli.main
 - progress logs: `uv run maestro -v ...` or `uv run maestro --log-level DEBUG ...`
 - UI console: `uv run maestro ui`
 - benchmark: `uv run maestro benchmark`
+- control plane: `uv run maestro control-plane --repo .`
 
 Parallel batch execution is controlled by `max_parallel_tickets` in the active policy pack.
 Shipped policies stay conservative by default except `prototype`, which currently allows `2`.

@@ -13,6 +13,7 @@ from rich.table import Table
 
 from maestro.benchmarks import run_benchmarks
 from maestro.config import load_config
+from maestro.control_plane import build_control_plane_snapshot, write_default_control_plane_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.credentials import (
     DEFAULT_CREDENTIAL_SERVICE,
@@ -342,6 +343,36 @@ def benchmark(json_output: bool = False) -> None:
             "scenario_count": report.scenario_count,
             "total_score": report.total_score,
             "average_score": report.average_score,
+        }
+    )
+
+
+@app.command("control-plane")
+def control_plane(
+    repo: Path = Path("."),
+    config: Path | None = None,
+    json_output: bool = False,
+    write_default: bool = False,
+) -> None:
+    repo_root = repo.resolve()
+    if write_default:
+        path = write_default_control_plane_config(repo_root)
+        logger.info("control_plane_default_written path=%s", path)
+    snapshot = build_control_plane_snapshot(repo_root, _config_path(config))
+    if json_output:
+        console.print_json(snapshot.model_dump_json(indent=2))
+        return
+    console.print(
+        {
+            "repo_path": snapshot.repo_path,
+            "config_path": snapshot.config_path,
+            "organization": snapshot.config.organization,
+            "project": snapshot.config.project,
+            "recent_runs": snapshot.recent_runs,
+            "credential_sources": [
+                item.model_dump(mode="json") for item in snapshot.credential_surfaces
+            ],
+            "hosted_extension_points": snapshot.boundary.hosted_extension_points,
         }
     )
 

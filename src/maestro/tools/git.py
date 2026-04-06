@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 IGNORED_WORKSPACE_PATTERNS = (
@@ -107,12 +108,30 @@ class GitWorktreeManager:
             return target, "git_worktree"
         if target.exists():
             self._remove_tree(target)
-        shutil.copytree(
-            self.repo_root,
-            target,
-            ignore=shutil.ignore_patterns(*IGNORED_WORKSPACE_PATTERNS),
-            dirs_exist_ok=True,
-        )
+        source_root = self.repo_root.resolve()
+        target_root = target.resolve()
+        if target_root.is_relative_to(source_root):
+            temp_parent = Path(
+                tempfile.mkdtemp(prefix="maestro-workspace-", dir=source_root.parent)
+            )
+            temp_target = temp_parent / "workspace"
+            try:
+                shutil.copytree(
+                    source_root,
+                    temp_target,
+                    ignore=shutil.ignore_patterns(*IGNORED_WORKSPACE_PATTERNS),
+                    dirs_exist_ok=True,
+                )
+                shutil.move(str(temp_target), target)
+            finally:
+                self._remove_tree(temp_parent)
+        else:
+            shutil.copytree(
+                source_root,
+                target,
+                ignore=shutil.ignore_patterns(*IGNORED_WORKSPACE_PATTERNS),
+                dirs_exist_ok=True,
+            )
         return target, "copy"
 
     def remove_workspace(self, target: Path, kind: str) -> None:

@@ -1,0 +1,70 @@
+# STEP-032
+
+- Step id: `STEP-032`
+- Title: Commercial control-plane foundation
+- Status: done
+- Objective:
+  - Define a concrete hosted-product seam without weakening the OSS local engine.
+- Scope:
+  - Add typed control-plane config and snapshot models.
+  - Add a local-first control-plane loader and default config writer.
+  - Expose the snapshot through CLI, API, and UI.
+  - Document OSS versus hosted boundaries clearly.
+- Non-goals:
+  - A real hosted backend.
+  - Multi-user auth, billing, or remote secret management.
+- Prerequisites:
+  - `STEP-031`
+- Implementation plan:
+  - Define control-plane schemas.
+  - Build a local snapshot surface over repo-local workspace state and provider credentials.
+  - Expose the snapshot in operator surfaces and document the boundary.
+- Files changed:
+  - `src/maestro/schemas/control_plane.py`
+  - `src/maestro/control_plane.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_control_plane.py`
+  - `tests/test_server.py`
+  - `tests/test_git_tools.py`
+  - `ui/src/main.tsx`
+  - `docs/commercial_control_plane.md`
+  - `docs/architecture/commercial_control_plane.md`
+  - `docs/runbooks/control_plane.md`
+  - `docs/reference/cli.md`
+  - `README.md`
+  - `mkdocs.yml`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_control_plane.py`.
+  - Updated `tests/test_server.py`.
+  - Updated `tests/test_git_tools.py`.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `uv run ruff check ...`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=... tests/test_control_plane.py tests/test_server.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=...`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+  - `uv run ty check`
+  - `uv run --group docs mkdocs build --strict`
+  - `cd ui && npm run build`
+- Results:
+  - `maestro control-plane` now exposes a local-first control-plane snapshot, and the UI shows the same surface.
+  - Full regression and eval passes confirmed the final roadmap state after the nested workspace copy fix.
+- Docs updated:
+  - `docs/commercial_control_plane.md`
+  - `docs/architecture/commercial_control_plane.md`
+  - `docs/runbooks/control_plane.md`
+  - `docs/reference/cli.md`
+  - `README.md`
+  - `mkdocs.yml`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Treat shared history, org policies, managed secrets, analytics, and governance as explicit extension points while preserving a viable local OSS engine.
+- Known limitations:
+  - The control-plane foundation is still local-first and declarative; it does not yet include a hosted service implementation.
+- Next recommended step:
+  - Roadmap complete
+- Commit hash:
+  - pending

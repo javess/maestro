@@ -53,7 +53,7 @@
 | STEP-029 | Multi-run scheduler and worker pools | done | 2026-04-06 08:31 UTC | [STEP-029](steps/STEP-029.md) | pending post-commit recording | scheduler/server tests pass; UI build pass; `ruff` pass; `ty` pass | `STEP-030` |
 | STEP-030 | Benchmark repos and execution scoring | done | 2026-04-06 08:35 UTC | [STEP-030](steps/STEP-030.md) | pending post-commit recording | benchmark test pass; `ruff` pass; `ty` pass | `STEP-031` |
 | STEP-031 | OSS adoption kit | done | 2026-04-06 08:42 UTC | [STEP-031](steps/STEP-031.md) | pending post-commit recording | issue-template validation pass; `mkdocs build --strict` pass; `git diff --check` pass | `STEP-032` |
-| STEP-032 | Commercial control-plane foundation | planned | 2026-04-06 08:42 UTC | - | - | - | Wait for `STEP-031` |
+| STEP-032 | Commercial control-plane foundation | done | 2026-04-06 08:58 UTC | [STEP-032](steps/STEP-032.md) | pending post-commit recording | control-plane/server tests pass; full `pytest` pass; `eval` pass; `ruff` pass; `ty` pass; `mkdocs build --strict` pass; UI build pass | Roadmap complete |
 
 ## Baseline
 

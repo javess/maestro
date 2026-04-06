@@ -239,3 +239,13 @@
 
 - Benchmarks are separate from deterministic eval scenarios and therefore did not change the eval
   scenario matrix.
+
+## STEP-031 Note
+
+- No eval scenario changes were required in STEP-031 because contributor templates and public docs
+  do not change runtime behavior.
+
+## STEP-032 Note
+
+- No eval scenario changes were required in STEP-032 because the control-plane foundation adds
+  local config, API, and UI visibility rather than changing orchestration semantics.

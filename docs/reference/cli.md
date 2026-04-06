@@ -11,7 +11,9 @@ maestro review <TICKET_ID>
 maestro status
 maestro resume <RUN_ID>
 maestro eval
+maestro benchmark
 maestro doctor
+maestro control-plane
 maestro preview
 ```
 
@@ -33,6 +35,7 @@ maestro creds delete <provider>
 
 ```bash
 maestro -vv plan brief.md --config examples/maestro.openai.yaml --repo .
+maestro control-plane --repo . --json-output
 maestro preview --repo . --adapter local --command "python game.py --demo"
 maestro status --repo .
 maestro eval --json-output-path eval-report.json

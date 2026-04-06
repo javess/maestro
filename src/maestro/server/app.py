@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from maestro.cli.main import _config_path, _project_root, _resolve_state_store, _workspace
 from maestro.config import load_config
+from maestro.control_plane import build_control_plane_snapshot, write_default_control_plane_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.repo.discovery import discover_repo
 from maestro.repo.readiness import assess_repo_readiness
@@ -47,6 +48,21 @@ class ApiServer:
                 "blockers": readiness.blockers,
                 "recommendations": readiness.recommendations,
             }
+
+        @app.get("/api/control-plane")
+        def control_plane(
+            repo_path: str,
+            config_path: str | None = None,
+            write_default: bool = False,
+        ) -> dict[str, object]:
+            repo = Path(repo_path).resolve()
+            if write_default:
+                write_default_control_plane_config(repo)
+            snapshot = build_control_plane_snapshot(
+                repo,
+                _config_path(Path(config_path) if config_path else None),
+            )
+            return snapshot.model_dump(mode="json")
 
         @app.get("/api/runs")
         def list_runs(repo_path: str) -> list[dict[str, object]]:

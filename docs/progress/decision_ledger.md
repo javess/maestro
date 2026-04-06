@@ -262,6 +262,10 @@
 - Rationale: they are already deterministic, versioned with the repo, and good enough to teach
   public contributors how to evaluate the product without duplicating demo assets.
 
+- Decision: make the commercial-control-plane foundation local-first and declarative.
+- Rationale: the repo needs a credible hosted-product seam now, but the OSS engine must remain
+  independently useful without introducing a hard cloud dependency.
+
 - Decision: implement the UI console on top of a thin local FastAPI layer rather than calling the
   CLI through shell subprocesses from the browser.
 - Rationale: a typed local API gives the UI a stable control surface and is easier to extend into

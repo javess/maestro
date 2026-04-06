@@ -83,11 +83,21 @@ type DoctorResult = {
   recommendations: string[];
 };
 
+type ControlPlaneResult = {
+  repo_path: string;
+  config_path: string;
+  recent_runs: string[];
+  credential_surfaces: { provider: string; resolved_source: string }[];
+  boundary: { hosted_extension_points: string[] };
+  config: { organization: string; project: string };
+};
+
 function App() {
   const [repoPath, setRepoPath] = useState("/Users/javiersierra/dev/maestro/examples/hello_world_cli_game");
   const [briefPath, setBriefPath] = useState("/Users/javiersierra/dev/maestro/examples/hello_world_cli_game_brief.md");
   const [configPath, setConfigPath] = useState("/Users/javiersierra/dev/maestro/examples/maestro.example.yaml");
   const [doctor, setDoctor] = useState<DoctorResult | null>(null);
+  const [controlPlane, setControlPlane] = useState<ControlPlaneResult | null>(null);
   const [runs, setRuns] = useState<RunRow[]>([]);
   const [selectedRunId, setSelectedRunId] = useState<string>("");
   const [runState, setRunState] = useState<RunState | null>(null);
@@ -101,6 +111,12 @@ function App() {
     const params = new URLSearchParams({ repo_path: repoPath, config_path: configPath });
     const response = await fetch(`${apiBase}/api/doctor?${params.toString()}`);
     setDoctor(await response.json());
+  }
+
+  async function fetchControlPlane() {
+    const params = new URLSearchParams({ repo_path: repoPath, config_path: configPath, write_default: "true" });
+    const response = await fetch(`${apiBase}/api/control-plane?${params.toString()}`);
+    setControlPlane((await response.json()) as ControlPlaneResult);
   }
 
   async function fetchRuns() {
@@ -164,6 +180,7 @@ function App() {
 
   useEffect(() => {
     void fetchDoctor();
+    void fetchControlPlane();
     void fetchRuns();
     void fetchScheduler();
   }, [repoPath, configPath]);
@@ -224,6 +241,9 @@ function App() {
                         </Button>
                         <Button variant="outlined" onClick={() => void fetchDoctor()}>
                           Refresh doctor
+                        </Button>
+                        <Button variant="outlined" onClick={() => void fetchControlPlane()}>
+                          Refresh control plane
                         </Button>
                       </Stack>
                     </Stack>
@@ -353,6 +373,38 @@ function App() {
                 </Card>
               </Grid>
             </Grid>
+            <Card sx={{ boxShadow: "0 16px 40px rgba(49,35,19,0.08)" }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  Control plane
+                </Typography>
+                {controlPlane ? (
+                  <Stack spacing={1}>
+                    <Stack direction="row" spacing={1}>
+                      <Chip label={`org ${controlPlane.config.organization}`} />
+                      <Chip label={`project ${controlPlane.config.project}`} />
+                      <Chip label={`${controlPlane.recent_runs.length} recent runs`} />
+                    </Stack>
+                    <Typography variant="subtitle2">Credential sources</Typography>
+                    <List dense>
+                      {controlPlane.credential_surfaces.map((item) => (
+                        <ListItem key={item.provider}>
+                          <ListItemText primary={item.provider} secondary={item.resolved_source} />
+                        </ListItem>
+                      ))}
+                    </List>
+                    <Typography variant="subtitle2">Hosted extension points</Typography>
+                    <List dense>
+                      {controlPlane.boundary.hosted_extension_points.map((item) => (
+                        <ListItem key={item}>
+                          <ListItemText primary={item} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Stack>
+                ) : null}
+              </CardContent>
+            </Card>
             <Card sx={{ boxShadow: "0 16px 40px rgba(49,35,19,0.08)" }}>
               <CardContent>
                 <Typography variant="h4" gutterBottom>

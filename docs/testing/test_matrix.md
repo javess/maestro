@@ -274,3 +274,16 @@
 
 - Added `tests/test_benchmarks.py` for scored benchmark-report generation.
 - Reran focused benchmark tests plus `ruff` and `ty`.
+
+## STEP-031 Note
+
+- No code tests were required in STEP-031 because it only added OSS-facing templates, guides, and
+  benchmark demo documentation.
+- Validated the issue-template YAML files and reran `mkdocs build --strict`.
+
+## STEP-032 Note
+
+- Added `tests/test_control_plane.py` for default config creation and control-plane snapshotting.
+- Updated `tests/test_server.py` for the control-plane API endpoint.
+- Updated `tests/test_git_tools.py` for copy-workspace creation when the target lives under the repo-local `.maestro/` workspace.
+- Reran focused control-plane/server tests plus `ruff`, `ty`, `mkdocs build --strict`, and the UI build.

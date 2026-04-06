@@ -63,7 +63,7 @@
 | STEP-029 | Multi-run scheduler and worker pools | done | Support queued runs, concurrency limits, cancellation, and background workers |
 | STEP-030 | Benchmark repos and execution scoring | done | Measure end-to-end delivery quality across real fixture repos and providers |
 | STEP-031 | OSS adoption kit | done | Add contribution guides, benchmark demos, issue templates, and positioning docs |
-| STEP-032 | Commercial control-plane foundation | planned | Define hosted/shared services for teams: org policies, managed secrets, analytics, and governance |
+| STEP-032 | Commercial control-plane foundation | done | Define hosted/shared services for teams: org policies, managed secrets, analytics, and governance |
 
 ## Step Sequencing
 
