@@ -1,0 +1,42 @@
+# STEP-022A
+
+- Step id: `STEP-022A`
+- Title: UI-first execution roadmap update
+- Status: done
+- Objective:
+  - Make full from-scratch UI-driven operation an explicit requirement in Phase 2.
+- Scope:
+  - Update the roadmap so the UI is expected to start runs, show live progress, and control
+    approvals/retries/cancellation.
+- Non-goals:
+  - No implementation in this step.
+- Prerequisites:
+  - `STEP-022` complete.
+- Implementation plan:
+  - Add a UI-first requirement note to Phase 2.
+  - Tighten `STEP-028` so it explicitly includes new-run creation and control actions.
+- Files changed:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-022A.md`
+- Tests added or updated:
+  - None; roadmap update only.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git diff --check`
+- Results:
+  - The roadmap now explicitly requires the UI to support end-to-end operation from run creation
+    through supervision and control.
+- Docs updated:
+  - Roadmap and progress tracking.
+- Decisions made:
+  - UI-first operation should be treated as product scope, not deferred UX polish.
+- Known limitations:
+  - No UI implementation yet.
+- Next recommended step:
+  - `STEP-023`
+- Commit hash:
+  - pending

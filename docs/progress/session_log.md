@@ -509,6 +509,28 @@
 - Stop reason: step complete
 - Next recommended step: `STEP-023`
 
+## 2026-04-06 07:41 UTC
+
+- Session goal: make full UI-driven execution explicit in the Phase 2 roadmap
+- Selected step: `STEP-022A`
+- Files changed:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-022A.md`
+- Commands run:
+  - `git diff --check`
+- Tests run:
+  - `git diff --check` passed
+- Evals run:
+  - none; planning step only
+- Outcome: completed `STEP-022A`; Phase 2 now explicitly requires UI-first run creation,
+  progress visibility, and supervision from scratch
+- Commit hash: none yet
+- Stop reason: continuing into execution work
+- Next recommended step: `STEP-023`
+
 ## 2026-04-06 00:30 UTC
 
 - Session goal: clean up publish-blocking docs artifacts before the final GitHub publication step

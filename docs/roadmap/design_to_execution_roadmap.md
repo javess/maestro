@@ -53,6 +53,7 @@
 | STEP-020A | Documentation artifact cleanup | done | Tiny prerequisite to record the docs lockfile update and ignore generated `site/` output before publication |
 | STEP-021 | Public GitHub publication | done | Publish the finished repo to the user’s GitHub account as a public repository |
 | STEP-022 | Phase 2 roadmap extension | done | Add the post-publication roadmap for reliable autonomous feature delivery, OSS adoption, and commercial readiness |
+| STEP-022A | UI-first execution roadmap update | done | Make full from-scratch UI-driven operation an explicit Phase 2 product requirement |
 | STEP-023 | Patch-based editing engine | planned | Add diff/patch editing alongside whole-file writes for safer repo mutation |
 | STEP-024 | Branch and commit automation | planned | Create target-repo branches, checkpoint commits, and commit-on-green policies |
 | STEP-025 | Validation-driven repair loop | planned | Retry failed implementations with structured failure context until green or escalated |
@@ -117,6 +118,22 @@ Docs:
 The original roadmap established `maestro` as a deterministic orchestration framework with repo
 execution, evals, docs, and publication. The next phase focuses on making it a genuinely useful
 autonomous delivery product.
+
+## UI-first product requirement
+
+Phase 2 should make the product fully operable from the UI, not just the CLI. That means a user
+should be able to:
+
+- create or load a target repo from the UI
+- select provider/configuration inputs
+- submit a brief and start a run
+- watch state transitions, logs, and provider activity live
+- inspect diffs, evidence bundles, and artifacts
+- approve, reject, retry, resume, or cancel work
+- view queued, running, blocked, and completed runs
+
+The CLI remains a first-class power-user path, but the product should no longer depend on the CLI
+to begin or supervise end-to-end execution.
 
 ### STEP-023 — Patch-based editing engine
 
@@ -200,17 +217,21 @@ Acceptance:
 ### STEP-028 — Interactive run console UI
 
 Objective:
-Turn the UI from a shell into an operator-facing run console.
+Turn the UI from a shell into an operator-facing run console that can also start and control runs
+from scratch.
 
 Minimum scope:
 
+- new-run creation flow for repo, brief, provider/profile, and policy selection
 - runs list, run detail view, ticket state, diffs, approvals, evidence, and logs
 - artifact browsing and replay/resume support
 - progress visibility for multi-ticket runs
+- retry, cancel, and approval actions from the UI
 
 Acceptance:
 
-- a user can supervise a run from the UI without reading raw JSON files
+- a user can start and supervise a run from the UI without reading raw JSON files or dropping to
+  the CLI
 
 ### STEP-029 — Multi-run scheduler and worker pools
 

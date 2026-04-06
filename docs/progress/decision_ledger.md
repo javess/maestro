@@ -229,3 +229,8 @@
 - Rationale: the published repo is now a strong framework baseline, but the highest-value next work
   is execution reliability, git output, operator trust, UI supervision, benchmarks, and a clearer
   OSS/commercial split.
+
+- Decision: make full UI-driven execution explicit in Phase 2 rather than leaving it implicit under
+  the generic UI step.
+- Rationale: the user wants the product operable from the UI from scratch, including starting runs,
+  viewing progress, and controlling approvals/retries, so the roadmap should state that clearly.
