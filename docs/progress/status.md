@@ -46,7 +46,7 @@
 | STEP-022A | UI-first execution roadmap update | done | 2026-04-06 07:41 UTC | [STEP-022A](steps/STEP-022A.md) | `2db5a0b` | `git diff --check` pass | `STEP-023` |
 | STEP-023 | Patch-based editing engine | done | 2026-04-06 07:46 UTC | [STEP-023](steps/STEP-023.md) | pending post-commit recording | targeted workspace/engine pass; `ruff` pass; `ty` pass | `STEP-024` |
 | STEP-024 | Branch and commit automation | done | 2026-04-06 08:00 UTC | [STEP-024](steps/STEP-024.md) | pending post-commit recording | targeted git/evidence/engine pass; `ruff` pass; `ty` pass | `STEP-025` |
-| STEP-025 | Validation-driven repair loop | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-024` |
+| STEP-025 | Validation-driven repair loop | done | 2026-04-06 08:00 UTC | [STEP-025](steps/STEP-025.md) | pending post-commit recording | targeted repair-loop pass; `ruff` pass; `ty` pass | `STEP-026` |
 | STEP-026 | Diff approval workflow | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-025` |
 | STEP-027 | Repo support tiers and readiness scoring | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-026` |
 | STEP-028 | Interactive run console UI | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-027` |

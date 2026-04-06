@@ -12,6 +12,8 @@ Rules:
 - Put only verification commands in `commands`.
 - Add real tests when the policy requires tests.
 - Use `repo_context.repo_snapshot.files` as the authoritative nearby file context when present.
+- When `repair_context` is present, use its failing checks, violations, and reviewer issues to
+  target the next attempt directly.
 - Preserve the existing repo style and avoid unnecessary rewrites.
 - Prefer the smallest implementation that satisfies the ticket acceptance criteria.
 - Add or update tests close to the changed behavior.

@@ -83,6 +83,42 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-025`
 
+## 2026-04-06 08:00 UTC
+
+- Session goal: make retry attempts deterministic and inspectable by feeding structured failure
+  evidence back into the coder
+- Selected step: `STEP-025`
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/engine.py`
+  - `prompts/coder.md`
+  - `skills/coder/SKILL.md`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/repair_loop.md`
+  - `docs/runbooks/repair_loop.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-025.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_engine.py -k repair_context`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/engine.py prompts/coder.md skills/coder/SKILL.md tests/test_engine.py`
+  - `uv run ty check`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_engine.py -k repair_context` passed
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/engine.py prompts/coder.md skills/coder/SKILL.md tests/test_engine.py` passed
+  - `uv run ty check` passed
+- Evals run:
+  - none; repair handling reuses the existing revise transition and was covered with targeted integration tests
+- Outcome: completed `STEP-025`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-026`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

@@ -718,6 +718,87 @@ def test_run_plan_persists_observation_followups_for_failed_review() -> None:
     assert "TICKET-1_observation_followups_1" in artifact_names
 
 
+def test_run_plan_passes_repair_context_on_retry(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+
+    class RepairAwareProvider(FakeProvider):
+        def __init__(self) -> None:
+            super().__init__()
+            self.code_attempts = 0
+
+        def generate_structured(self, *, prompt: str, model: str, schema, metadata=None):
+            if schema.__name__ == "CodeResult":
+                self.code_attempts += 1
+                if self.code_attempts == 1:
+                    assert (metadata or {}).get("repair_context") is None
+                    return CodeResult(
+                        ticket_id="TICKET-1",
+                        summary="First attempt",
+                        file_operations=[
+                            FileOperation(
+                                path="src/app.py",
+                                action="write",
+                                content="print('first')\n",
+                            )
+                        ],
+                        commands=["run-failing-check"],
+                        tests_added=[],
+                    )
+                repair_context = cast(
+                    dict[str, object] | None,
+                    (metadata or {}).get("repair_context"),
+                )
+                assert repair_context is not None
+                assert repair_context["ticket_id"] == "TICKET-1"
+                failing_checks = cast(list[dict[str, object]], repair_context["failing_checks"])
+                assert "forced failure" in cast(str, failing_checks[0]["output"])
+                return CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Second attempt",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="write",
+                            content="print('fixed')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=[],
+                )
+            if schema.__name__ == "ReviewResult":
+                return ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                )
+            return super().generate_structured(
+                prompt=prompt,
+                model=model,
+                schema=schema,
+                metadata=metadata,
+            )
+
+    scenario = EvalScenario(
+        name="repair-loop",
+        provider=RepairAwareProvider(),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+        policy=PolicyPack(name="prototype", require_tests=False, max_review_cycles=2),
+        shell_failures={"run-failing-check"},
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "done"
+    assert (repo / "src" / "app.py").read_text() == "print('fixed')\n"
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "TICKET-1_repair_context_1" in artifact_names
+
+
 def test_plan_tickets_passes_archetype_pack_to_planner(tmp_path: Path) -> None:
     project_root = Path(__file__).resolve().parents[1]
 

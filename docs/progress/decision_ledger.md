@@ -244,3 +244,8 @@
   preserve detached worktree commits.
 - Rationale: the target repo is the operator’s durable working copy, so branch visibility and local
   commit history need to exist there rather than only inside isolated execution workspaces.
+
+- Decision: build the repair loop on top of the existing `REVISE` transition instead of adding a
+  second retry state.
+- Rationale: the state machine already models bounded retries correctly; what was missing was typed
+  repair evidence, not another transition.

@@ -49,6 +49,7 @@ from maestro.schemas.contracts import (
     MaestroConfig,
     PolicyPack,
     ProductSpec,
+    RepairContext,
     RepoInfo,
     ReviewResult,
     RunEvent,
@@ -445,6 +446,11 @@ class OrchestratorEngine:
                     else None,
                     "repo_snapshot": repo_snapshot.model_dump(mode="json"),
                 },
+                "repair_context": (
+                    state.repair_contexts[ticket.id].model_dump(mode="json")
+                    if ticket.id in state.repair_contexts
+                    else None
+                ),
             }
         )
         return apply_code_result(execution_root, result)
@@ -751,6 +757,21 @@ class OrchestratorEngine:
                 state.status = "escalated"
                 self._append_event(state, OrchestratorState.ESCALATE, ",".join(violations))
                 return OrchestratorState.ESCALATE
+            repair_context = RepairContext(
+                ticket_id=ticket.id,
+                review_cycle=state.review_cycles + 1,
+                failing_checks=[check for check in checks if not check.success],
+                review_issues=review.issues,
+                prior_summary=code_result.summary,
+                prior_notes=code_result.notes,
+                violations=violations,
+            )
+            state.repair_contexts[ticket.id] = repair_context
+            self.deps.artifact_store.write_json(
+                state.artifacts,
+                f"{ticket.id}_repair_context_{state.review_cycles + 1}",
+                repair_context.model_dump(mode="json"),
+            )
             state.review_cycles += 1
             ticket.status = TicketStatus.pending
             self._append_event(state, OrchestratorState.REVISE, ",".join(violations))
@@ -775,6 +796,7 @@ class OrchestratorEngine:
                 for change in code_result.changed_files
                 if change.path not in state.pending_commit_paths
             )
+        state.repair_contexts.pop(ticket.id, None)
         state.completed_tickets.append(ticket.id)
         state.review_cycles = 0
         logger.info("ticket_completed run_id=%s ticket=%s", state.run_id, ticket.id)

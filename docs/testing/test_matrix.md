@@ -239,3 +239,9 @@
   expected run branch and commit metadata.
 - Updated `tests/test_evidence.py` so evidence bundles carry commit metadata when present.
 - Reran targeted git/evidence/engine tests plus `ruff` and `ty`.
+
+## STEP-025 Note
+
+- Updated `tests/test_engine.py` to assert failed validation produces a persisted repair context
+  and that the next coder attempt receives it.
+- Reran focused repair-loop tests plus `ruff` and `ty`.

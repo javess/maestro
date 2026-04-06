@@ -1,0 +1,70 @@
+# STEP-025
+
+- Step id: `STEP-025`
+- Title: Validation-driven repair loop
+- Status: done
+- Objective:
+  - Turn retries into an explicit repair loop that persists failure evidence and feeds it into the
+    next coder attempt.
+- Scope:
+  - Add a typed repair-context contract.
+  - Persist repair-context artifacts when checks or review fail and retries remain.
+  - Pass repair context into subsequent coder attempts.
+  - Clear repair context when the ticket completes.
+- Non-goals:
+  - New orchestrator states.
+  - Unbounded retries.
+  - Automatic approval behavior changes.
+- Prerequisites:
+  - `STEP-023`
+  - `STEP-024`
+- Implementation plan:
+  - Extend contracts with `RepairContext`.
+  - Capture failed checks, reviewer issues, and prior attempt metadata on revise.
+  - Feed that context back into the coder payload.
+  - Add focused retry-path tests and documentation.
+- Files changed:
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/engine.py`
+  - `prompts/coder.md`
+  - `skills/coder/SKILL.md`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/repair_loop.md`
+  - `docs/runbooks/repair_loop.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-025.md`
+- Tests added or updated:
+  - Updated `tests/test_engine.py` to assert repair-context artifact persistence and retry payload
+    propagation after a failed validation command.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_engine.py -k repair_context`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/engine.py prompts/coder.md skills/coder/SKILL.md tests/test_engine.py`
+  - `uv run ty check`
+- Results:
+  - Failed validations now emit a typed repair-context artifact.
+  - Retry attempts receive explicit failing-check and reviewer evidence in `repair_context`.
+  - Repair data is cleared once the ticket completes successfully.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/repair_loop.md`
+  - `docs/runbooks/repair_loop.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - progress and roadmap files
+- Decisions made:
+  - Reuse the existing `REVISE` state instead of adding a new retry state.
+- Known limitations:
+  - Repair context currently focuses on checks, reviewer issues, and prior notes, not richer diff
+    summaries.
+- Next recommended step:
+  - `STEP-026`
+- Commit hash:
+  - pending

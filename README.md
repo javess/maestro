@@ -27,6 +27,7 @@ machine. The baseline includes:
 - typed eval reports with summary metrics and optional JSON export
 - SQLite-backed run indexing alongside canonical JSON state and artifact storage
 - layered prompt plus `SKILL.md` guidance for each specialized agent role
+- structured repair loops that feed failing checks and reviewer issues back into bounded retries
 
 ## Quick start
 

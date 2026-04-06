@@ -56,7 +56,7 @@
 | STEP-022A | UI-first execution roadmap update | done | Make full from-scratch UI-driven operation an explicit Phase 2 product requirement |
 | STEP-023 | Patch-based editing engine | done | Add diff/patch editing alongside whole-file writes for safer repo mutation |
 | STEP-024 | Branch and commit automation | done | Create target-repo branches, checkpoint commits, and commit-on-green policies |
-| STEP-025 | Validation-driven repair loop | planned | Retry failed implementations with structured failure context until green or escalated |
+| STEP-025 | Validation-driven repair loop | done | Retry failed implementations with structured failure context until green or escalated |
 | STEP-026 | Diff approval workflow | planned | Add explicit diff approval, rejection, and rerun controls across CLI and UI |
 | STEP-027 | Repo support tiers and readiness scoring | planned | Classify repos as supported, experimental, or planning-only with concrete diagnostics |
 | STEP-028 | Interactive run console UI | planned | Turn the UI into a real run console for artifacts, diffs, approvals, and logs |

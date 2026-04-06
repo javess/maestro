@@ -185,6 +185,16 @@ class ReviewResult(BaseModel):
     issues: list[ReviewIssue] = Field(default_factory=list)
 
 
+class RepairContext(BaseModel):
+    ticket_id: str
+    review_cycle: int
+    failing_checks: list[CheckResult] = Field(default_factory=list)
+    review_issues: list[ReviewIssue] = Field(default_factory=list)
+    prior_summary: str
+    prior_notes: list[str] = Field(default_factory=list)
+    violations: list[str] = Field(default_factory=list)
+
+
 class RepoInfo(BaseModel):
     root: Path
     repo_type: str
@@ -372,6 +382,7 @@ class RunState(BaseModel):
     base_branch: str | None = None
     run_branch: str | None = None
     pending_commit_paths: list[str] = Field(default_factory=list)
+    repair_contexts: dict[str, RepairContext] = Field(default_factory=dict)
     completed_tickets: list[str] = Field(default_factory=list)
     review_cycles: int = 0
     approval_request: ApprovalRequest | None = None
