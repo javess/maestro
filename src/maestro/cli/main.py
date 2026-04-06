@@ -12,6 +12,12 @@ from rich.table import Table
 
 from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
+from maestro.credentials import (
+    DEFAULT_CREDENTIAL_SERVICE,
+    credential_status,
+    delete_provider_secret,
+    store_provider_secret,
+)
 from maestro.evals.harness import run_eval_report
 from maestro.logging import configure_logging
 from maestro.preview.factory import build_preview_adapter
@@ -23,6 +29,8 @@ from maestro.storage.sqlite import SqliteRunIndex
 from maestro.tools.git import GitWorktreeManager
 
 app = typer.Typer(help="Deterministic multi-agent software delivery framework")
+creds_app = typer.Typer(help="Secure local provider credential storage")
+app.add_typer(creds_app, name="creds")
 console = Console()
 logger = logging.getLogger(__name__)
 
@@ -258,6 +266,96 @@ def doctor(config: Path | None = None, repo: Path = Path(".")) -> None:
             "git_branch": repo_manager.current_branch() if (repo / ".git").exists() else "unknown",
             "git_dirty": repo_manager.is_dirty() if (repo / ".git").exists() else False,
             "repo_type": discovery.repo_info.repo_type,
+        }
+    )
+
+
+@creds_app.command("set")
+def creds_set(
+    provider: str,
+    value: str = typer.Option(
+        ...,
+        "--value",
+        prompt=True,
+        hide_input=True,
+        confirmation_prompt=True,
+        help="Provider secret value to store in the OS keychain.",
+    ),
+    service: str = typer.Option(
+        DEFAULT_CREDENTIAL_SERVICE,
+        "--service",
+        help="Keychain service name.",
+    ),
+    credential_name: str | None = typer.Option(
+        None,
+        "--credential-name",
+        help="Override the stored credential name. Defaults to the provider env var name.",
+    ),
+) -> None:
+    target = store_provider_secret(
+        provider=provider,
+        secret=value,
+        service_name=service,
+        credential_name=credential_name,
+    )
+    console.print(
+        {
+            "provider": target.provider,
+            "service_name": target.service_name,
+            "credential_name": target.credential_name,
+            "stored": True,
+        }
+    )
+
+
+@creds_app.command("status")
+def creds_status(
+    provider: str,
+    service: str = typer.Option(
+        DEFAULT_CREDENTIAL_SERVICE,
+        "--service",
+        help="Keychain service name.",
+    ),
+    credential_name: str | None = typer.Option(
+        None,
+        "--credential-name",
+        help="Override the stored credential name. Defaults to the provider env var name.",
+    ),
+) -> None:
+    console.print(
+        credential_status(
+            provider=provider,
+            service_name=service,
+            credential_name=credential_name,
+        )
+    )
+
+
+@creds_app.command("delete")
+def creds_delete(
+    provider: str,
+    service: str = typer.Option(
+        DEFAULT_CREDENTIAL_SERVICE,
+        "--service",
+        help="Keychain service name.",
+    ),
+    credential_name: str | None = typer.Option(
+        None,
+        "--credential-name",
+        help="Override the stored credential name. Defaults to the provider env var name.",
+    ),
+) -> None:
+    target = delete_provider_secret(
+        provider=provider,
+        service_name=service,
+        credential_name=credential_name,
+    )
+    console.print(
+        {
+            "provider": target.provider,
+            "service_name": target.service_name,
+            "credential_name": target.credential_name,
+            "deleted": True,
         }
     )
 

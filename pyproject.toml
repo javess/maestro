@@ -22,6 +22,7 @@ providers = [
   "openai>=2.0.0",
   "anthropic>=0.52.0",
   "google-genai>=1.12.0",
+  "keyring>=25.6.0",
 ]
 build = [
   "pyinstaller>=6.15.0",
@@ -59,4 +60,3 @@ quote-style = "double"
 
 [tool.ty.src]
 include = ["src", "tests"]
-

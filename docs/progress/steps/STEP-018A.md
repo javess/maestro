@@ -1,0 +1,69 @@
+# STEP-018A
+
+- Step id: `STEP-018A`
+- Title: Secure credential storage
+- Status: done
+- Objective:
+  - Add secure local credential storage so provider secrets do not rely only on `.env`.
+- Scope:
+  - Add OS keychain-backed secret resolution through `keyring`.
+  - Keep shell env vars and `.env` support intact.
+  - Add a CLI for storing, inspecting, and deleting local provider secrets.
+  - Wire provider factory resolution to pass secrets directly into provider adapters.
+- Non-goals:
+  - No remote secret manager integration.
+  - No multi-user secret sharing flow.
+- Prerequisites:
+  - `STEP-018` complete.
+- Implementation plan:
+  - Add a credential utility layer with keychain support.
+  - Extend provider construction to resolve secure secrets.
+  - Add `maestro creds` CLI commands.
+  - Add tests and update provider-credential docs.
+- Files changed:
+  - `src/maestro/credentials.py`
+  - `src/maestro/providers/factory.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/providers/gemini_adapter.py`
+  - `src/maestro/providers/anthropic_adapter.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_credentials.py`
+  - `tests/test_providers.py`
+  - `pyproject.toml`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-018A.md`
+- Tests added or updated:
+  - Added `tests/test_credentials.py` for keychain-backed secret storage and CLI coverage.
+  - Updated `tests/test_providers.py` for provider-factory keychain resolution.
+- Evals added or updated:
+  - No scenario set change; existing evals were rerun after provider setup changes.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_credentials.py tests/test_config.py tests/test_providers.py`
+  - `uv run ruff check src/maestro/credentials.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/anthropic_adapter.py src/maestro/cli/main.py tests/test_credentials.py tests/test_config.py tests/test_providers.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Results:
+  - Local provider secrets can now be stored in the OS keychain with `maestro creds set`.
+  - Providers resolve secrets from shell env, `.env`, or keychain without changing core engine code.
+  - Real-provider adapters can receive resolved secrets directly instead of relying only on env vars.
+  - Full backend regression and deterministic eval coverage remained green after the credential changes.
+- Docs updated:
+  - Updated README, usage docs, and provider-credential runbook.
+  - Updated progress and test/eval tracking.
+- Decisions made:
+  - Keep keychain integration local and optional, with `.env` preserved as the simpler fallback.
+- Known limitations:
+  - Secure storage currently depends on the local OS keychain backend used by `keyring`.
+  - Remote secret managers remain future work.
+- Next recommended step:
+  - `STEP-019`
+- Commit hash:
+  - pending

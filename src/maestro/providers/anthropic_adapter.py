@@ -17,8 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 class AnthropicProvider(LlmProvider):
-    def __init__(self, api_key_env: str = "ANTHROPIC_API_KEY", client: Any | None = None) -> None:
+    def __init__(
+        self,
+        api_key_env: str = "ANTHROPIC_API_KEY",
+        api_key: str | None = None,
+        client: Any | None = None,
+    ) -> None:
         self.api_key_env = api_key_env
+        self.api_key = api_key
         self._client = client
         self._capabilities = ProviderCapability(
             structured_outputs=False,
@@ -37,7 +43,7 @@ class AnthropicProvider(LlmProvider):
     def _get_client(self) -> Any:
         if self._client is not None:
             return self._client
-        api_key = os.environ.get(self.api_key_env)
+        api_key = self.api_key or os.environ.get(self.api_key_env)
         if not api_key:
             raise RuntimeError(
                 f"Missing Anthropic API key in environment variable {self.api_key_env}"

@@ -116,6 +116,13 @@ The shipped real-provider config expects keys for:
 - `GEMINI_API_KEY`
 - `ANTHROPIC_API_KEY`
 
+To store a local provider key securely in the OS keychain instead of `.env`:
+
+```bash
+uv run maestro creds set openai
+uv run maestro creds status openai
+```
+
 For the bundled OpenAI hello-world example:
 
 ```bash

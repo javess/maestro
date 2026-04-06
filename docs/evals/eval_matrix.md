@@ -178,3 +178,10 @@
   without changing orchestrator outcomes.
 - Existing deterministic scenarios were rerun to confirm JSON-plus-SQL persistence preserves the
   same completion, escalation, approval-hold, and follow-up behaviors.
+
+## STEP-018A Note
+
+- No scenario set changes were required in STEP-018A because credential resolution changes provider
+  setup rather than deterministic orchestration behavior.
+- Existing deterministic scenarios were rerun to confirm keychain-backed credential support does
+  not alter fake-provider eval outcomes.

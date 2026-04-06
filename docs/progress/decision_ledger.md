@@ -203,3 +203,8 @@
 - Decision: implement STEP-018 as a SQLite index alongside canonical JSON storage.
 - Rationale: SQLite gives fast local run/artifact queries and resumable metadata without forcing a
   risky migration away from the simpler JSON source of truth.
+
+- Decision: implement STEP-018A with OS keychain support via `keyring` while keeping `.env` and
+  shell env vars as fallback paths.
+- Rationale: this adds a materially safer local secret path without forcing a new remote secret
+  manager dependency or rewriting provider setup.

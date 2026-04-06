@@ -207,3 +207,11 @@
 - Updated `tests/test_engine.py` to assert repo-local runs create `.maestro/maestro.db`.
 - Reran targeted storage/engine tests plus the full backend suite and eval CLI after wiring the
   SQLite index.
+
+## STEP-018A Note
+
+- Added `tests/test_credentials.py` for keychain-backed credential storage and the `maestro creds`
+  CLI.
+- Updated `tests/test_providers.py` to confirm the provider factory resolves secrets from the
+  keychain when environment variables are absent.
+- Reran targeted credential/config/provider tests plus the full backend suite and eval CLI.

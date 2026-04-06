@@ -47,6 +47,7 @@ uv run maestro review TICKET-1
 uv run maestro status
 uv run maestro resume <RUN_ID>
 uv run maestro eval
+uv run maestro creds status openai
 uv run maestro doctor
 uv run maestro preview --repo examples/hello_world_cli_game --adapter local --command "python game.py --demo"
 uv run maestro ui
@@ -109,9 +110,14 @@ Shipped policies stay conservative by default except `prototype`, which currentl
 Configure providers in `examples/maestro.example.yaml`. The default test and eval path
 uses `FakeProvider` for deterministic execution without secrets.
 
-For local real-provider development, `maestro` now loads a `.env` file from the same directory as
-your config file. Start from [.env.example](/Users/javiersierra/dev/maestro/.env.example), then set
-`OPENAI_API_KEY` there before using the OpenAI adapter.
+For local real-provider development, `maestro` loads a `.env` file from the same directory as your
+config file and can also resolve provider keys from the OS keychain via `keyring`. Start from
+[.env.example](/Users/javiersierra/dev/maestro/.env.example), or store a secure local secret with:
+
+```bash
+uv run maestro creds set openai
+uv run maestro creds status openai
+```
 
 Provider routing is per role and supports fallbacks:
 
@@ -129,8 +135,8 @@ fallbacks:
 
 The OpenAI, Gemini, and Claude adapters are now runtime-wired. OpenAI prefers native structured
 output when possible, Gemini uses SDK JSON-schema generation plus fallback parsing, and Claude uses
-text-plus-JSON parsing. Secure key storage is still future work; the current supported
-local-development path is `.env` plus environment variables.
+text-plus-JSON parsing. Secure local key storage is now supported through the OS keychain, while
+shell env vars and `.env` remain the simpler fallback paths.
 
 If `maestro` detects that one of the richer Pydantic schemas is unlikely to fit OpenAI's native
 structured-output validator, it now skips that path up front and uses text generation plus JSON

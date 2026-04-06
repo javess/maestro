@@ -325,6 +325,50 @@
 - Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
 - Next recommended step: `STEP-018A`
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: add OS keychain-backed provider credential storage while preserving `.env` and shell env workflows
+- Selected step: `STEP-018A`
+- Files changed:
+  - `src/maestro/credentials.py`
+  - `src/maestro/providers/factory.py`
+  - `src/maestro/providers/openai_adapter.py`
+  - `src/maestro/providers/gemini_adapter.py`
+  - `src/maestro/providers/anthropic_adapter.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_credentials.py`
+  - `tests/test_providers.py`
+  - `pyproject.toml`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/runbooks/provider_credentials.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-018A.md`
+- Commands run:
+  - `sed -n '1,320p' src/maestro/config.py`
+  - `sed -n '1,260p' src/maestro/providers/factory.py`
+  - `sed -n '1,260p' tests/test_config.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_credentials.py tests/test_config.py tests/test_providers.py`
+  - `uv run ruff check src/maestro/credentials.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/anthropic_adapter.py src/maestro/cli/main.py tests/test_credentials.py tests/test_config.py tests/test_providers.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_credentials.py tests/test_config.py tests/test_providers.py` passed (`10 passed`)
+  - `uv run ruff check src/maestro/credentials.py src/maestro/providers/factory.py src/maestro/providers/openai_adapter.py src/maestro/providers/gemini_adapter.py src/maestro/providers/anthropic_adapter.py src/maestro/cli/main.py tests/test_credentials.py tests/test_config.py tests/test_providers.py` passed
+  - `uv run ty check` passed
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp` passed (`121 passed`)
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json ...` passed (`8 scenarios, 0 failed`)
+- Outcome: completed `STEP-018A`; local provider secrets can now resolve through the OS keychain and be managed with the `maestro creds` CLI
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-019`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score
