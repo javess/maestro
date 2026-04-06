@@ -199,3 +199,11 @@
 - Updated `tests/test_git_tools.py` to keep repeated eval runs from regressing on stale nested
   workspace cleanup.
 - Reran the full backend suite and eval CLI after expanding report metrics and output modes.
+
+## STEP-018 Note
+
+- Updated `tests/test_storage.py` for SQLite run-index persistence, artifact indexing, and
+  repo-local workspace database paths.
+- Updated `tests/test_engine.py` to assert repo-local runs create `.maestro/maestro.db`.
+- Reran targeted storage/engine tests plus the full backend suite and eval CLI after wiring the
+  SQLite index.

@@ -36,7 +36,7 @@
 | STEP-015 | Observation-to-backlog loop | done | 2026-04-06 00:20 UTC | [STEP-015](steps/STEP-015.md) | pending post-commit recording | targeted observation tests pass; `ruff` pass; `ty` pass; full `pytest` pass; `eval` pass | `STEP-016` |
 | STEP-016 | Archetype pack system | done | 2026-04-06 00:40 UTC | [STEP-016](steps/STEP-016.md) | pending post-commit recording | targeted archetype tests pass; `ruff` pass; `ty` pass | `STEP-017` |
 | STEP-017 | Scenario eval library expansion | done | 2026-04-06 00:30 UTC | [STEP-017](steps/STEP-017.md) | pending post-commit recording | eval/git-tool tests pass; `ruff` pass; `ty` pass; full `pytest` pass (`116 passed`); `eval` pass (`8/8`) | `STEP-018` |
-| STEP-018 | Local SQL persistence backend | planned | 2026-04-05 11:22 UTC | - | - | - | Wait for STEP-017 completion |
+| STEP-018 | Local SQL persistence backend | done | 2026-04-06 00:30 UTC | [STEP-018](steps/STEP-018.md) | pending post-commit recording | targeted storage/engine pass; `ruff` pass; `ty` pass; full `pytest` pass (`117 passed`); `eval` pass (`8/8`) | `STEP-018A` |
 | STEP-018A | Secure credential storage | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018` |
 | STEP-019 | Prompt refinement and role guidance | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018A` |
 | STEP-020 | Documentation publishing and onboarding polish | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-019` |

@@ -199,3 +199,7 @@
 - Decision: add explicit final publication step `STEP-021` for GitHub release to the user account.
 - Rationale: repository publication should be treated as a deliberate end-state action after the
   implementation, docs, storage, security, and polish steps are complete.
+
+- Decision: implement STEP-018 as a SQLite index alongside canonical JSON storage.
+- Rationale: SQLite gives fast local run/artifact queries and resumable metadata without forcing a
+  risky migration away from the simpler JSON source of truth.

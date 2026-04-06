@@ -23,6 +23,7 @@ machine. The baseline includes:
 - observation-driven follow-up proposal artifacts generated from failed checks and review issues
 - configurable archetype packs so planning can start from SaaS or API-service defaults
 - typed eval reports with summary metrics and optional JSON export
+- SQLite-backed run indexing alongside canonical JSON state and artifact storage
 
 ## Quick start
 
@@ -60,6 +61,8 @@ Runtime plan, state, preview, and evidence artifacts now persist in the target r
 `.maestro/`. Git-backed repos also execute ticket attempts in isolated per-ticket workspaces
 under `.maestro/worktrees/`, syncing approved changes back into the repo root only after review
 and policy gates pass.
+Repo-local workspaces now also maintain `.maestro/maestro.db` as a SQLite run index for fast run
+and artifact metadata queries while keeping JSON files canonical.
 
 ## Install as a global CLI
 

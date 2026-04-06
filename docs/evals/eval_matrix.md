@@ -171,3 +171,10 @@
 - The scenario set is unchanged in this step, but reporting now includes typed summary metrics and
   per-scenario assertions.
 - `maestro eval` now supports both human-readable summary output and JSON report export.
+
+## STEP-018 Note
+
+- No scenario set changes were required in STEP-018 because the SQLite layer indexes run metadata
+  without changing orchestrator outcomes.
+- Existing deterministic scenarios were rerun to confirm JSON-plus-SQL persistence preserves the
+  same completion, escalation, approval-hold, and follow-up behaviors.

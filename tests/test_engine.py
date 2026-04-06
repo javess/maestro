@@ -34,6 +34,7 @@ def test_run_plan_completes(tmp_path: Path) -> None:
     assert state.status in {"done", "escalated", "awaiting_approval"}
     assert (repo / ".maestro" / "state" / f"{state.run_id}.json").exists()
     assert (repo / ".maestro" / "runs" / state.run_id).exists()
+    assert (repo / ".maestro" / "maestro.db").exists()
 
 
 def test_run_plan_emits_evidence_bundle_for_completed_ticket(tmp_path: Path) -> None:

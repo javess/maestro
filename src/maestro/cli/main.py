@@ -19,6 +19,7 @@ from maestro.repo.discovery import discover_repo
 from maestro.schemas.contracts import TicketStatus
 from maestro.schemas.preview import PreviewRequest
 from maestro.storage.local import LocalStateStore, MaestroWorkspace, workspace_root_for_repo
+from maestro.storage.sqlite import SqliteRunIndex
 from maestro.tools.git import GitWorktreeManager
 
 app = typer.Typer(help="Deterministic multi-agent software delivery framework")
@@ -58,11 +59,13 @@ def _workspace(repo: Path) -> MaestroWorkspace:
 
 
 def _legacy_state_store() -> LocalStateStore:
-    return LocalStateStore(_project_root() / "runs" / "state")
+    legacy_root = _project_root() / "runs"
+    return LocalStateStore(legacy_root / "state", index=SqliteRunIndex(legacy_root / "maestro.db"))
 
 
 def _resolve_state_store(repo: Path, run_id: str | None = None) -> LocalStateStore:
-    repo_store = LocalStateStore(_workspace(repo).state_dir)
+    workspace = _workspace(repo)
+    repo_store = LocalStateStore(workspace.state_dir, index=SqliteRunIndex(workspace.index_path))
     if run_id is None or repo_store.exists(run_id):
         return repo_store
     legacy_store = _legacy_state_store()
@@ -180,11 +183,9 @@ def review(ticket_id: str, config: Path | None = None, repo: Path = Path(".")) -
 def status(run_id: str | None = None, repo: Path = Path(".")) -> None:
     state_store = _resolve_state_store(repo.resolve(), run_id)
     if run_id is None:
-        rows = [state_store.root / f"{value}.json" for value in state_store.list_run_ids()]
         table = Table("run_id", "status", "state")
-        for row in rows:
-            state = state_store.load(row.stem)
-            table.add_row(state.run_id, state.status, state.current_state)
+        for row in state_store.list_runs():
+            table.add_row(row.run_id, row.status, row.current_state)
         console.print(table)
         return
     state = state_store.load(run_id)

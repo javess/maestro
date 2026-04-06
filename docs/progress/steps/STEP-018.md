@@ -1,0 +1,70 @@
+# STEP-018
+
+- Step id: `STEP-018`
+- Title: Local SQL persistence backend
+- Status: done
+- Objective:
+  - Add a SQLite-backed local persistence index while preserving JSON compatibility.
+- Scope:
+  - Add a SQLite run/artifact metadata index.
+  - Wire repo-local and eval storage to update the index automatically.
+  - Keep JSON state and artifact files canonical.
+  - Expose indexed run listings through the existing storage layer and CLI status path.
+- Non-goals:
+  - No PostgreSQL backend in this step.
+  - No replacement of JSON payload storage.
+- Prerequisites:
+  - `STEP-017` complete.
+- Implementation plan:
+  - Add typed SQLite index records.
+  - Implement a small SQLite run index adapter in the storage layer.
+  - Wire local artifact and state stores to update the index.
+  - Update repo-local workspace metadata and status listing behavior.
+  - Add tests and storage docs.
+- Files changed:
+  - `src/maestro/schemas/storage.py`
+  - `src/maestro/storage/sqlite.py`
+  - `src/maestro/storage/local.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_storage.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/sqlite_persistence.md`
+  - `docs/runbooks/sqlite_persistence.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-018.md`
+- Tests added or updated:
+  - Updated `tests/test_storage.py` for run indexing, artifact indexing, and run listing.
+  - Updated `tests/test_engine.py` to assert repo-local runs create a SQLite database.
+- Evals added or updated:
+  - No scenario set change; existing evals were rerun against the JSON-plus-SQL storage path.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_storage.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/storage/sqlite.py src/maestro/schemas/storage.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/evals/harness.py tests/test_storage.py tests/test_engine.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Results:
+  - Repo-local runs now write `.maestro/maestro.db`.
+  - Run and artifact metadata are queryable in SQLite while JSON stays canonical.
+  - `status` can use indexed run metadata instead of scanning every JSON file.
+  - Full backend regression and deterministic eval coverage remained green after the storage change.
+- Docs updated:
+  - Added architecture and runbook docs for SQLite persistence.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Keep SQLite as an index/query layer and preserve JSON as the source of truth.
+- Known limitations:
+  - The CLI still loads full JSON state for single-run inspection.
+  - PostgreSQL is still deferred.
+- Next recommended step:
+  - `STEP-018A`
+- Commit hash:
+  - pending

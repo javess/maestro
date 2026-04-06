@@ -54,6 +54,7 @@ from maestro.schemas.contracts import (
 from maestro.schemas.observation import Observation
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.storage.policies import load_policy
+from maestro.storage.sqlite import SqliteRunIndex
 from maestro.tools.git import GitWorktreeManager
 from maestro.tools.shell import LocalShellRunner
 
@@ -100,11 +101,17 @@ def build_engine_deps(
     )
     artifact_root = workspace_root / "runs" if workspace_root is not None else project_root / "runs"
     state_root = workspace_root / "state" if workspace_root is not None else artifact_root / "state"
+    index_path = (
+        workspace_root / "maestro.db"
+        if workspace_root is not None
+        else artifact_root / "maestro.db"
+    )
+    index = SqliteRunIndex(index_path)
     return EngineDeps(
         config=config,
         policy=policy,
-        artifact_store=LocalArtifactStore(artifact_root),
-        state_store=LocalStateStore(state_root),
+        artifact_store=LocalArtifactStore(artifact_root, index=index),
+        state_store=LocalStateStore(state_root, index=index),
         shell=LocalShellRunner(),
         providers=providers,
         router=router,

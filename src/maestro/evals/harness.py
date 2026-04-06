@@ -21,6 +21,7 @@ from maestro.schemas.contracts import (
 )
 from maestro.schemas.eval import EvalReport, EvalScenarioResult, EvalSummary
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
+from maestro.storage.sqlite import SqliteRunIndex
 from maestro.tools.shell import LocalShellRunner
 
 
@@ -80,8 +81,14 @@ def build_eval_engine(project_root: Path, scenario: EvalScenario) -> Orchestrato
     deps = EngineDeps(
         config=config,
         policy=scenario.policy or PolicyPack(name="default"),
-        artifact_store=LocalArtifactStore(project_root / "runs"),
-        state_store=LocalStateStore(project_root / "runs" / "state"),
+        artifact_store=LocalArtifactStore(
+            project_root / "runs",
+            index=SqliteRunIndex(project_root / "runs" / "maestro.db"),
+        ),
+        state_store=LocalStateStore(
+            project_root / "runs" / "state",
+            index=SqliteRunIndex(project_root / "runs" / "maestro.db"),
+        ),
         shell=PassingShellRunner(scenario.shell_failures),
         providers=providers,
         router=ProviderRouter(config=config, providers=providers),

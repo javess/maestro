@@ -281,6 +281,50 @@
 - Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
 - Next recommended step: `STEP-018`
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: add SQLite-backed run indexing while keeping JSON state and artifact files canonical
+- Selected step: `STEP-018`
+- Files changed:
+  - `src/maestro/schemas/storage.py`
+  - `src/maestro/storage/sqlite.py`
+  - `src/maestro/storage/local.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_storage.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/sqlite_persistence.md`
+  - `docs/runbooks/sqlite_persistence.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-018.md`
+- Commands run:
+  - `sed -n '1,320p' src/maestro/storage/local.py`
+  - `sed -n '1,260p' src/maestro/core/engine.py`
+  - `sed -n '1,260p' tests/test_storage.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_storage.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/storage/sqlite.py src/maestro/schemas/storage.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/evals/harness.py tests/test_storage.py tests/test_engine.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_storage.py tests/test_engine.py` passed (`19 passed`)
+  - `uv run ruff check src/maestro/storage/local.py src/maestro/storage/sqlite.py src/maestro/schemas/storage.py src/maestro/core/engine.py src/maestro/cli/main.py src/maestro/evals/harness.py tests/test_storage.py tests/test_engine.py` passed
+  - `uv run ty check` passed
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp` passed (`117 passed`)
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json ...` passed (`8 scenarios, 0 failed`)
+- Outcome: completed `STEP-018`; repo-local and eval workspaces now maintain a SQLite run/artifact index alongside canonical JSON files
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-018A`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score

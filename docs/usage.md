@@ -55,6 +55,7 @@ The artifact and run state live inside the target repo under `.maestro/`:
 ```text
 <target-repo>/.maestro/runs/<RUN_ID>/preview_<adapter>.json
 <target-repo>/.maestro/state/<RUN_ID>.json
+<target-repo>/.maestro/maestro.db
 ```
 
 ## Test
