@@ -7,6 +7,8 @@ from maestro.schemas.contracts import (
     CheckResult,
     CodeChange,
     CodeResult,
+    CommitMetadata,
+    CommitMode,
     PolicyPack,
     RepoInfo,
     ReviewResult,
@@ -136,3 +138,40 @@ def test_build_evidence_bundle_includes_migration_plan_when_paths_require_it() -
 
     assert bundle.migration_plan is not None
     assert bundle.migration_plan.changed_paths == ["migrations/001_add_table.sql"]
+
+
+def test_build_evidence_bundle_carries_commit_metadata() -> None:
+    ticket = Ticket(
+        id="T-3",
+        title="Commit ticket",
+        description="desc",
+        acceptance_criteria=["done"],
+    )
+    code_result = CodeResult(
+        ticket_id="T-3",
+        summary="Committed change",
+        changed_files=[CodeChange(path="src/app.py", summary="update")],
+        commit_metadata=CommitMetadata(
+            branch="maestro/run-1",
+            commit_hash="abc123",
+            message="maestro: checkpoint T-3 - Commit ticket",
+            mode=CommitMode.checkpoint_commits,
+        ),
+    )
+    review = ReviewResult(ticket_id="T-3", approved=True, summary="Approved")
+
+    bundle = build_evidence_bundle(
+        run_id="run-3",
+        ticket=ticket,
+        review_cycle=1,
+        code_result=code_result,
+        checks=[],
+        review=review,
+        repo_info=RepoInfo(root=Path("."), repo_type="python"),
+        violations=[],
+        policy_findings=[],
+        policy=PolicyPack(name="default"),
+    )
+
+    assert bundle.commit_metadata is not None
+    assert bundle.commit_metadata.branch == "maestro/run-1"

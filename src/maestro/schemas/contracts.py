@@ -33,6 +33,12 @@ class ApprovalMode(StrEnum):
     multi_go = "multi_go"
 
 
+class CommitMode(StrEnum):
+    no_commit = "no_commit"
+    commit_on_green = "commit_on_green"
+    checkpoint_commits = "checkpoint_commits"
+
+
 class AssumptionKind(StrEnum):
     stated_fact = "stated_fact"
     inferred_fact = "inferred_fact"
@@ -155,6 +161,7 @@ class CodeResult(BaseModel):
     commands: list[str] = Field(default_factory=list)
     tests_added: list[str] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
+    commit_metadata: CommitMetadata | None = None
     success: bool = True
 
 
@@ -198,6 +205,8 @@ class PolicyPack(BaseModel):
     name: str
     max_review_cycles: int = 2
     max_parallel_tickets: int = 1
+    commit_mode: CommitMode = CommitMode.no_commit
+    commit_branch_prefix: str = "maestro"
     require_tests: bool = True
     require_lint: bool = True
     require_format: bool = True
@@ -276,6 +285,13 @@ class ApprovalRequest(BaseModel):
     status: Literal["pending", "approved"] = "pending"
 
 
+class CommitMetadata(BaseModel):
+    branch: str
+    commit_hash: str
+    message: str
+    mode: CommitMode
+
+
 class EvidenceBundle(BaseModel):
     bundle_id: str
     run_id: str
@@ -288,6 +304,7 @@ class EvidenceBundle(BaseModel):
     review_result: ReviewResult | None = None
     risk_score: RiskScore | None = None
     approval_request: ApprovalRequest | None = None
+    commit_metadata: CommitMetadata | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -352,6 +369,9 @@ class RunState(BaseModel):
     backlog: Backlog = Field(default_factory=lambda: Backlog(tickets=[]))
     current_ticket_id: str | None = None
     ticket_workdirs: dict[str, str] = Field(default_factory=dict)
+    base_branch: str | None = None
+    run_branch: str | None = None
+    pending_commit_paths: list[str] = Field(default_factory=list)
     completed_tickets: list[str] = Field(default_factory=list)
     review_cycles: int = 0
     approval_request: ApprovalRequest | None = None

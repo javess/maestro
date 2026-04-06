@@ -19,6 +19,7 @@ machine. The baseline includes:
 - repo mutation through coder-produced file operations applied into the target repo workspace
 - anchored patch editing for safer in-place mutation of existing repo files
 - git-backed ticket execution in isolated per-ticket workspaces under `<target-repo>/.maestro/worktrees/`
+- policy-driven target-repo run branches and local commit automation for approved work
 - bounded parallel execution for dependency-safe ready ticket batches when policy allows it
 - migration-aware evidence bundles and standalone migration plan artifacts for schema-sensitive work
 - observation-driven follow-up proposal artifacts generated from failed checks and review issues
@@ -68,6 +69,8 @@ Repo-local workspaces now also maintain `.maestro/maestro.db` as a SQLite run in
 and artifact metadata queries while keeping JSON files canonical.
 Existing files can now be updated through anchored patch hunks as well as whole-file writes, which
 reduces blast radius for localized repo edits.
+When the active policy enables it, successful runs also leave behind a repo-local feature branch
+with either per-ticket checkpoint commits or one final run commit.
 
 ## Install as a global CLI
 
@@ -109,6 +112,8 @@ uv run pyinstaller -m maestro.cli.main
 
 Parallel batch execution is controlled by `max_parallel_tickets` in the active policy pack.
 Shipped policies stay conservative by default except `prototype`, which currently allows `2`.
+Commit behavior is controlled by `commit_mode`; `prototype` currently uses
+`checkpoint_commits`, while `legacy` uses `commit_on_green`.
 
 ## Providers
 

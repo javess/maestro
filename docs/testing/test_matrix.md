@@ -231,3 +231,11 @@
   and synced back into the target repo.
 - Reran targeted workspace/engine tests plus `ruff` and `ty` after introducing patch mutation
   support.
+
+## STEP-024 Note
+
+- Updated `tests/test_git_tools.py` to cover branch checkout and path-scoped commit helpers.
+- Updated `tests/test_engine.py` to assert both checkpoint and final-run commit modes create the
+  expected run branch and commit metadata.
+- Updated `tests/test_evidence.py` so evidence bundles carry commit metadata when present.
+- Reran targeted git/evidence/engine tests plus `ruff` and `ty`.

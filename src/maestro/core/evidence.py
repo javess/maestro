@@ -136,6 +136,7 @@ def build_evidence_bundle(
         review_result=review,
         risk_score=risk_score,
         approval_request=approval_request,
+        commit_metadata=code_result.commit_metadata,
         metadata={
             "review_cycle": review_cycle,
             "violations": violations,

@@ -43,6 +43,9 @@ from maestro.schemas.contracts import (
     ApprovalRequest,
     CheckResult,
     CodeResult,
+    CommitMetadata,
+    CommitMode,
+    EvidenceBundle,
     MaestroConfig,
     PolicyPack,
     ProductSpec,
@@ -175,6 +178,117 @@ class OrchestratorEngine:
 
     def _parallel_ticket_limit(self) -> int:
         return max(1, self.deps.policy.max_parallel_tickets)
+
+    def _commit_mode(self) -> CommitMode:
+        return self.deps.policy.commit_mode
+
+    def _ensure_run_branch(self, state: RunState) -> str | None:
+        if self._commit_mode() is CommitMode.no_commit:
+            return None
+        if not (state.repo_path / ".git").exists():
+            return None
+        manager = GitWorktreeManager(state.repo_path)
+        if state.run_branch is not None:
+            return state.run_branch
+        if manager.is_dirty():
+            self._record_state_note(state, "commit_skipped_dirty_repo")
+            logger.warning(
+                "commit_branch_skipped_dirty_repo run_id=%s repo=%s",
+                state.run_id,
+                state.repo_path,
+            )
+            return None
+        state.base_branch = manager.current_branch()
+        branch = f"{self.deps.policy.commit_branch_prefix}/{state.run_id}"
+        manager.checkout_branch(branch)
+        state.run_branch = branch
+        self._record_state_note(state, f"commit_branch:{branch}")
+        return branch
+
+    def _commit_ticket_result(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        code_result: CodeResult,
+        *,
+        mode: CommitMode,
+        message: str,
+    ) -> CommitMetadata | None:
+        branch = self._ensure_run_branch(state)
+        if branch is None:
+            return None
+        manager = GitWorktreeManager(state.repo_path)
+        commit_hash = manager.commit_paths(
+            paths=[change.path for change in code_result.changed_files],
+            message=message,
+        )
+        if commit_hash is None:
+            self._record_state_note(state, f"commit_skipped_no_changes:{ticket.id}")
+            return None
+        metadata = CommitMetadata(
+            branch=branch,
+            commit_hash=commit_hash,
+            message=message,
+            mode=mode,
+        )
+        code_result.commit_metadata = metadata
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_commit_{len(state.completed_tickets) + 1}",
+            metadata.model_dump(mode="json"),
+        )
+        self._update_ticket_commit_metadata_on_bundles(state, ticket.id, metadata)
+        self._record_state_note(state, f"commit_created:{ticket.id}:{commit_hash}")
+        return metadata
+
+    def _update_ticket_commit_metadata_on_bundles(
+        self,
+        state: RunState,
+        ticket_id: str | None,
+        commit_metadata: CommitMetadata,
+    ) -> None:
+        for entry in state.artifacts.evidence_bundles:
+            path = Path(entry.path)
+            if not path.exists():
+                continue
+            payload = EvidenceBundle.model_validate_json(path.read_text())
+            if ticket_id is not None and payload.ticket_id != ticket_id:
+                continue
+            payload.commit_metadata = commit_metadata
+            path.write_text(payload.model_dump_json(indent=2))
+
+    def _finalize_run_commit(
+        self,
+        state: RunState,
+    ) -> None:
+        if self._commit_mode() is not CommitMode.commit_on_green:
+            return
+        if state.status != "done" or not state.pending_commit_paths:
+            return
+        branch = self._ensure_run_branch(state)
+        if branch is None:
+            return
+        manager = GitWorktreeManager(state.repo_path)
+        commit_hash = manager.commit_paths(
+            paths=sorted(set(state.pending_commit_paths)),
+            message=f"maestro: complete run {state.run_id}",
+        )
+        if commit_hash is None:
+            return
+        metadata = CommitMetadata(
+            branch=branch,
+            commit_hash=commit_hash,
+            message=f"maestro: complete run {state.run_id}",
+            mode=CommitMode.commit_on_green,
+        )
+        self._update_ticket_commit_metadata_on_bundles(state, None, metadata)
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            "run_commit",
+            metadata.model_dump(mode="json"),
+        )
+        state.pending_commit_paths = []
+        self._record_state_note(state, f"commit_created:run:{commit_hash}")
 
     def _append_event(self, state: RunState, current: OrchestratorState, detail: str) -> None:
         state.current_state = current.value
@@ -642,7 +756,25 @@ class OrchestratorEngine:
             self._append_event(state, OrchestratorState.REVISE, ",".join(violations))
             return OrchestratorState.REVISE
         ticket.status = TicketStatus.complete
+        if self._commit_mode() is CommitMode.checkpoint_commits:
+            self._ensure_run_branch(state)
+        if self._commit_mode() is CommitMode.commit_on_green:
+            self._ensure_run_branch(state)
         self._sync_ticket_result(state, ticket, code_result)
+        if self._commit_mode() is CommitMode.checkpoint_commits:
+            self._commit_ticket_result(
+                state,
+                ticket,
+                code_result,
+                mode=CommitMode.checkpoint_commits,
+                message=f"maestro: checkpoint {ticket.id} - {ticket.title}",
+            )
+        if self._commit_mode() is CommitMode.commit_on_green:
+            state.pending_commit_paths.extend(
+                change.path
+                for change in code_result.changed_files
+                if change.path not in state.pending_commit_paths
+            )
         state.completed_tickets.append(ticket.id)
         state.review_cycles = 0
         logger.info("ticket_completed run_id=%s ticket=%s", state.run_id, ticket.id)
@@ -714,6 +846,7 @@ class OrchestratorEngine:
             tickets = self.pick_tickets(state)
             if not tickets:
                 break
+        self._finalize_run_commit(state)
         state.current_state = (
             OrchestratorState.DONE.value if state.status == "done" else state.current_state
         )

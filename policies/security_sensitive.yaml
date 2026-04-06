@@ -1,6 +1,8 @@
 name: security_sensitive
 max_review_cycles: 1
 max_parallel_tickets: 1
+commit_mode: no_commit
+commit_branch_prefix: maestro
 require_tests: true
 require_lint: true
 require_format: true

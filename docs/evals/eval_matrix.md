@@ -199,3 +199,10 @@
   mutation primitive rather than the orchestrator state machine.
 - Existing deterministic eval coverage remains valid while targeted integration tests validate the
   new patch-application path.
+
+## STEP-024 Note
+
+- No eval scenario set changes were required in STEP-024 because branch and commit automation do
+  not change orchestrator transitions.
+- Existing deterministic eval coverage remains valid while targeted git-backed integration tests
+  validate branch creation, commit modes, and evidence metadata propagation.

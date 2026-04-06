@@ -1,0 +1,79 @@
+# STEP-024
+
+- Step id: `STEP-024`
+- Title: Branch and commit automation
+- Status: done
+- Objective:
+  - Make target-repo branches and local commits a first-class, policy-driven execution output.
+- Scope:
+  - Add commit-mode policy controls.
+  - Create run branches in target repos.
+  - Commit approved changes either per ticket or once per successful run.
+  - Persist commit metadata into artifacts and evidence bundles.
+- Non-goals:
+  - Remote pushes or pull request creation.
+  - Signed commits.
+  - Multi-branch merge strategies.
+- Prerequisites:
+  - `STEP-013H`
+  - `STEP-013IA`
+  - `STEP-023`
+- Implementation plan:
+  - Extend contracts with commit modes and commit metadata.
+  - Teach the git helper to create branches and make path-scoped commits.
+  - Wire branch/commit behavior into the orchestrator success path.
+  - Cover both checkpoint and final-run commit modes in tests.
+- Files changed:
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/tools/git.py`
+  - `tests/test_git_tools.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/branch_commit_automation.md`
+  - `docs/runbooks/branch_commit_automation.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-024.md`
+- Tests added or updated:
+  - Updated `tests/test_git_tools.py` for branch checkout and path-scoped commit helpers.
+  - Updated `tests/test_engine.py` for checkpoint and commit-on-green behavior.
+  - Updated `tests/test_evidence.py` for commit metadata propagation.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_git_tools.py tests/test_evidence.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/tools/git.py policies tests/test_git_tools.py tests/test_evidence.py tests/test_engine.py`
+  - `uv run ty check`
+- Results:
+  - Clean git repos now get a dedicated run branch when commit automation is enabled.
+  - `checkpoint_commits` writes one commit per approved ticket.
+  - `commit_on_green` writes one final run commit after successful completion.
+  - Evidence bundles and run artifacts now carry commit metadata.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/branch_commit_automation.md`
+  - `docs/runbooks/branch_commit_automation.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - progress and roadmap files
+- Decisions made:
+  - Commit automation skips dirty repos except for `.maestro/` runtime metadata.
+- Known limitations:
+  - Commits remain local only.
+  - Dirty repos disable commit automation rather than attempting an automatic stash/rebase flow.
+- Next recommended step:
+  - `STEP-025`
+- Commit hash:
+  - pending

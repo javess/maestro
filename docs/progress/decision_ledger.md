@@ -239,3 +239,8 @@
   contract instead of introducing a second patch-specific artifact type.
 - Rationale: patch editing is the smallest compatible way to improve mutation safety for existing
   files while preserving current execution, evidence, and persistence flows.
+
+- Decision: create and commit onto a dedicated run branch in the target repo instead of trying to
+  preserve detached worktree commits.
+- Rationale: the target repo is the operator’s durable working copy, so branch visibility and local
+  commit history need to exist there rather than only inside isolated execution workspaces.

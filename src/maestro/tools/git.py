@@ -17,6 +17,7 @@ IGNORED_WORKSPACE_PATTERNS = (
     "dist",
     "build",
 )
+IGNORED_STATUS_PREFIXES = (".maestro/",)
 
 
 class GitWorktreeManager:
@@ -31,7 +32,15 @@ class GitWorktreeManager:
             capture_output=True,
             check=False,
         )
-        return bool(completed.stdout.strip())
+        for line in completed.stdout.splitlines():
+            path = line[3:]
+            if any(
+                path == prefix.rstrip("/") or path.startswith(prefix)
+                for prefix in IGNORED_STATUS_PREFIXES
+            ):
+                continue
+            return True
+        return False
 
     def current_branch(self) -> str:
         completed = subprocess.run(
@@ -40,6 +49,48 @@ class GitWorktreeManager:
             text=True,
             capture_output=True,
             check=False,
+        )
+        return completed.stdout.strip()
+
+    def checkout_branch(self, branch: str) -> None:
+        subprocess.run(
+            ["git", "checkout", "-B", branch],
+            cwd=self.repo_root,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+
+    def commit_paths(self, *, paths: list[str], message: str) -> str | None:
+        subprocess.run(
+            ["git", "add", "--", *paths],
+            cwd=self.repo_root,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        status = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"],
+            cwd=self.repo_root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if status.returncode == 0:
+            return None
+        subprocess.run(
+            ["git", "commit", "-m", message],
+            cwd=self.repo_root,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        completed = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=self.repo_root,
+            text=True,
+            capture_output=True,
+            check=True,
         )
         return completed.stdout.strip()
 
