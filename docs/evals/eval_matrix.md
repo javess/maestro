@@ -229,3 +229,8 @@
 
 - No eval scenario set changes were required in STEP-028 because the UI console and local API are
   operator surfaces over existing orchestration behavior.
+
+## STEP-029 Note
+
+- No eval scenario set changes were required in STEP-029 because the local scheduler changes
+  execution management, not orchestration semantics.

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -11,6 +10,7 @@ from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.repo.discovery import discover_repo
 from maestro.repo.readiness import assess_repo_readiness
+from maestro.server.scheduler import LocalRunScheduler
 
 
 class PlanRequest(BaseModel):
@@ -27,8 +27,7 @@ class RunActionRequest(BaseModel):
 
 class ApiServer:
     def __init__(self) -> None:
-        self.executor = ThreadPoolExecutor(max_workers=4)
-        self.futures: dict[str, Future[object]] = {}
+        self.scheduler = LocalRunScheduler(max_workers=2)
 
     def create_app(self) -> FastAPI:
         app = FastAPI(title="maestro local api", version="0.1.0")
@@ -74,7 +73,7 @@ class ApiServer:
             def runner() -> object:
                 return engine.run_plan(repo, brief)
 
-            self.futures[state.run_id] = self.executor.submit(runner)
+            self.scheduler.enqueue(state.run_id, runner)
             return {"run_id": state.run_id}
 
         @app.post("/api/runs/{run_id}/approve")
@@ -124,10 +123,18 @@ class ApiServer:
 
         @app.get("/api/runs/{run_id}/future")
         def future_status(run_id: str) -> dict[str, object]:
-            future = self.futures.get(run_id)
-            if future is None:
+            state = self.scheduler.future_state(run_id)
+            if state == "unknown":
                 raise HTTPException(status_code=404, detail="Unknown run id")
-            return {"done": future.done(), "cancelled": future.cancelled()}
+            return {"state": state}
+
+        @app.get("/api/scheduler")
+        def scheduler_status() -> list[dict[str, str]]:
+            return [row.__dict__ for row in self.scheduler.list_runs()]
+
+        @app.post("/api/runs/{run_id}/cancel")
+        def cancel_run(run_id: str) -> dict[str, object]:
+            return {"run_id": run_id, "cancelled": self.scheduler.cancel(run_id)}
 
         return app
 

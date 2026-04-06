@@ -234,6 +234,43 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-029`
 
+## 2026-04-06 08:31 UTC
+
+- Session goal: formalize local queued execution and worker-pool behavior behind the UI/API
+- Selected step: `STEP-029`
+- Files changed:
+  - `src/maestro/server/scheduler.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_scheduler.py`
+  - `tests/test_server.py`
+  - `ui/src/main.tsx`
+  - `README.md`
+  - `docs/architecture/run_scheduler.md`
+  - `docs/runbooks/run_scheduler.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-029.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_scheduler.py tests/test_server.py`
+  - `uv run ruff check src/maestro/server/app.py src/maestro/server/scheduler.py src/maestro/cli/main.py tests/test_scheduler.py tests/test_server.py`
+  - `uv run ty check`
+  - `cd ui && npm run build`
+- Tests run:
+  - scheduler/server pytest passed
+  - `ruff` passed
+  - `ty` passed
+  - UI build passed
+- Evals run:
+  - none; scheduler changes execution management rather than eval semantics
+- Outcome: completed `STEP-029`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-030`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

@@ -47,6 +47,11 @@ type RunRow = {
   current_ticket_id?: string | null;
 };
 
+type SchedulerRow = {
+  run_id: string;
+  state: string;
+};
+
 type RunEvent = {
   state: string;
   detail: string;
@@ -86,6 +91,7 @@ function App() {
   const [runs, setRuns] = useState<RunRow[]>([]);
   const [selectedRunId, setSelectedRunId] = useState<string>("");
   const [runState, setRunState] = useState<RunState | null>(null);
+  const [schedulerRows, setSchedulerRows] = useState<SchedulerRow[]>([]);
   const [actionComment, setActionComment] = useState("");
   const [message, setMessage] = useState<string>("");
 
@@ -111,6 +117,11 @@ function App() {
     const params = new URLSearchParams({ repo_path: repoPath });
     const response = await fetch(`${apiBase}/api/runs/${runId}?${params.toString()}`);
     setRunState(await response.json());
+  }
+
+  async function fetchScheduler() {
+    const response = await fetch(`${apiBase}/api/scheduler`);
+    setSchedulerRows((await response.json()) as SchedulerRow[]);
   }
 
   async function startPlan() {
@@ -139,9 +150,22 @@ function App() {
     setMessage(`${action} applied to ${selectedTicketId}`);
   }
 
+  async function cancelRun() {
+    if (!selectedRunId) {
+      return;
+    }
+    const response = await fetch(`${apiBase}/api/runs/${selectedRunId}/cancel`, {
+      method: "POST",
+    });
+    const payload = (await response.json()) as { cancelled: boolean };
+    setMessage(payload.cancelled ? `Cancelled ${selectedRunId}` : `Unable to cancel ${selectedRunId}`);
+    await fetchScheduler();
+  }
+
   useEffect(() => {
     void fetchDoctor();
     void fetchRuns();
+    void fetchScheduler();
   }, [repoPath, configPath]);
 
   useEffect(() => {
@@ -152,6 +176,7 @@ function App() {
     const interval = window.setInterval(() => {
       void fetchRun(selectedRunId);
       void fetchRuns();
+      void fetchScheduler();
     }, 2000);
     return () => window.clearInterval(interval);
   }, [selectedRunId, repoPath]);
@@ -272,6 +297,9 @@ function App() {
                           <Chip label={runState.status} color="primary" />
                           <Chip label={runState.current_state} />
                           <Chip label={`${artifactCount} artifacts`} />
+                          <Button size="small" onClick={() => void cancelRun()}>
+                            Cancel run
+                          </Button>
                         </Stack>
                         {runState.diff_approval_request ? (
                           <Alert severity="warning">
@@ -325,6 +353,20 @@ function App() {
                 </Card>
               </Grid>
             </Grid>
+            <Card sx={{ boxShadow: "0 16px 40px rgba(49,35,19,0.08)" }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  Scheduler
+                </Typography>
+                <List dense>
+                  {schedulerRows.map((row) => (
+                    <ListItem key={row.run_id}>
+                      <ListItemText primary={row.run_id} secondary={row.state} />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
           </Stack>
         </Container>
       </Box>

@@ -31,6 +31,7 @@ machine. The baseline includes:
 - optional diff-approval gates with CLI approve/reject/rerun controls before repo finalization
 - deterministic repo readiness scoring and support tiers exposed through `maestro doctor`
 - a local Material UI run console that can start runs, inspect progress, and act on diff approvals
+- local queued run scheduling with worker limits and cancel support through the UI/API
 
 ## Quick start
 

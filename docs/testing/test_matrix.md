@@ -263,3 +263,9 @@
 - Added `tests/test_server.py` for the local API doctor and run-start endpoints.
 - Validated the Material UI console with `npm run build`.
 - Reran focused server tests plus `ruff` and `ty`.
+
+## STEP-029 Note
+
+- Added `tests/test_scheduler.py` for queued dispatch and cancellation behavior.
+- Updated `tests/test_server.py` for scheduler-status and cancel endpoints.
+- Reran focused scheduler/server tests plus `ruff`, `ty`, and the UI build.

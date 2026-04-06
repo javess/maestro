@@ -1,0 +1,56 @@
+# STEP-029
+
+- Step id: `STEP-029`
+- Title: Multi-run scheduler and worker pools
+- Status: done
+- Objective:
+  - Support queued runs, worker limits, cancellation, and background workers for UI-driven execution.
+- Scope:
+  - Add a local scheduler abstraction.
+  - Expose queue state and cancellation over the local API.
+  - Surface scheduler state in the UI.
+- Non-goals:
+  - Durable distributed queues.
+  - Cross-process worker coordination.
+- Prerequisites:
+  - `STEP-028`
+- Implementation plan:
+  - Add a scheduler module with queued/running/completed states.
+  - Route UI/API run starts through the scheduler.
+  - Expose scheduler state and cancellation endpoints.
+- Files changed:
+  - `src/maestro/server/scheduler.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_scheduler.py`
+  - `tests/test_server.py`
+  - `ui/src/main.tsx`
+  - `README.md`
+  - `docs/architecture/run_scheduler.md`
+  - `docs/runbooks/run_scheduler.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_scheduler.py`.
+  - Updated `tests/test_server.py` for scheduler and cancel endpoints.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - scheduler/server pytest
+  - `ruff`
+  - `ty`
+  - UI build
+- Results:
+  - UI/API run creation now flows through a queued local scheduler with worker limits.
+  - Scheduler state and queued cancellation are visible from the API and UI.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/run_scheduler.md`
+  - `docs/runbooks/run_scheduler.md`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Start with an in-process local scheduler before any durable distributed queue.
+- Known limitations:
+  - Queue state is in-memory and process-local.
+- Next recommended step:
+  - `STEP-030`
+- Commit hash:
+  - pending

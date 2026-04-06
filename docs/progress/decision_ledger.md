@@ -262,3 +262,7 @@
   CLI through shell subprocesses from the browser.
 - Rationale: a typed local API gives the UI a stable control surface and is easier to extend into
   later scheduling and shared-control-plane work.
+
+- Decision: start scheduling with an in-process local queue and worker pool.
+- Rationale: this is the smallest extension that supports queued UI-driven runs and cancellation
+  while preserving the file-backed state model and avoiding premature distributed infrastructure.
