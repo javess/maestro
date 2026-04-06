@@ -4,9 +4,11 @@ from pathlib import Path
 from maestro.config import load_config, load_env_file
 
 
-def test_load_env_file_populates_missing_environment_variables(tmp_path: Path) -> None:
+def test_load_env_file_populates_missing_environment_variables(tmp_path: Path, monkeypatch) -> None:
     env_path = tmp_path / ".env"
     env_path.write_text("OPENAI_API_KEY=test-key\n# comment\nEMPTY=\n")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("EMPTY", raising=False)
 
     load_env_file(env_path)
 

@@ -185,3 +185,10 @@
 - Updated `tests/test_engine.py` to assert observation-followup artifacts are persisted on failed
   review paths.
 - Added the observation-driven eval scenario and reran the full backend test suite.
+
+## STEP-016 Note
+
+- Added `tests/test_archetypes.py` for pack loading.
+- Updated `tests/test_engine.py` to assert planning receives and persists the selected pack.
+- Hardened `tests/test_config.py` against ambient local API keys that would otherwise make env-file
+  tests flaky.

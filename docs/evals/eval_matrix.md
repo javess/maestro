@@ -160,3 +160,8 @@
   deterministic eval runs.
 - Existing scenarios now cover both migration-sensitive and observation-driven follow-up artifact
   generation.
+
+## STEP-016 Note
+
+- No eval scenario set changes were required in STEP-016 because archetype packs currently enrich
+  planning metadata without changing state-machine outcomes.

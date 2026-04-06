@@ -39,6 +39,9 @@ artifacts and evidence bundle set.
 Failed checks and reviewer issues now also emit structured observation-followup artifacts so the
 next planning cycle can start from explicit follow-up proposals.
 
+You can also select an archetype pack in config with `archetype: saas_app` or
+`archetype: api_service` to pass product-shape defaults into planning.
+
 ## Preview a local target repo
 
 ```bash

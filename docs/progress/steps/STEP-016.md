@@ -1,0 +1,69 @@
+# STEP-016
+
+- Step id: `STEP-016`
+- Title: Archetype pack system
+- Status: done
+- Objective:
+  - Support generic application archetypes without hardcoding one product shape.
+- Scope:
+  - Add a typed archetype pack schema and loader.
+  - Ship at least two starter packs.
+  - Pass the selected pack into planning and persist it as a run artifact.
+- Non-goals:
+  - No automatic policy mutation yet.
+  - No automatic architecture synthesis rewrite yet.
+- Prerequisites:
+  - `STEP-015` complete.
+- Implementation plan:
+  - Add archetype pack contracts and registry loader.
+  - Ship `saas_app` and `api_service`.
+  - Extend config and planning payloads to consume packs.
+  - Update tests and docs.
+- Files changed:
+  - `src/maestro/schemas/archetype.py`
+  - `src/maestro/archetypes.py`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/engine.py`
+  - `archetypes/saas_app.yaml`
+  - `archetypes/api_service.yaml`
+  - `tests/test_archetypes.py`
+  - `tests/test_engine.py`
+  - `tests/test_config.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/archetype_packs.md`
+  - `docs/runbooks/archetype_packs.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-016.md`
+- Tests added or updated:
+  - Added `tests/test_archetypes.py` for pack loading.
+  - Updated `tests/test_engine.py` to assert the planner receives and persists the selected pack.
+  - Hardened `tests/test_config.py` against ambient developer env vars.
+- Evals added or updated:
+  - None. Archetype packs currently enrich planning metadata without changing deterministic state
+    transitions.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_archetypes.py tests/test_engine.py tests/test_config.py`
+  - `uv run ruff check tests/test_config.py tests/test_archetypes.py tests/test_engine.py src/maestro/archetypes.py src/maestro/core/engine.py src/maestro/schemas/archetype.py src/maestro/schemas/contracts.py`
+  - `uv run ty check`
+- Results:
+  - Planning can now consume a selected archetype pack.
+  - Built-in packs for SaaS apps and API services ship with the repo.
+  - The selected pack is persisted as an artifact for the run.
+- Docs updated:
+  - Added architecture and runbook docs for archetype packs.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Archetype packs are advisory planning inputs first, not hard overrides of policy or synthesis.
+- Known limitations:
+  - Packs are not yet feeding automated policy override logic.
+  - Only two starter packs ship in this step.
+- Next recommended step:
+  - `STEP-017`
+- Commit hash:
+  - pending

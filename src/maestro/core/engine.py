@@ -12,6 +12,7 @@ from maestro.agents.roles import (
     ProductDesignerAgent,
     ReviewerAgent,
 )
+from maestro.archetypes import load_archetype_pack
 from maestro.config import load_config
 from maestro.core.architecture_synthesizer import synthesize_architecture
 from maestro.core.backlog_graph import build_backlog_graph, select_ready_tickets
@@ -227,11 +228,19 @@ class OrchestratorEngine:
         repo = discover_repo(state.repo_path)
         spec = ProductSpec.model_validate(spec_payload)
         architecture = synthesize_architecture(spec, repo)
+        archetype_pack = (
+            load_archetype_pack(self.deps.config.archetype, self.project_root / "archetypes")
+            if self.deps.config.archetype is not None
+            else None
+        )
         backlog = agent.run_backlog(
             {
                 "product_spec": spec_payload,
                 "architecture_artifacts": architecture.model_dump(mode="json"),
                 "repo_context": repo.model_dump(mode="json"),
+                "archetype_pack": (
+                    archetype_pack.model_dump(mode="json") if archetype_pack is not None else None
+                ),
             }
         )
         backlog.architecture_artifacts = backlog.architecture_artifacts or architecture
@@ -250,6 +259,12 @@ class OrchestratorEngine:
                 for ticket_id, analysis in backlog.impact_analyses.items()
             },
         )
+        if archetype_pack is not None:
+            self.deps.artifact_store.write_json(
+                state.artifacts,
+                "archetype_pack",
+                archetype_pack.model_dump(mode="json"),
+            )
         state.backlog = backlog
         logger.info(
             "plan_tickets_complete run_id=%s tickets=%s",

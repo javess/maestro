@@ -479,3 +479,41 @@ def test_run_plan_persists_observation_followups_for_failed_review() -> None:
 
     artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
     assert "TICKET-1_observation_followups_1" in artifact_names
+
+
+def test_plan_tickets_passes_archetype_pack_to_planner(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+
+    class CapturingArchetypeProvider(FakeProvider):
+        def __init__(self) -> None:
+            super().__init__()
+            self.captured_archetype: dict[str, object] | None = None
+
+        def generate_structured(self, *, prompt: str, model: str, schema, metadata=None):
+            if schema.__name__ == "Backlog":
+                self.captured_archetype = cast(
+                    dict[str, object] | None,
+                    (metadata or {}).get("archetype_pack"),
+                )
+            return super().generate_structured(
+                prompt=prompt,
+                model=model,
+                schema=schema,
+                metadata=metadata,
+            )
+
+    provider = CapturingArchetypeProvider()
+    scenario = EvalScenario(
+        name="archetype-pack",
+        provider=provider,
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    engine.deps.config.archetype = "saas_app"
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    assert provider.captured_archetype is not None
+    assert provider.captured_archetype["name"] == "saas_app"
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "archetype_pack" in artifact_names

@@ -181,3 +181,8 @@
   back into the live backlog graph.
 - Rationale: it keeps the observation loop deterministic and reviewable without silently mutating
   active planning state.
+
+- Decision: start archetype packs as advisory planning inputs rather than hard overrides of policy
+  or architecture synthesis.
+- Rationale: that keeps the initial pack system generic and low-risk while still making the product
+  shape explicit to planning.

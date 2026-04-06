@@ -1,0 +1,13 @@
+name: api_service
+description: Stateless or lightly stateful API service focused on contracts, reliability, and observability.
+architecture_defaults:
+  domains:
+    - api
+    - persistence
+    - observability
+policy_defaults:
+  approval_mode: auto_go
+work_patterns:
+  - preserve API compatibility where practical
+  - include contract and smoke coverage
+  - document operational impacts for infra-facing changes

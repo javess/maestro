@@ -1,0 +1,14 @@
+name: saas_app
+description: Multi-user application with auth, billing, UI, and operational concerns.
+architecture_defaults:
+  domains:
+    - auth
+    - billing
+    - web_ui
+    - admin
+policy_defaults:
+  approval_mode: review_go
+work_patterns:
+  - preserve backward compatibility on public APIs
+  - prefer incremental rollout for schema and billing changes
+  - require user-facing acceptance criteria for UI work

@@ -34,7 +34,7 @@
 | STEP-013J | Multi-provider runtime adapters | done | 2026-04-05 23:43 UTC | [STEP-013J](steps/STEP-013J.md) | pending post-commit recording | targeted provider tests pass; `ruff` pass; `ty` pass; full `pytest` pass | `STEP-014` |
 | STEP-014 | Migration planner | done | 2026-04-05 23:43 UTC | [STEP-014](steps/STEP-014.md) | pending post-commit recording | targeted migration/evidence tests pass; `ruff` pass; `ty` pass; full `pytest` pass | `STEP-015` |
 | STEP-015 | Observation-to-backlog loop | done | 2026-04-06 00:20 UTC | [STEP-015](steps/STEP-015.md) | pending post-commit recording | targeted observation tests pass; `ruff` pass; `ty` pass; full `pytest` pass; `eval` pass | `STEP-016` |
-| STEP-016 | Archetype pack system | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-015 |
+| STEP-016 | Archetype pack system | done | 2026-04-06 00:40 UTC | [STEP-016](steps/STEP-016.md) | pending post-commit recording | targeted archetype tests pass; `ruff` pass; `ty` pass | `STEP-017` |
 | STEP-017 | Scenario eval library expansion | planned | 2026-04-05 10:14 UTC | - | - | - | Wait for STEP-016 |
 | STEP-018 | Local SQL persistence backend | planned | 2026-04-05 11:22 UTC | - | - | - | Wait for STEP-017 completion |
 | STEP-018A | Secure credential storage | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018` |

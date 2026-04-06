@@ -316,6 +316,7 @@ class MaestroConfig(BaseModel):
     llm: dict[str, RoleConfig]
     fallbacks: dict[str, list[FallbackConfig]] = Field(default_factory=dict)
     policy: str = "default"
+    archetype: str | None = None
 
 
 class RunEvent(BaseModel):
