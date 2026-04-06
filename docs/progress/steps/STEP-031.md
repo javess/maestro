@@ -1,0 +1,61 @@
+# STEP-031
+
+- Step id: `STEP-031`
+- Title: OSS adoption kit
+- Status: done
+- Objective:
+  - Make the project easier to evaluate and contribute to from outside the core team.
+- Scope:
+  - Add a contributor guide.
+  - Add GitHub issue and PR templates.
+  - Add public benchmark demo guidance.
+  - Add positioning docs for deterministic orchestration versus agent chat loops.
+- Non-goals:
+  - Hosted community services.
+  - New runtime behavior in the orchestrator.
+- Prerequisites:
+  - `STEP-030`
+- Implementation plan:
+  - Add contributor-facing repo scaffolding.
+  - Add public-facing adoption and benchmark docs.
+  - Update docs navigation and README entry points.
+- Files changed:
+  - `CONTRIBUTING.md`
+  - `.github/ISSUE_TEMPLATE/bug_report.yml`
+  - `.github/ISSUE_TEMPLATE/feature_request.yml`
+  - `.github/ISSUE_TEMPLATE/config.yml`
+  - `.github/pull_request_template.md`
+  - `docs/oss_adoption.md`
+  - `docs/benchmark_demos.md`
+  - `docs/contributing.md`
+  - `examples/benchmark_demos/README.md`
+  - `mkdocs.yml`
+  - `README.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - No code tests required; this was contributor and documentation scaffolding.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `uv run python` issue-template YAML validation
+  - `uv run --group docs mkdocs build --strict`
+  - `git diff --check`
+- Results:
+  - New contributors now have a concrete evaluation path, public issue templates, and benchmark demo guidance.
+- Docs updated:
+  - `CONTRIBUTING.md`
+  - `docs/oss_adoption.md`
+  - `docs/benchmark_demos.md`
+  - `docs/contributing.md`
+  - `examples/benchmark_demos/README.md`
+  - `README.md`
+  - `mkdocs.yml`
+  - progress and roadmap docs
+- Decisions made:
+  - Treat the public benchmark fixtures as the first OSS demo surface instead of creating separate duplicated demo repos.
+- Known limitations:
+  - The benchmark demos still rely on local fixture repos rather than standalone public sample apps.
+- Next recommended step:
+  - `STEP-032`
+- Commit hash:
+  - pending

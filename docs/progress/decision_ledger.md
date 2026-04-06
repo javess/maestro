@@ -258,6 +258,10 @@
 - Rationale: repo support tiers need to be deterministic, explainable, and safe to run without
   external services or expensive semantic analysis.
 
+- Decision: use the existing fixture repos as the first public benchmark demos for OSS adoption.
+- Rationale: they are already deterministic, versioned with the repo, and good enough to teach
+  public contributors how to evaluate the product without duplicating demo assets.
+
 - Decision: implement the UI console on top of a thin local FastAPI layer rather than calling the
   CLI through shell subprocesses from the browser.
 - Rationale: a typed local API gives the UI a stable control surface and is easier to extend into

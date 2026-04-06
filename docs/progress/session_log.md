@@ -271,6 +271,41 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-030`
 
+## 2026-04-06 08:42 UTC
+
+- Session goal: package the repo for outside contributors and evaluators
+- Selected step: `STEP-031`
+- Files changed:
+  - `CONTRIBUTING.md`
+  - `.github/ISSUE_TEMPLATE/bug_report.yml`
+  - `.github/ISSUE_TEMPLATE/feature_request.yml`
+  - `.github/ISSUE_TEMPLATE/config.yml`
+  - `.github/pull_request_template.md`
+  - `docs/oss_adoption.md`
+  - `docs/benchmark_demos.md`
+  - `docs/contributing.md`
+  - `examples/benchmark_demos/README.md`
+  - `mkdocs.yml`
+  - `README.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-031.md`
+- Commands run:
+  - `uv run python` issue-template YAML validation
+  - `uv run --group docs mkdocs build --strict`
+  - `git diff --check`
+- Tests run:
+  - issue-template YAML validation passed
+  - `mkdocs build --strict` passed
+- Evals run:
+  - none; this step only affects contributor scaffolding and docs
+- Outcome: completed `STEP-031`
+- Commit hash: none yet
+- Stop reason: continue into the final roadmap step requested by the user
+- Next recommended step: `STEP-032`
+
 ## 2026-04-06 08:35 UTC
 
 - Session goal: add a scored benchmark harness over fixture repos

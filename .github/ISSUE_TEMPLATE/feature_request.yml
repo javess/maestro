@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose an improvement to maestro.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What user or operator problem is not handled well today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the change at a product or workflow level.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Provider, repo, policy, or UX constraints that should shape the solution.
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Expected impact area
+      options:
+        - Planning
+        - Repo execution
+        - Review and approval
+        - UI and operator flow
+        - Provider integration
+        - Benchmarking and evals
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: How should we know the feature is done?

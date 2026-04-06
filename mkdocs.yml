@@ -17,8 +17,10 @@ nav:
   - Home: index.md
   - Getting Started: getting_started.md
   - Examples: examples.md
+  - Benchmark Demos: benchmark_demos.md
   - CLI Reference: reference/cli.md
   - Developer Guide: developer_guide.md
+  - OSS Adoption: oss_adoption.md
   - Architecture:
       - Overview: architecture.md
       - Notes: architecture/README.md
@@ -52,6 +54,8 @@ nav:
       - Prompt Tuning: runbooks/prompt_tuning.md
       - Preview Environments: runbooks/preview_environments.md
       - SQLite Persistence: runbooks/sqlite_persistence.md
+  - Community:
+      - Contributing: contributing.md
   - Testing:
       - Test Matrix: testing/test_matrix.md
       - Eval Matrix: evals/eval_matrix.md

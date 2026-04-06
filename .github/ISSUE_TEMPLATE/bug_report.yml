@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a reproducible problem in maestro.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include enough detail for someone outside the core team
+        to reproduce the issue.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Exact commands, repo shape, config, and provider setup used.
+      placeholder: |
+        1. Run ...
+        2. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - CLI
+        - UI
+        - Provider adapter
+        - Repo mutation
+        - Eval or benchmark
+        - Docs
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, Node, repo type, and any provider details that matter.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or artifacts
+      description: Paste relevant `-v` or `-vv` logs, run ids, or `.maestro` artifact references.

@@ -34,6 +34,15 @@ machine. The baseline includes:
 - local queued run scheduling with worker limits and cancel support through the UI/API
 - a benchmark harness with scored fixture-repo runs for regression tracking
 
+The repo is now structured for outside contributors as well:
+
+- [CONTRIBUTING.md](/Users/javiersierra/dev/maestro/CONTRIBUTING.md) for setup and contribution norms
+- `.github/ISSUE_TEMPLATE/` for reproducible bug and feature reports
+- [docs/oss_adoption.md](/Users/javiersierra/dev/maestro/docs/oss_adoption.md) for positioning and evaluation guidance
+- [docs/benchmark_demos.md](/Users/javiersierra/dev/maestro/docs/benchmark_demos.md) plus
+  [examples/benchmark_demos/README.md](/Users/javiersierra/dev/maestro/examples/benchmark_demos/README.md)
+  for public benchmark walkthroughs
+
 ## Quick start
 
 ```bash
