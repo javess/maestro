@@ -50,6 +50,7 @@
 | STEP-018A | Secure credential storage | planned | Add keyring-backed provider credentials alongside env-file support |
 | STEP-019 | Prompt refinement and role guidance | planned | Strengthen agent prompts and skills with design, implementation, and review guidance |
 | STEP-020 | Documentation publishing and onboarding polish | planned | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
+| STEP-021 | Public GitHub publication | planned | Publish the finished repo to the user’s GitHub account as a public repository |
 
 ## Step Sequencing
 

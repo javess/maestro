@@ -186,3 +186,7 @@
   or architecture synthesis.
 - Rationale: that keeps the initial pack system generic and low-risk while still making the product
   shape explicit to planning.
+
+- Decision: add explicit final publication step `STEP-021` for GitHub release to the user account.
+- Rationale: repository publication should be treated as a deliberate end-state action after the
+  implementation, docs, storage, security, and polish steps are complete.

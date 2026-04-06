@@ -1388,3 +1388,26 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-017`
+
+## 2026-04-06 00:55 UTC
+
+- Session goal: record final public GitHub publication as an explicit roadmap end-state
+- Selected step: roadmap maintenance
+- Files changed:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/session_log.md`
+- Commands run:
+  - `sed -n '1,120p' docs/roadmap/design_to_execution_roadmap.md`
+  - `sed -n '1,120p' docs/progress/status.md`
+  - `tail -40 docs/progress/decision_ledger.md`
+  - `tail -40 docs/progress/session_log.md`
+- Tests run:
+  - None. This was a roadmap-only documentation update.
+- Evals run:
+  - None.
+- Outcome: added `STEP-021` as the final publication step
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-017`

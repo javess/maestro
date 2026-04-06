@@ -40,6 +40,7 @@
 | STEP-018A | Secure credential storage | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018` |
 | STEP-019 | Prompt refinement and role guidance | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-018A` |
 | STEP-020 | Documentation publishing and onboarding polish | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-019` |
+| STEP-021 | Public GitHub publication | planned | 2026-04-06 00:55 UTC | - | - | - | Wait for `STEP-020` |
 
 ## Baseline
 
