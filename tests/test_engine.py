@@ -464,3 +464,18 @@ def test_run_plan_persists_migration_plan_artifact(tmp_path: Path) -> None:
 
     artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
     assert "TICKET-1_migration_plan_1" in artifact_names
+
+
+def test_run_plan_persists_observation_followups_for_failed_review() -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    scenario = EvalScenario(
+        name="observation-followups",
+        provider=FakeProvider({"force_review_issue": True}),
+        expected_final_state=OrchestratorState.ESCALATE,
+        expected_status="escalated",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "TICKET-1_observation_followups_1" in artifact_names

@@ -178,3 +178,10 @@
 - Updated `tests/test_evidence.py`, `tests/test_engine.py`, and `tests/test_schemas.py` for
   migration-plan persistence in evidence bundles and run artifacts.
 - Added the migration-sensitive eval scenario and reran the full backend test suite.
+
+## STEP-015 Note
+
+- Added `tests/test_observation.py` for deterministic observation-followup compilation.
+- Updated `tests/test_engine.py` to assert observation-followup artifacts are persisted on failed
+  review paths.
+- Added the observation-driven eval scenario and reran the full backend test suite.

@@ -20,6 +20,7 @@ machine. The baseline includes:
 - git-backed ticket execution in isolated per-ticket workspaces under `<target-repo>/.maestro/worktrees/`
 - bounded parallel execution for dependency-safe ready ticket batches when policy allows it
 - migration-aware evidence bundles and standalone migration plan artifacts for schema-sensitive work
+- observation-driven follow-up proposal artifacts generated from failed checks and review issues
 
 ## Quick start
 

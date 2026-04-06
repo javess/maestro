@@ -21,6 +21,7 @@ from maestro.core.evidence import (
     determine_approval_request,
 )
 from maestro.core.models import OrchestratorState
+from maestro.core.observation import compile_observations
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
 from maestro.core.product_brief import compile_product_brief
 from maestro.core.run_graph_runtime import (
@@ -49,6 +50,7 @@ from maestro.schemas.contracts import (
     Ticket,
     TicketStatus,
 )
+from maestro.schemas.observation import Observation
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.storage.policies import load_policy
 from maestro.tools.git import GitWorktreeManager
@@ -533,6 +535,46 @@ class OrchestratorEngine:
         )
         return violations, approval_request
 
+    def write_observation_followups(
+        self,
+        state: RunState,
+        ticket: Ticket,
+        checks: list[CheckResult],
+        review: ReviewResult,
+    ) -> None:
+        observations: list[Observation] = []
+        for check in checks:
+            if check.success:
+                continue
+            observations.append(
+                Observation(
+                    source="check",
+                    category="error",
+                    summary=f"Failed check: {check.command}",
+                    detail=check.output,
+                    severity="high",
+                )
+            )
+        for issue in review.issues:
+            observations.append(
+                Observation(
+                    source="review",
+                    category="regression" if review.approved is False else "feedback",
+                    summary=issue.message,
+                    detail=issue.recommendation,
+                    path=issue.path,
+                    severity=issue.severity.value,
+                )
+            )
+        if not observations:
+            return
+        compilation = compile_observations(observations)
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_observation_followups_{state.review_cycles + 1}",
+            compilation.model_dump(mode="json"),
+        )
+
     def advance_ticket(
         self,
         state: RunState,
@@ -619,6 +661,12 @@ class OrchestratorEngine:
                     attempt.checks,
                     attempt.review,
                     repo.repo_info,
+                )
+                self.write_observation_followups(
+                    state,
+                    ticket,
+                    attempt.checks,
+                    attempt.review,
                 )
                 result = self.advance_ticket(
                     state,

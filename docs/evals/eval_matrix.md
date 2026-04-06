@@ -153,3 +153,10 @@
 - Added `migration-sensitive-flow` to keep migration planning visible in deterministic eval runs.
 - Existing scenarios continue to validate completion, escalation, approval-hold, fallback, graph
   ordering, and now migration-sensitive artifact generation.
+
+## STEP-015 Note
+
+- Added `observation-driven-followup` to keep observation-compilation behavior visible in
+  deterministic eval runs.
+- Existing scenarios now cover both migration-sensitive and observation-driven follow-up artifact
+  generation.

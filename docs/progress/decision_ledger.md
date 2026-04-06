@@ -176,3 +176,8 @@
   framework-specific migration commands in this step.
 - Rationale: first-class migration artifacts satisfy auditability and risk requirements while
   keeping the planner generic across repos and stacks.
+
+- Decision: emit observation-derived follow-up proposals as persisted artifacts before wiring them
+  back into the live backlog graph.
+- Rationale: it keeps the observation loop deterministic and reviewable without silently mutating
+  active planning state.

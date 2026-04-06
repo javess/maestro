@@ -177,4 +177,10 @@ def default_scenarios() -> list[EvalScenario]:
             expected_final_state=OrchestratorState.DONE,
             expected_status="done",
         ),
+        EvalScenario(
+            name="observation-driven-followup",
+            provider=FakeProvider({"force_review_issue": True}),
+            expected_final_state=OrchestratorState.ESCALATE,
+            expected_status="escalated",
+        ),
     ]

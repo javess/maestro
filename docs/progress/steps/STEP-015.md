@@ -1,0 +1,67 @@
+# STEP-015
+
+- Step id: `STEP-015`
+- Title: Observation-to-backlog loop
+- Status: done
+- Objective:
+  - Convert post-execution observations into structured follow-up work proposals.
+- Scope:
+  - Add typed observation and follow-up proposal schemas.
+  - Implement a deterministic observation compiler.
+  - Persist observation-followup artifacts from failed checks and review issues.
+  - Update tests, evals, and docs.
+- Non-goals:
+  - No automatic backlog merge yet.
+  - No runtime telemetry ingestion beyond checks and reviewer issues.
+- Prerequisites:
+  - `STEP-014` complete.
+- Implementation plan:
+  - Model observations and follow-up proposals.
+  - Compile failures into deterministic follow-up artifacts.
+  - Persist artifacts during execution.
+  - Update coverage and docs.
+- Files changed:
+  - `src/maestro/schemas/observation.py`
+  - `src/maestro/core/observation.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_observation.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/observation_loop.md`
+  - `docs/runbooks/observation_loop.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-015.md`
+- Tests added or updated:
+  - Added `tests/test_observation.py` for deterministic follow-up compilation.
+  - Updated `tests/test_engine.py` to assert persisted observation-followup artifacts.
+- Evals added or updated:
+  - Added `observation-driven-followup` to the deterministic eval scenario set.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_observation.py tests/test_engine.py tests/test_evidence.py`
+  - `uv run ruff check src/maestro/core/observation.py src/maestro/core/engine.py src/maestro/schemas/observation.py src/maestro/evals/harness.py tests/test_observation.py tests/test_engine.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+- Results:
+  - Failed checks and review issues now emit structured follow-up proposal artifacts.
+  - Observation compilation is deterministic and attached to run artifacts.
+- Docs updated:
+  - Added architecture and runbook docs for the observation loop.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Emit follow-up proposals as artifacts first rather than mutating the live backlog graph.
+- Known limitations:
+  - The loop is currently driven by checks and reviewer issues only.
+  - Follow-ups are not yet merged back into the active backlog automatically.
+- Next recommended step:
+  - `STEP-016`
+- Commit hash:
+  - pending

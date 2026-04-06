@@ -36,6 +36,9 @@ Independent ready tickets can also execute in bounded parallel batches when the 
 Migration-sensitive tickets now emit a dedicated migration plan artifact as part of the run
 artifacts and evidence bundle set.
 
+Failed checks and reviewer issues now also emit structured observation-followup artifacts so the
+next planning cycle can start from explicit follow-up proposals.
+
 ## Preview a local target repo
 
 ```bash

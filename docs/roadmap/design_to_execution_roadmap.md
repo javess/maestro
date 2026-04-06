@@ -43,7 +43,7 @@
 | STEP-013IB | Parallel ticket execution | done | Execute dependency-safe ready tickets concurrently when configured |
 | STEP-013J | Multi-provider runtime adapters | done | Wire Gemini and Claude runtime adapters with the same structured/fallback contract style as OpenAI |
 | STEP-014 | Migration planner | done | Migration artifacts and sensitivity handling |
-| STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
+| STEP-015 | Observation-to-backlog loop | done | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |
 | STEP-017 | Scenario eval library expansion | planned | Expand eval matrix for new roadmap coverage |
 | STEP-018 | Local SQL persistence backend | planned | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
