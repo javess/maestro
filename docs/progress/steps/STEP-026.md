@@ -1,0 +1,62 @@
+# STEP-026
+
+- Step id: `STEP-026`
+- Title: Diff approval workflow
+- Status: done
+- Objective:
+  - Add explicit diff approval, rejection, and rerun controls before repo finalization.
+- Scope:
+  - Persist structured diff artifacts.
+  - Add a diff-approval hold state to `RunState`.
+  - Add CLI approve/reject/rerun commands.
+  - Feed rejection comments back into repair context.
+- Non-goals:
+  - Full UI implementation.
+  - Multi-ticket simultaneous diff approvals.
+- Prerequisites:
+  - `STEP-023`
+  - `STEP-024`
+  - `STEP-025`
+- Implementation plan:
+  - Add diff artifact and diff approval request contracts.
+  - Generate unified diffs from repo root versus execution workspace.
+  - Pause runs when diff approval is required.
+  - Allow approval and rerun control through the CLI.
+- Files changed:
+  - `policies/*.yaml`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/diffing.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_diffing.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/diff_approval.md`
+  - `docs/runbooks/diff_approval.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_diffing.py`.
+  - Updated `tests/test_engine.py` for diff approval, approval finalize, and rerun rejection.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_diffing.py tests/test_engine.py -k diff`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/diffing.py src/maestro/core/engine.py src/maestro/cli/main.py policies tests/test_diffing.py tests/test_engine.py`
+  - `uv run ty check`
+- Results:
+  - Runs can now pause for diff approval before syncing or committing changes.
+  - Operators can approve, reject, or rerun diff proposals from the CLI.
+  - Rejections create repair context for the next attempt.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/diff_approval.md`
+  - `docs/runbooks/diff_approval.md`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Diff approval must happen before repo finalization, not after.
+- Known limitations:
+  - The hold is currently single-ticket oriented.
+- Next recommended step:
+  - `STEP-027`
+- Commit hash:
+  - pending

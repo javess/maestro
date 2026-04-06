@@ -28,6 +28,7 @@ machine. The baseline includes:
 - SQLite-backed run indexing alongside canonical JSON state and artifact storage
 - layered prompt plus `SKILL.md` guidance for each specialized agent role
 - structured repair loops that feed failing checks and reviewer issues back into bounded retries
+- optional diff-approval gates with CLI approve/reject/rerun controls before repo finalization
 
 ## Quick start
 

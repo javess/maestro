@@ -249,3 +249,7 @@
   second retry state.
 - Rationale: the state machine already models bounded retries correctly; what was missing was typed
   repair evidence, not another transition.
+
+- Decision: implement diff approval as a separate hold before repo sync and commit finalization.
+- Rationale: users need to inspect the generated change set before it lands in the target repo, so
+  diff approval must pause before finalization rather than only annotating already-applied changes.

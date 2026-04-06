@@ -213,3 +213,9 @@
   existing revise transition instead of adding new states.
 - Existing deterministic eval coverage remains valid while targeted integration tests validate the
   new repair-context artifact and retry payload.
+
+## STEP-026 Note
+
+- No eval scenario set changes were required in STEP-026 because diff approval adds a bounded hold
+  on the existing review path rather than changing the core state graph for deterministic evals.
+- Targeted integration tests validate diff artifact generation and approval/rejection handling.

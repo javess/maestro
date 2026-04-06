@@ -18,6 +18,7 @@ from maestro.archetypes import load_archetype_pack
 from maestro.config import load_config
 from maestro.core.architecture_synthesizer import synthesize_architecture
 from maestro.core.backlog_graph import build_backlog_graph, select_ready_tickets
+from maestro.core.diffing import build_diff_artifact
 from maestro.core.evidence import (
     build_evidence_bundle,
     collect_policy_findings,
@@ -45,6 +46,7 @@ from maestro.schemas.contracts import (
     CodeResult,
     CommitMetadata,
     CommitMode,
+    DiffApprovalRequest,
     EvidenceBundle,
     MaestroConfig,
     PolicyPack,
@@ -179,6 +181,12 @@ class OrchestratorEngine:
 
     def _parallel_ticket_limit(self) -> int:
         return max(1, self.deps.policy.max_parallel_tickets)
+
+    def _artifact_entry_path(self, state: RunState, name: str) -> Path:
+        for artifact in state.artifacts.artifacts:
+            if artifact.name == name:
+                return Path(artifact.path)
+        raise FileNotFoundError(f"Unknown artifact {name!r} for run {state.run_id}")
 
     def _commit_mode(self) -> CommitMode:
         return self.deps.policy.commit_mode
@@ -634,6 +642,20 @@ class OrchestratorEngine:
     ) -> tuple[list[str], ApprovalRequest | None]:
         logger.debug("evidence_bundle_start run_id=%s ticket=%s", state.run_id, ticket.id)
         review_cycle = state.review_cycles + 1
+        execution_root = self._ticket_execution_root(state, ticket.id)
+        diff_artifact = build_diff_artifact(
+            run_id=state.run_id,
+            ticket_id=ticket.id,
+            review_cycle=review_cycle,
+            code_result=code_result,
+            repo_root=state.repo_path,
+            execution_root=execution_root,
+        )
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            diff_artifact.artifact_id,
+            diff_artifact.model_dump(mode="json"),
+        )
         violations, policy_findings = collect_policy_findings(
             policy=self.deps.policy,
             review_cycles=state.review_cycles,
@@ -661,6 +683,7 @@ class OrchestratorEngine:
             policy=self.deps.policy,
             approval_request=approval_request,
         )
+        bundle.diff_artifact_name = diff_artifact.artifact_id
         self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
         if bundle.migration_plan is not None:
             self.deps.artifact_store.write_json(
@@ -678,6 +701,101 @@ class OrchestratorEngine:
             approval_request is not None,
         )
         return violations, approval_request
+
+    def _create_diff_approval_request(self, state: RunState, ticket: Ticket) -> DiffApprovalRequest:
+        review_cycle = state.review_cycles + 1
+        request = DiffApprovalRequest(
+            ticket_id=ticket.id,
+            review_cycle=review_cycle,
+            diff_artifact_name=f"{ticket.id}_diff_{review_cycle}",
+            code_result_artifact_name=f"{ticket.id}_coder_attempt_{review_cycle}",
+            checks_artifact_name=f"{ticket.id}_checks_{review_cycle}",
+            review_artifact_name=f"{ticket.id}_reviewer_{review_cycle}",
+        )
+        state.diff_approval_request = request
+        self._record_state_note(state, f"diff_approval_required:{ticket.id}")
+        return request
+
+    def approve_diff(self, state: RunState, ticket_id: str) -> RunState:
+        request = state.diff_approval_request
+        if request is None or request.ticket_id != ticket_id:
+            raise ValueError(f"No pending diff approval for ticket {ticket_id}")
+        ticket = next(item for item in state.backlog.tickets if item.id == ticket_id)
+        code_result = CodeResult.model_validate_json(
+            self._artifact_entry_path(state, request.code_result_artifact_name).read_text()
+        )
+        self._sync_ticket_result(state, ticket, code_result)
+        if self._commit_mode() is CommitMode.checkpoint_commits:
+            self._commit_ticket_result(
+                state,
+                ticket,
+                code_result,
+                mode=CommitMode.checkpoint_commits,
+                message=f"maestro: checkpoint {ticket.id} - {ticket.title}",
+            )
+        if self._commit_mode() is CommitMode.commit_on_green:
+            state.pending_commit_paths.extend(
+                change.path
+                for change in code_result.changed_files
+                if change.path not in state.pending_commit_paths
+            )
+        ticket.status = TicketStatus.complete
+        state.repair_contexts.pop(ticket.id, None)
+        if ticket.id not in state.completed_tickets:
+            state.completed_tickets.append(ticket.id)
+        request.status = "approved"
+        state.diff_approval_request = None
+        state.status = "running"
+        state.review_cycles = 0
+        self._append_event(state, OrchestratorState.COMPLETE_TICKET, ticket.id)
+        if not select_ready_tickets(state.backlog, state.completed_tickets, limit=1):
+            state.status = "done"
+            self._finalize_run_commit(state)
+            state.current_state = OrchestratorState.DONE.value
+        return state
+
+    def reject_diff(
+        self,
+        state: RunState,
+        ticket_id: str,
+        comment: str,
+        *,
+        rerun: bool,
+    ) -> RunState:
+        request = state.diff_approval_request
+        if request is None or request.ticket_id != ticket_id:
+            raise ValueError(f"No pending diff approval for ticket {ticket_id}")
+        request.status = "rerun_requested" if rerun else "rejected"
+        request.comment = comment
+        review_cycle = request.review_cycle
+        code_result = CodeResult.model_validate_json(
+            self._artifact_entry_path(state, request.code_result_artifact_name).read_text()
+        )
+        review = ReviewResult.model_validate_json(
+            self._artifact_entry_path(state, request.review_artifact_name).read_text()
+        )
+        ticket = next(item for item in state.backlog.tickets if item.id == ticket_id)
+        repair_context = RepairContext(
+            ticket_id=ticket.id,
+            review_cycle=review_cycle,
+            failing_checks=[],
+            review_issues=review.issues,
+            prior_summary=code_result.summary,
+            prior_notes=[comment] if comment else [],
+            violations=[f"diff_{request.status}"],
+        )
+        state.repair_contexts[ticket.id] = repair_context
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            f"{ticket.id}_repair_context_{review_cycle}",
+            repair_context.model_dump(mode="json"),
+        )
+        ticket.status = TicketStatus.pending
+        state.diff_approval_request = None
+        state.status = "running"
+        state.review_cycles = review_cycle
+        self._append_event(state, OrchestratorState.REVISE, f"diff_{request.status}:{ticket.id}")
+        return state
 
     def write_observation_followups(
         self,
@@ -744,6 +862,10 @@ class OrchestratorEngine:
                 state,
                 f"approval_required:{state.current_ticket_id}:{approval_request.required_approvals}",
             )
+            return OrchestratorState.REVIEW
+        if not violations and self.deps.policy.require_diff_approval:
+            self._create_diff_approval_request(state, ticket)
+            state.status = "awaiting_diff_approval"
             return OrchestratorState.REVIEW
         if violations:
             logger.warning(
@@ -855,7 +977,10 @@ class OrchestratorEngine:
                     violations=violations,
                     approval_request=approval_request,
                 )
-                if result is OrchestratorState.ESCALATE or state.status == "awaiting_approval":
+                if result is OrchestratorState.ESCALATE or state.status in {
+                    "awaiting_approval",
+                    "awaiting_diff_approval",
+                }:
                     should_stop = True
                     break
             if should_stop:

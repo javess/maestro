@@ -208,6 +208,68 @@ def resume(run_id: str, repo: Path = Path(".")) -> None:
 
 
 @app.command()
+def approve(run_id: str, ticket_id: str, repo: Path = Path(".")) -> None:
+    repo_root = repo.resolve()
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(None),
+        workspace_root=_workspace(repo_root).root,
+    )
+    engine = OrchestratorEngine(_project_root(), deps)
+    state_store = _resolve_state_store(repo_root, run_id)
+    state = state_store.load(run_id)
+    updated = engine.approve_diff(state, ticket_id)
+    deps.state_store.save(updated)
+    console.print_json(updated.model_dump_json(indent=2))
+
+
+@app.command()
+def reject(
+    run_id: str,
+    ticket_id: str,
+    repo: Path = Path("."),
+    comment: str = typer.Option("", "--comment", help="Reason for rejecting the proposed diff."),
+) -> None:
+    repo_root = repo.resolve()
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(None),
+        workspace_root=_workspace(repo_root).root,
+    )
+    engine = OrchestratorEngine(_project_root(), deps)
+    state_store = _resolve_state_store(repo_root, run_id)
+    state = state_store.load(run_id)
+    updated = engine.reject_diff(state, ticket_id, comment, rerun=False)
+    deps.state_store.save(updated)
+    console.print_json(updated.model_dump_json(indent=2))
+
+
+@app.command()
+def rerun(
+    run_id: str,
+    ticket_id: str,
+    repo: Path = Path("."),
+    comment: str = typer.Option(
+        "",
+        "--comment",
+        help="Optional guidance for the rerun request.",
+    ),
+) -> None:
+    repo_root = repo.resolve()
+    deps = build_engine_deps(
+        _project_root(),
+        _config_path(None),
+        workspace_root=_workspace(repo_root).root,
+    )
+    engine = OrchestratorEngine(_project_root(), deps)
+    state_store = _resolve_state_store(repo_root, run_id)
+    state = state_store.load(run_id)
+    updated = engine.reject_diff(state, ticket_id, comment, rerun=True)
+    deps.state_store.save(updated)
+    console.print_json(updated.model_dump_json(indent=2))
+
+
+@app.command()
 def eval(json_output: bool = False, json_output_path: Path | None = None) -> None:
     root = _project_root()
     report = run_eval_report(root)

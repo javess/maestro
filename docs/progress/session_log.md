@@ -119,6 +119,47 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-026`
 
+## 2026-04-06 08:14 UTC
+
+- Session goal: add an explicit diff-approval hold with approve/reject/rerun actions
+- Selected step: `STEP-026`
+- Files changed:
+  - `policies/default.yaml`
+  - `policies/legacy.yaml`
+  - `policies/prototype.yaml`
+  - `policies/security_sensitive.yaml`
+  - `policies/strict.yaml`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/diffing.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_diffing.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/diff_approval.md`
+  - `docs/runbooks/diff_approval.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-026.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_diffing.py tests/test_engine.py -k diff`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/diffing.py src/maestro/core/engine.py src/maestro/cli/main.py policies tests/test_diffing.py tests/test_engine.py`
+  - `uv run ty check`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_diffing.py tests/test_engine.py -k diff` passed
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/diffing.py src/maestro/core/engine.py src/maestro/cli/main.py policies tests/test_diffing.py tests/test_engine.py` passed
+  - `uv run ty check` passed
+- Evals run:
+  - none; diff approval behavior is covered by targeted integration tests
+- Outcome: completed `STEP-026`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-027`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

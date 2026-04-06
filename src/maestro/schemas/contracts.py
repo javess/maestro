@@ -217,6 +217,7 @@ class PolicyPack(BaseModel):
     max_parallel_tickets: int = 1
     commit_mode: CommitMode = CommitMode.no_commit
     commit_branch_prefix: str = "maestro"
+    require_diff_approval: bool = False
     require_tests: bool = True
     require_lint: bool = True
     require_format: bool = True
@@ -302,6 +303,32 @@ class CommitMetadata(BaseModel):
     mode: CommitMode
 
 
+class DiffFilePatch(BaseModel):
+    path: str
+    change_type: Literal["added", "modified", "deleted"]
+    unified_diff: str
+
+
+class DiffArtifact(BaseModel):
+    artifact_id: str
+    run_id: str
+    ticket_id: str
+    review_cycle: int
+    summary: str
+    files: list[DiffFilePatch] = Field(default_factory=list)
+
+
+class DiffApprovalRequest(BaseModel):
+    ticket_id: str
+    review_cycle: int
+    diff_artifact_name: str
+    code_result_artifact_name: str
+    checks_artifact_name: str
+    review_artifact_name: str
+    status: Literal["pending", "approved", "rejected", "rerun_requested"] = "pending"
+    comment: str = ""
+
+
 class EvidenceBundle(BaseModel):
     bundle_id: str
     run_id: str
@@ -314,6 +341,7 @@ class EvidenceBundle(BaseModel):
     review_result: ReviewResult | None = None
     risk_score: RiskScore | None = None
     approval_request: ApprovalRequest | None = None
+    diff_artifact_name: str | None = None
     commit_metadata: CommitMetadata | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -386,6 +414,13 @@ class RunState(BaseModel):
     completed_tickets: list[str] = Field(default_factory=list)
     review_cycles: int = 0
     approval_request: ApprovalRequest | None = None
+    diff_approval_request: DiffApprovalRequest | None = None
     artifacts: ArtifactManifest
     events: list[RunEvent] = Field(default_factory=list)
-    status: Literal["running", "done", "escalated", "awaiting_approval"] = "running"
+    status: Literal[
+        "running",
+        "done",
+        "escalated",
+        "awaiting_approval",
+        "awaiting_diff_approval",
+    ] = "running"

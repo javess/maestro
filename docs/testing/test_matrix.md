@@ -245,3 +245,10 @@
 - Updated `tests/test_engine.py` to assert failed validation produces a persisted repair context
   and that the next coder attempt receives it.
 - Reran focused repair-loop tests plus `ruff` and `ty`.
+
+## STEP-026 Note
+
+- Added `tests/test_diffing.py` for structured unified-diff artifact generation.
+- Updated `tests/test_engine.py` to assert diff-approval hold, approval finalization, and rerun
+  rejection behavior.
+- Reran focused diff-approval tests plus `ruff` and `ty`.

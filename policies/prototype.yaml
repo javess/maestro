@@ -3,6 +3,7 @@ max_review_cycles: 3
 max_parallel_tickets: 2
 commit_mode: checkpoint_commits
 commit_branch_prefix: maestro
+require_diff_approval: false
 require_tests: false
 require_lint: true
 require_format: true

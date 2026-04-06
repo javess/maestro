@@ -14,6 +14,7 @@ from maestro.schemas.contracts import (
     CodeChange,
     CodeResult,
     CommitMode,
+    DiffArtifact,
     FileOperation,
     PatchHunk,
     PolicyPack,
@@ -492,6 +493,120 @@ def test_run_plan_creates_final_run_commit_when_commit_on_green(tmp_path: Path) 
         check=True,
     )
     assert f"maestro: complete run {state.run_id}" in log.stdout
+
+
+def test_run_plan_waits_for_diff_approval_and_can_approve(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.name", "Test User"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(["git", "add", "pyproject.toml"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo, check=True, capture_output=True)
+
+    scenario = EvalScenario(
+        name="diff-approval",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="Create app",
+                            description="Create the first app file",
+                            acceptance_criteria=["app exists"],
+                        )
+                    ]
+                ),
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Create app file",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="write",
+                            content="def main() -> None:\n    print('diff')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=[],
+                ),
+                "ReviewResult": ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.REVIEW,
+        expected_status="awaiting_diff_approval",
+        policy=PolicyPack(name="strict", require_tests=False, require_diff_approval=True),
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "awaiting_diff_approval"
+    assert state.diff_approval_request is not None
+    diff_path = next(
+        Path(artifact.path)
+        for artifact in state.artifacts.artifacts
+        if artifact.name == state.diff_approval_request.diff_artifact_name
+    )
+    diff_artifact = DiffArtifact.model_validate_json(diff_path.read_text())
+    assert diff_artifact.files[0].path == "src/app.py"
+    approved = engine.approve_diff(state, "TICKET-1")
+    assert approved.status == "done"
+    assert (repo / "src" / "app.py").read_text() == "def main() -> None:\n    print('diff')\n"
+
+
+def test_run_plan_reject_diff_creates_repair_context(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+
+    scenario = EvalScenario(
+        name="diff-reject",
+        provider=FakeProvider(
+            {
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Create app file",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="write",
+                            content="print('draft')\n",
+                        )
+                    ],
+                    commands=[],
+                    tests_added=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.REVIEW,
+        expected_status="awaiting_diff_approval",
+        policy=PolicyPack(name="strict", require_tests=False, require_diff_approval=True),
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    updated = engine.reject_diff(state, "TICKET-1", "needs smaller diff", rerun=True)
+    assert updated.status == "running"
+    assert updated.repair_contexts["TICKET-1"].prior_notes == ["needs smaller diff"]
 
 
 def test_run_plan_applies_patch_operations_to_repo(tmp_path: Path) -> None:
