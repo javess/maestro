@@ -22,6 +22,7 @@ machine. The baseline includes:
 - migration-aware evidence bundles and standalone migration plan artifacts for schema-sensitive work
 - observation-driven follow-up proposal artifacts generated from failed checks and review issues
 - configurable archetype packs so planning can start from SaaS or API-service defaults
+- typed eval reports with summary metrics and optional JSON export
 
 ## Quick start
 

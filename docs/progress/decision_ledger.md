@@ -187,6 +187,15 @@
 - Rationale: that keeps the initial pack system generic and low-risk while still making the product
   shape explicit to planning.
 
+- Decision: centralize eval execution into a typed report builder shared by the CLI and tests.
+- Rationale: one reporting path keeps metrics, assertions, and output modes consistent and easier
+  to extend.
+
+- Decision: harden copy-workspace cleanup in the git tool layer while landing `STEP-017`.
+- Rationale: repeated eval runs against the repo-root fixture exposed a stale nested workspace
+  deletion failure, and fixing it at the shared git utility boundary is safer than special-casing
+  eval behavior.
+
 - Decision: add explicit final publication step `STEP-021` for GitHub release to the user account.
 - Rationale: repository publication should be treated as a deliberate end-state action after the
   implementation, docs, storage, security, and polish steps are complete.

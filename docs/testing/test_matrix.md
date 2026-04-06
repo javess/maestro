@@ -192,3 +192,10 @@
 - Updated `tests/test_engine.py` to assert planning receives and persists the selected pack.
 - Hardened `tests/test_config.py` against ambient local API keys that would otherwise make env-file
   tests flaky.
+
+## STEP-017 Note
+
+- Added `tests/test_evals.py` for typed report generation and CLI JSON export.
+- Updated `tests/test_git_tools.py` to keep repeated eval runs from regressing on stale nested
+  workspace cleanup.
+- Reran the full backend suite and eval CLI after expanding report metrics and output modes.

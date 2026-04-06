@@ -1,0 +1,68 @@
+# STEP-017
+
+- Step id: `STEP-017`
+- Title: Scenario eval library expansion
+- Status: done
+- Objective:
+  - Make the eval system measurable and regression-resistant.
+- Scope:
+  - Add typed eval report contracts.
+  - Expand CLI output to include summary metrics and JSON export.
+  - Add harness and CLI tests for eval reporting.
+- Non-goals:
+  - No storage backend changes yet.
+  - No secure credential changes yet.
+- Prerequisites:
+  - `STEP-016` complete.
+- Implementation plan:
+  - Add typed eval report models.
+  - Move eval execution into a reusable report builder.
+  - Extend the CLI with JSON file output and richer human-readable summary tables.
+  - Add tests and docs.
+- Files changed:
+  - `src/maestro/schemas/eval.py`
+  - `src/maestro/evals/harness.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/tools/git.py`
+  - `tests/test_evals.py`
+  - `tests/test_git_tools.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/eval_reporting.md`
+  - `docs/runbooks/eval_reporting.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-017.md`
+- Tests added or updated:
+  - Added `tests/test_evals.py` for typed eval reports and CLI JSON export.
+  - Updated `tests/test_git_tools.py` to cover robust replacement of existing nested copy workspaces.
+- Evals added or updated:
+  - The eval harness now produces a typed report with aggregate metrics.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_git_tools.py tests/test_evals.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_evals.py`
+  - `uv run ruff check src/maestro/evals/harness.py src/maestro/cli/main.py src/maestro/schemas/eval.py tests/test_evals.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+- Results:
+  - `maestro eval` now emits a summary table and per-scenario rows.
+  - JSON eval reports can be emitted to stdout or saved to a file.
+  - The eval harness now returns typed scenario and summary metrics.
+  - Workspace cleanup was hardened during validation so repeated eval runs can recreate nested copy workspaces reliably.
+- Docs updated:
+  - Added architecture and runbook docs for eval reporting.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Keep eval report generation in a reusable harness function so CLI and tests share one path.
+  - Use a more robust workspace-removal fallback in the git tool layer after eval validation exposed stale nested copy workspaces on repeated runs.
+- Known limitations:
+  - The CLI file-output test runs the full deterministic eval suite and is slower than typical unit tests.
+- Next recommended step:
+  - `STEP-018`
+- Commit hash:
+  - pending

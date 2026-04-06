@@ -19,6 +19,7 @@ from maestro.schemas.contracts import (
     RoleConfig,
     Ticket,
 )
+from maestro.schemas.eval import EvalReport, EvalScenarioResult, EvalSummary
 from maestro.storage.local import LocalArtifactStore, LocalStateStore
 from maestro.tools.shell import LocalShellRunner
 
@@ -184,3 +185,58 @@ def default_scenarios() -> list[EvalScenario]:
             expected_status="escalated",
         ),
     ]
+
+
+def run_eval_report(project_root: Path, scenarios: list[EvalScenario] | None = None) -> EvalReport:
+    scenario_list = scenarios or default_scenarios()
+    results: list[EvalScenarioResult] = []
+    for scenario in scenario_list:
+        engine = build_eval_engine(project_root, scenario)
+        state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+        assertions: list[str] = []
+        passed = True
+        if state.current_state != scenario.expected_final_state.value:
+            passed = False
+            assertions.append(
+                f"expected_state={scenario.expected_final_state.value} actual={state.current_state}"
+            )
+        if state.status != scenario.expected_status:
+            passed = False
+            assertions.append(f"expected_status={scenario.expected_status} actual={state.status}")
+        retry_count = sum(
+            1 for event in state.events if event.state == OrchestratorState.REVISE.value
+        )
+        schema_errors = sum(
+            1
+            for event in state.events
+            if "schema" in event.detail.lower() and "error" in event.detail.lower()
+        )
+        policy_violations = sum(
+            1 for event in state.events if event.state == OrchestratorState.ESCALATE.value
+        )
+        results.append(
+            EvalScenarioResult(
+                scenario=scenario.name,
+                status=state.status,
+                current_state=state.current_state,
+                expected_state=scenario.expected_final_state.value,
+                expected_status=scenario.expected_status,
+                evidence_bundles=len(state.artifacts.evidence_bundles),
+                retries=retry_count,
+                schema_errors=schema_errors,
+                policy_violations=policy_violations,
+                passed=passed,
+                assertions=assertions,
+            )
+        )
+    return EvalReport(
+        summary=EvalSummary(
+            scenario_count=len(results),
+            passed=sum(1 for result in results if result.passed),
+            failed=sum(1 for result in results if not result.passed),
+            total_retries=sum(result.retries for result in results),
+            total_schema_errors=sum(result.schema_errors for result in results),
+            total_policy_violations=sum(result.policy_violations for result in results),
+        ),
+        scenarios=results,
+    )

@@ -12,7 +12,7 @@ from rich.table import Table
 
 from maestro.config import load_config
 from maestro.core.engine import OrchestratorEngine, build_engine_deps
-from maestro.evals.harness import build_eval_engine, default_scenarios
+from maestro.evals.harness import run_eval_report
 from maestro.logging import configure_logging
 from maestro.preview.factory import build_preview_adapter
 from maestro.repo.discovery import discover_repo
@@ -199,31 +199,49 @@ def resume(run_id: str, repo: Path = Path(".")) -> None:
 
 
 @app.command()
-def eval(json_output: bool = False) -> None:
+def eval(json_output: bool = False, json_output_path: Path | None = None) -> None:
     root = _project_root()
-    report: list[dict[str, str]] = []
-    for scenario in default_scenarios():
-        engine = build_eval_engine(root, scenario)
-        state = engine.run_plan(root, root / "examples" / "brief.md")
-        report.append(
-            {
-                "scenario": scenario.name,
-                "status": state.status,
-                "current_state": state.current_state,
-                "expected_state": scenario.expected_final_state.value,
-                "evidence_bundles": str(len(state.artifacts.evidence_bundles)),
-            }
-        )
+    report = run_eval_report(root)
+    if json_output_path is not None:
+        json_output_path.write_text(report.model_dump_json(indent=2))
     if json_output:
-        console.print_json(json.dumps(report, indent=2))
+        console.print_json(report.model_dump_json(indent=2))
         return
-    table = Table("scenario", "status", "state", "evidence bundles")
-    for row in report:
+    summary = Table(
+        "scenarios",
+        "passed",
+        "failed",
+        "retries",
+        "schema errors",
+        "policy violations",
+    )
+    summary.add_row(
+        str(report.summary.scenario_count),
+        str(report.summary.passed),
+        str(report.summary.failed),
+        str(report.summary.total_retries),
+        str(report.summary.total_schema_errors),
+        str(report.summary.total_policy_violations),
+    )
+    console.print(summary)
+    table = Table(
+        "scenario",
+        "status",
+        "state",
+        "expected",
+        "evidence bundles",
+        "retries",
+        "passed",
+    )
+    for row in report.scenarios:
         table.add_row(
-            row["scenario"],
-            row["status"],
-            row["current_state"],
-            row["evidence_bundles"],
+            row.scenario,
+            row.status,
+            row.current_state,
+            row.expected_state,
+            str(row.evidence_bundles),
+            str(row.retries),
+            "yes" if row.passed else "no",
         )
     console.print(table)
 

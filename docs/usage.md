@@ -71,6 +71,7 @@ uv run pytest
 ```bash
 uv run maestro eval
 uv run maestro eval --json-output
+uv run maestro eval --json-output-path eval-report.json
 ```
 
 ## UI

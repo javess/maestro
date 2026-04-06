@@ -165,3 +165,9 @@
 
 - No eval scenario set changes were required in STEP-016 because archetype packs currently enrich
   planning metadata without changing state-machine outcomes.
+
+## STEP-017 Note
+
+- The scenario set is unchanged in this step, but reporting now includes typed summary metrics and
+  per-scenario assertions.
+- `maestro eval` now supports both human-readable summary output and JSON report export.

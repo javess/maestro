@@ -237,6 +237,50 @@
 - Stop reason: step complete; waiting for user confirmation before `STEP-008`
 - Next recommended step: `STEP-008` after explicit user confirmation
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: complete the remaining roadmap batch starting by landing `STEP-017` with typed eval reporting and stable repeated eval execution
+- Selected step: `STEP-017`
+- Files changed:
+  - `src/maestro/schemas/eval.py`
+  - `src/maestro/evals/harness.py`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/tools/git.py`
+  - `tests/test_evals.py`
+  - `tests/test_git_tools.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/eval_reporting.md`
+  - `docs/runbooks/eval_reporting.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-017.md`
+- Commands run:
+  - `git status --short`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_evals.py`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+  - `sed -n '1,240p' src/maestro/tools/git.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_git_tools.py tests/test_evals.py`
+  - `uv run ruff check src/maestro/tools/git.py tests/test_git_tools.py src/maestro/evals/harness.py src/maestro/cli/main.py src/maestro/schemas/eval.py tests/test_evals.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_git_tools.py tests/test_evals.py` passed (`4 passed`)
+  - `uv run ruff check src/maestro/tools/git.py tests/test_git_tools.py src/maestro/evals/harness.py src/maestro/cli/main.py src/maestro/schemas/eval.py tests/test_evals.py` passed
+  - `uv run ty check` passed
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp` passed (`116 passed`)
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json ...` passed (`8 scenarios, 0 failed`)
+- Outcome: completed `STEP-017`, including a validation-driven git workspace cleanup hardening so repeated eval runs remain reliable
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-018`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score
@@ -1388,6 +1432,44 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-017`
+
+## 2026-04-06 01:00 UTC
+
+- Session goal: expand the eval harness into a typed reporting system with JSON export
+- Selected step: `STEP-017`
+- Files changed:
+  - `src/maestro/schemas/eval.py`
+  - `src/maestro/evals/harness.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_evals.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/eval_reporting.md`
+  - `docs/runbooks/eval_reporting.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-017.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_evals.py`
+  - `uv run ruff check src/maestro/evals/harness.py src/maestro/cli/main.py src/maestro/schemas/eval.py tests/test_evals.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+- Tests run:
+  - eval harness and CLI tests passed
+  - `uv run ruff check ...` passed
+  - `uv run ty check` passed
+  - full `uv run pytest --basetemp=...` passed
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output` passed
+- Outcome: completed `STEP-017`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-018`
 
 ## 2026-04-06 00:55 UTC
 

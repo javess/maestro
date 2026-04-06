@@ -55,7 +55,7 @@ class GitWorktreeManager:
             )
             return target, "git_worktree"
         if target.exists():
-            shutil.rmtree(target)
+            self._remove_tree(target)
         shutil.copytree(
             self.repo_root,
             target,
@@ -83,4 +83,15 @@ class GitWorktreeManager:
                 check=False,
             )
             return
-        shutil.rmtree(target, ignore_errors=True)
+        self._remove_tree(target)
+
+    def _remove_tree(self, target: Path) -> None:
+        try:
+            shutil.rmtree(target)
+        except OSError:
+            subprocess.run(
+                ["rm", "-rf", str(target)],
+                text=True,
+                capture_output=True,
+                check=True,
+            )

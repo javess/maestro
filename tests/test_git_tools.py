@@ -38,3 +38,38 @@ def test_create_workspace_copy_ignores_tool_caches(tmp_path: Path) -> None:
     assert (workspace / "dirty.txt").read_text() == "dirty\n"
     assert not (workspace / ".venv").exists()
     assert not (workspace / "node_modules").exists()
+
+
+def test_create_workspace_replaces_existing_nested_copy_workspace(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.name", "Test User"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    (repo / "tracked.txt").write_text("tracked\n")
+    subprocess.run(["git", "add", "tracked.txt"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo, check=True, capture_output=True)
+    (repo / "dirty.txt").write_text("dirty\n")
+
+    manager = GitWorktreeManager(repo)
+    target = tmp_path / "workspace"
+    existing = target / "docs" / "runbooks"
+    existing.mkdir(parents=True)
+    (existing / "stale.md").write_text("stale\n")
+
+    workspace, kind = manager.create_workspace(target)
+
+    assert kind == "copy"
+    assert workspace == target
+    assert (workspace / "tracked.txt").read_text() == "tracked\n"
+    assert not (workspace / "docs" / "runbooks" / "stale.md").exists()

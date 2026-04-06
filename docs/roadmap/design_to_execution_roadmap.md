@@ -45,7 +45,7 @@
 | STEP-014 | Migration planner | done | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | done | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | done | Configurable application archetypes |
-| STEP-017 | Scenario eval library expansion | planned | Expand eval matrix for new roadmap coverage |
+| STEP-017 | Scenario eval library expansion | done | Expand eval matrix for new roadmap coverage |
 | STEP-018 | Local SQL persistence backend | planned | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
 | STEP-018A | Secure credential storage | planned | Add keyring-backed provider credentials alongside env-file support |
 | STEP-019 | Prompt refinement and role guidance | planned | Strengthen agent prompts and skills with design, implementation, and review guidance |
