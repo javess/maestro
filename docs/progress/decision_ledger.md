@@ -218,3 +218,8 @@
   nav tree instead of introducing auto-generated API-reference plugins.
 - Rationale: the repo already has extensive hand-authored architecture and runbook material, and a
   static site is the lowest-risk way to make it publishable on GitHub Pages now.
+
+- Decision: split a tiny `STEP-020A` cleanup before publication.
+- Rationale: adding MkDocs introduced a legitimate `uv.lock` update and a generated `site/`
+  directory; publishing should happen from a clean repo with lockfile changes captured and build
+  artifacts ignored.

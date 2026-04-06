@@ -1,0 +1,47 @@
+# STEP-020A
+
+- Step id: `STEP-020A`
+- Title: Documentation artifact cleanup
+- Status: done
+- Objective:
+  - Clean up publish-blocking generated artifacts after the MkDocs integration step.
+- Scope:
+  - Add generated docs output to `.gitignore`.
+  - Capture the docs dependency lockfile update.
+  - Remove the generated local `site/` directory from the worktree before publication.
+- Non-goals:
+  - No behavioral product changes.
+- Prerequisites:
+  - `STEP-020` complete.
+- Implementation plan:
+  - Ignore `site/`.
+  - Keep the updated `uv.lock`.
+  - Remove the generated local build artifact.
+- Files changed:
+  - `.gitignore`
+  - `uv.lock`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-020A.md`
+- Tests added or updated:
+  - No code tests; this is a repo-hygiene cleanup.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `rm -rf site`
+  - `git diff --check`
+- Results:
+  - The repo is ready to publish without generated docs output in the worktree.
+  - The docs dependency lockfile update is preserved for reproducible installs.
+- Docs updated:
+  - Updated roadmap and progress tracking for the cleanup split.
+- Decisions made:
+  - Split this tiny prerequisite out of `STEP-021` to keep publication itself focused on the remote push.
+- Known limitations:
+  - None.
+- Next recommended step:
+  - `STEP-021`
+- Commit hash:
+  - pending

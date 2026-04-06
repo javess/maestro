@@ -460,6 +460,30 @@
 - Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
 - Next recommended step: `STEP-021`
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: clean up publish-blocking docs artifacts before the final GitHub publication step
+- Selected step: `STEP-020A`
+- Files changed:
+  - `.gitignore`
+  - `uv.lock`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-020A.md`
+- Commands run:
+  - `rm -rf site`
+  - `git diff --check`
+- Tests run:
+  - `git diff --check` passed
+- Evals run:
+  - none; not applicable for this cleanup step
+- Outcome: completed `STEP-020A`; the generated docs site was removed, ignored, and the updated lockfile remains ready for publication
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-021`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score
