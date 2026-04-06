@@ -253,3 +253,7 @@
 - Decision: implement diff approval as a separate hold before repo sync and commit finalization.
 - Rationale: users need to inspect the generated change set before it lands in the target repo, so
   diff approval must pause before finalization rather than only annotating already-applied changes.
+
+- Decision: keep readiness scoring heuristic and fully local in the first implementation.
+- Rationale: repo support tiers need to be deterministic, explainable, and safe to run without
+  external services or expensive semantic analysis.

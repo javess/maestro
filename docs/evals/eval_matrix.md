@@ -219,3 +219,8 @@
 - No eval scenario set changes were required in STEP-026 because diff approval adds a bounded hold
   on the existing review path rather than changing the core state graph for deterministic evals.
 - Targeted integration tests validate diff artifact generation and approval/rejection handling.
+
+## STEP-027 Note
+
+- No eval scenario set changes were required in STEP-027 because readiness scoring enriches doctor
+  and discovery outputs without changing orchestration transitions.

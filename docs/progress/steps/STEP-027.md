@@ -1,0 +1,54 @@
+# STEP-027
+
+- Step id: `STEP-027`
+- Title: Repo support tiers and readiness scoring
+- Status: done
+- Objective:
+  - Classify repos as supported, experimental, or planning-only with concrete readiness diagnostics.
+- Scope:
+  - Add a deterministic readiness schema and scoring function.
+  - Expose readiness data through `maestro doctor`.
+  - Persist readiness alongside repo discovery during runs.
+- Non-goals:
+  - Deep semantic repo analysis.
+  - Provider-assisted readiness scoring.
+- Prerequisites:
+  - `STEP-012`
+- Implementation plan:
+  - Add support-tier and readiness contracts.
+  - Score repos from deterministic local signals.
+  - Surface blockers and recommendations in CLI output.
+- Files changed:
+  - `src/maestro/schemas/readiness.py`
+  - `src/maestro/repo/readiness.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_readiness.py`
+  - `README.md`
+  - `docs/architecture/repo_readiness.md`
+  - `docs/runbooks/repo_readiness.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_readiness.py`.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - targeted readiness/discovery pytest run
+  - `ruff`
+  - `ty`
+- Results:
+  - `maestro doctor` now reports a support tier, readiness score, blockers, and recommendations.
+  - Run discovery persists a `repo_readiness` artifact.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/repo_readiness.md`
+  - `docs/runbooks/repo_readiness.md`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Keep the first readiness scorer deterministic and heuristic.
+- Known limitations:
+  - The score is intentionally simple and does not yet account for historical success rates.
+- Next recommended step:
+  - `STEP-028`
+- Commit hash:
+  - pending

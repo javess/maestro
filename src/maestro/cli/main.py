@@ -22,6 +22,7 @@ from maestro.evals.harness import run_eval_report
 from maestro.logging import configure_logging
 from maestro.preview.factory import build_preview_adapter
 from maestro.repo.discovery import discover_repo
+from maestro.repo.readiness import assess_repo_readiness
 from maestro.schemas.contracts import TicketStatus
 from maestro.schemas.preview import PreviewRequest
 from maestro.storage.local import LocalStateStore, MaestroWorkspace, workspace_root_for_repo
@@ -322,12 +323,17 @@ def doctor(config: Path | None = None, repo: Path = Path(".")) -> None:
     cfg = load_config(_config_path(config))
     repo_manager = GitWorktreeManager(repo.resolve())
     discovery = discover_repo(repo.resolve())
+    readiness = assess_repo_readiness(repo.resolve(), discovery)
     console.print(
         {
             "config_policy": cfg.policy,
             "git_branch": repo_manager.current_branch() if (repo / ".git").exists() else "unknown",
             "git_dirty": repo_manager.is_dirty() if (repo / ".git").exists() else False,
             "repo_type": discovery.repo_info.repo_type,
+            "support_tier": readiness.tier,
+            "readiness_score": readiness.score,
+            "blockers": readiness.blockers,
+            "recommendations": readiness.recommendations,
         }
     )
 

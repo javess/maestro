@@ -40,6 +40,7 @@ from maestro.providers.router import ProviderRouter
 from maestro.repo.context import build_repo_snapshot
 from maestro.repo.discovery import discover_repo
 from maestro.repo.impact import analyze_backlog_impact
+from maestro.repo.readiness import assess_repo_readiness
 from maestro.schemas.contracts import (
     ApprovalRequest,
     CheckResult,
@@ -328,10 +329,16 @@ class OrchestratorEngine:
     def discover(self, state: RunState):
         logger.debug("repo_discovery_start run_id=%s repo=%s", state.run_id, state.repo_path)
         repo = discover_repo(state.repo_path)
+        readiness = assess_repo_readiness(state.repo_path, repo)
         self.deps.artifact_store.write_json(
             state.artifacts,
             "repo_discovery",
             repo.model_dump(mode="json"),
+        )
+        self.deps.artifact_store.write_json(
+            state.artifacts,
+            "repo_readiness",
+            readiness.model_dump(mode="json"),
         )
         self._append_event(state, OrchestratorState.DISCOVER_REPO, repo.adapter_name)
         return repo

@@ -58,7 +58,7 @@
 | STEP-024 | Branch and commit automation | done | Create target-repo branches, checkpoint commits, and commit-on-green policies |
 | STEP-025 | Validation-driven repair loop | done | Retry failed implementations with structured failure context until green or escalated |
 | STEP-026 | Diff approval workflow | done | Add explicit diff approval, rejection, and rerun controls across CLI and UI |
-| STEP-027 | Repo support tiers and readiness scoring | planned | Classify repos as supported, experimental, or planning-only with concrete diagnostics |
+| STEP-027 | Repo support tiers and readiness scoring | done | Classify repos as supported, experimental, or planning-only with concrete diagnostics |
 | STEP-028 | Interactive run console UI | planned | Turn the UI into a real run console for artifacts, diffs, approvals, and logs |
 | STEP-029 | Multi-run scheduler and worker pools | planned | Support queued runs, concurrency limits, cancellation, and background workers |
 | STEP-030 | Benchmark repos and execution scoring | planned | Measure end-to-end delivery quality across real fixture repos and providers |

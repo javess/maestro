@@ -252,3 +252,8 @@
 - Updated `tests/test_engine.py` to assert diff-approval hold, approval finalization, and rerun
   rejection behavior.
 - Reran focused diff-approval tests plus `ruff` and `ty`.
+
+## STEP-027 Note
+
+- Added `tests/test_readiness.py` for support-tier classification and scoring.
+- Reran readiness, repo-discovery, and engine discovery coverage plus `ruff` and `ty`.

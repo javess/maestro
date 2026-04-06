@@ -160,6 +160,41 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-027`
 
+## 2026-04-06 08:19 UTC
+
+- Session goal: expose concrete repo support tiers and readiness diagnostics through discovery and doctor
+- Selected step: `STEP-027`
+- Files changed:
+  - `src/maestro/schemas/readiness.py`
+  - `src/maestro/repo/readiness.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/cli/main.py`
+  - `tests/test_readiness.py`
+  - `README.md`
+  - `docs/architecture/repo_readiness.md`
+  - `docs/runbooks/repo_readiness.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-027.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_readiness.py tests/test_repo_discovery.py tests/test_engine.py -k 'readiness or doctor or discovery'`
+  - `uv run ruff check src/maestro/schemas/readiness.py src/maestro/repo/readiness.py src/maestro/core/engine.py src/maestro/cli/main.py tests/test_readiness.py tests/test_repo_discovery.py`
+  - `uv run ty check`
+- Tests run:
+  - targeted readiness/discovery tests passed
+  - `ruff` passed
+  - `ty` passed
+- Evals run:
+  - none; readiness scoring does not change orchestration transitions
+- Outcome: completed `STEP-027`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-028`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

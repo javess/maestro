@@ -29,6 +29,7 @@ machine. The baseline includes:
 - layered prompt plus `SKILL.md` guidance for each specialized agent role
 - structured repair loops that feed failing checks and reviewer issues back into bounded retries
 - optional diff-approval gates with CLI approve/reject/rerun controls before repo finalization
+- deterministic repo readiness scoring and support tiers exposed through `maestro doctor`
 
 ## Quick start
 
