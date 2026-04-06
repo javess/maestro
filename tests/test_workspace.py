@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from maestro.core.workspace import apply_code_result
+import pytest
+
+from maestro.core.workspace import WorkspaceEditError, apply_code_result
 from maestro.repo.context import build_repo_snapshot
-from maestro.schemas.contracts import CodeResult, FileOperation
+from maestro.schemas.contracts import CodeResult, FileOperation, PatchHunk
 from maestro.schemas.impact import ImpactAnalysis
 
 
@@ -46,3 +48,51 @@ def test_build_repo_snapshot_uses_context_slice_files(tmp_path: Path) -> None:
 
     assert [item.path for item in snapshot.files] == ["src/app.py", "README.md"]
     assert "snapshot" in snapshot.files[0].content
+
+
+def test_apply_code_result_supports_patch_hunks(tmp_path: Path) -> None:
+    target = tmp_path / "hello.py"
+    target.write_text("def greet() -> str:\n    return 'old'\n")
+    result = CodeResult(
+        ticket_id="T-2",
+        summary="patch hello",
+        file_operations=[
+            FileOperation(
+                path="hello.py",
+                action="patch",
+                hunks=[
+                    PatchHunk(kind="replace", match="return 'old'", content="return 'new'"),
+                    PatchHunk(
+                        kind="insert_after",
+                        match="def greet() -> str:\n",
+                        content="    message = 'new'\n",
+                    ),
+                ],
+            )
+        ],
+    )
+
+    applied = apply_code_result(tmp_path, result)
+
+    assert "message = 'new'" in target.read_text()
+    assert "return 'new'" in target.read_text()
+    assert [change.path for change in applied.changed_files] == ["hello.py"]
+
+
+def test_apply_code_result_raises_when_patch_anchor_is_missing(tmp_path: Path) -> None:
+    target = tmp_path / "hello.py"
+    target.write_text("print('old')\n")
+    result = CodeResult(
+        ticket_id="T-3",
+        summary="broken patch",
+        file_operations=[
+            FileOperation(
+                path="hello.py",
+                action="patch",
+                hunks=[PatchHunk(kind="replace", match="missing", content="found")],
+            )
+        ],
+    )
+
+    with pytest.raises(WorkspaceEditError, match="Patch anchor not found"):
+        apply_code_result(tmp_path, result)

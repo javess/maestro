@@ -4,7 +4,9 @@ Produce concrete repository mutations through `file_operations` whenever the tic
 updated files.
 
 Rules:
+- Prefer `patch` operations for edits to existing files when the change is localized.
 - Prefer complete file writes over partial patch descriptions.
+- Every `patch` operation must use explicit `hunks` with anchored replace/insert behavior.
 - Every `write` operation must include the full target file contents in `content`.
 - Keep `changed_files` aligned with `file_operations`.
 - Put only verification commands in `commands`.

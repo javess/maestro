@@ -192,3 +192,10 @@
   rather than the deterministic state machine or eval scenario set.
 - Existing deterministic scenarios were rerun to confirm richer role guidance preserves current
   orchestration behavior.
+
+## STEP-023 Note
+
+- No eval scenario set changes were required in STEP-023 because patch editing changes the repo
+  mutation primitive rather than the orchestrator state machine.
+- Existing deterministic eval coverage remains valid while targeted integration tests validate the
+  new patch-application path.

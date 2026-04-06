@@ -14,6 +14,7 @@ from maestro.schemas.contracts import (
     CodeChange,
     CodeResult,
     FileOperation,
+    PatchHunk,
     ReviewResult,
     Ticket,
 )
@@ -316,6 +317,66 @@ def test_run_plan_syncs_approved_changes_back_from_workspace(tmp_path: Path) -> 
         "def main() -> None:\n    print('from worktree')\n"
     )
     assert "TICKET-1" in state.ticket_workdirs
+
+
+def test_run_plan_applies_patch_operations_to_repo(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "pyproject.toml").write_text("[project]\nname='fixture'\n")
+    app = repo / "src" / "app.py"
+    app.parent.mkdir(parents=True)
+    app.write_text("def greet() -> str:\n    return 'old'\n")
+
+    scenario = EvalScenario(
+        name="patch-mutation",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="Patch app",
+                            description="Patch the app file",
+                            acceptance_criteria=["app returns new"],
+                        )
+                    ]
+                ),
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Patch app file",
+                    file_operations=[
+                        FileOperation(
+                            path="src/app.py",
+                            action="patch",
+                            hunks=[
+                                PatchHunk(
+                                    kind="replace",
+                                    match="return 'old'",
+                                    content="return 'new'",
+                                )
+                            ],
+                        )
+                    ],
+                    commands=[],
+                    tests_added=["tests/test_app.py"],
+                ),
+                "ReviewResult": ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(repo, project_root / "examples" / "brief.md")
+
+    assert state.status == "done"
+    assert app.read_text() == "def greet() -> str:\n    return 'new'\n"
 
 
 def test_run_plan_executes_ready_tickets_in_parallel_when_policy_allows(tmp_path: Path) -> None:

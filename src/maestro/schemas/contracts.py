@@ -4,7 +4,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.backlog_graph import BacklogGraph
@@ -111,11 +111,29 @@ class CodeChange(BaseModel):
     summary: str
 
 
+class PatchHunk(BaseModel):
+    kind: Literal["replace", "insert_before", "insert_after"]
+    match: str
+    content: str
+    occurrence: int = 1
+
+
 class FileOperation(BaseModel):
     path: str
-    action: Literal["write", "delete"]
+    action: Literal["write", "delete", "patch"]
     content: str | None = None
     executable: bool = False
+    hunks: list[PatchHunk] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _validate_payload(self) -> FileOperation:
+        if self.action == "write" and self.content is None:
+            raise ValueError("write operations require content")
+        if self.action == "patch" and not self.hunks:
+            raise ValueError("patch operations require hunks")
+        if self.action in {"delete", "patch"} and self.content is not None:
+            raise ValueError(f"{self.action} operations do not accept content")
+        return self
 
 
 class RepoContextFile(BaseModel):

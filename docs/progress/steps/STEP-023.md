@@ -1,0 +1,73 @@
+# STEP-023
+
+- Step id: `STEP-023`
+- Title: Patch-based editing engine
+- Status: done
+- Objective:
+  - Add a safer in-place mutation primitive for existing repo files by supporting anchored patch
+    hunks alongside whole-file writes.
+- Scope:
+  - Extend the code-change contract with patch operations.
+  - Apply patch hunks deterministically inside the isolated repo workspace.
+  - Keep existing write and delete operations intact.
+  - Update coder guidance so runtime prompts prefer patch operations for narrow edits.
+- Non-goals:
+  - AST-aware patching.
+  - Automatic conflict resolution.
+  - Repair-loop retries or approval UX changes.
+- Prerequisites:
+  - `STEP-013H`
+  - `STEP-013IA`
+- Implementation plan:
+  - Add typed `PatchHunk` support to the mutation contract.
+  - Validate operation invariants at the schema boundary.
+  - Teach the workspace layer to apply anchored replace/insert hunks.
+  - Add targeted tests and document the mutation model.
+- Files changed:
+  - `prompts/coder.md`
+  - `skills/coder/SKILL.md`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/workspace.py`
+  - `tests/test_workspace.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/architecture/patch_editing.md`
+  - `docs/runbooks/patch_editing.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-023.md`
+- Tests added or updated:
+  - Updated `tests/test_workspace.py` for patch hunk success and failure paths.
+  - Updated `tests/test_engine.py` for patch-application sync back into the target repo.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git push origin main`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_workspace.py tests/test_engine.py`
+  - `uv run ruff check src/maestro/schemas/contracts.py src/maestro/core/workspace.py prompts/coder.md skills/coder/SKILL.md tests/test_workspace.py tests/test_engine.py`
+  - `uv run ty check`
+- Results:
+  - Existing repo files can now be edited through anchored `replace`, `insert_before`, and
+    `insert_after` hunks.
+  - Missing anchors fail explicitly with `WorkspaceEditError`.
+  - Whole-file writes remain available for new files and large rewrites.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/patch_editing.md`
+  - `docs/runbooks/patch_editing.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - progress and roadmap files
+- Decisions made:
+  - Reuse `CodeResult` and `FileOperation` instead of creating a parallel patch artifact type.
+- Known limitations:
+  - String-anchor matching is not AST-aware.
+  - Patch application is sequential and does not auto-resolve conflicts.
+- Next recommended step:
+  - `STEP-024`
+- Commit hash:
+  - pending

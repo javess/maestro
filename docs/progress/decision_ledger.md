@@ -234,3 +234,8 @@
   the generic UI step.
 - Rationale: the user wants the product operable from the UI from scratch, including starting runs,
   viewing progress, and controlling approvals/retries, so the roadmap should state that clearly.
+
+- Decision: extend repo mutation with anchored patch hunks inside the existing `CodeResult`
+  contract instead of introducing a second patch-specific artifact type.
+- Rationale: patch editing is the smallest compatible way to improve mutation safety for existing
+  files while preserving current execution, evidence, and persistence flows.

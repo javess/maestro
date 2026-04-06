@@ -42,9 +42,9 @@
 | STEP-020 | Documentation publishing and onboarding polish | done | 2026-04-06 00:30 UTC | [STEP-020](steps/STEP-020.md) | pending post-commit recording | `mkdocs build --strict` pass; `ruff` pass; `ty` pass | `STEP-021` |
 | STEP-020A | Documentation artifact cleanup | done | 2026-04-06 00:30 UTC | [STEP-020A](steps/STEP-020A.md) | pending post-commit recording | `git diff --check` pass | `STEP-021` |
 | STEP-021 | Public GitHub publication | done | 2026-04-06 00:30 UTC | [STEP-021](steps/STEP-021.md) | pending post-commit recording | `gh repo create ... --public --push` pass | Roadmap complete |
-| STEP-022 | Phase 2 roadmap extension | done | 2026-04-06 07:39 UTC | [STEP-022](steps/STEP-022.md) | pending post-commit recording | `git diff --check` pending | `STEP-023` |
-| STEP-022A | UI-first execution roadmap update | done | 2026-04-06 07:41 UTC | [STEP-022A](steps/STEP-022A.md) | pending post-commit recording | `git diff --check` pending | `STEP-023` |
-| STEP-023 | Patch-based editing engine | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for implementation start |
+| STEP-022 | Phase 2 roadmap extension | done | 2026-04-06 07:39 UTC | [STEP-022](steps/STEP-022.md) | `a2a0c42` | `git diff --check` pass | `STEP-023` |
+| STEP-022A | UI-first execution roadmap update | done | 2026-04-06 07:41 UTC | [STEP-022A](steps/STEP-022A.md) | `2db5a0b` | `git diff --check` pass | `STEP-023` |
+| STEP-023 | Patch-based editing engine | done | 2026-04-06 07:46 UTC | [STEP-023](steps/STEP-023.md) | pending post-commit recording | targeted workspace/engine pass; `ruff` pass; `ty` pass | `STEP-024` |
 | STEP-024 | Branch and commit automation | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-023` |
 | STEP-025 | Validation-driven repair loop | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-024` |
 | STEP-026 | Diff approval workflow | planned | 2026-04-06 07:39 UTC | - | - | - | Wait for `STEP-025` |

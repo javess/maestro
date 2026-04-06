@@ -46,15 +46,15 @@
 | STEP-015 | Observation-to-backlog loop | done | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | done | Configurable application archetypes |
 | STEP-017 | Scenario eval library expansion | done | Expand eval matrix for new roadmap coverage |
-| STEP-018 | Local SQL persistence backend | planned | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
-| STEP-018A | Secure credential storage | planned | Add keyring-backed provider credentials alongside env-file support |
+| STEP-018 | Local SQL persistence backend | done | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
+| STEP-018A | Secure credential storage | done | Add keyring-backed provider credentials alongside env-file support |
 | STEP-019 | Prompt refinement and role guidance | done | Strengthen agent prompts and skills with design, implementation, and review guidance |
 | STEP-020 | Documentation publishing and onboarding polish | done | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
 | STEP-020A | Documentation artifact cleanup | done | Tiny prerequisite to record the docs lockfile update and ignore generated `site/` output before publication |
 | STEP-021 | Public GitHub publication | done | Publish the finished repo to the user’s GitHub account as a public repository |
 | STEP-022 | Phase 2 roadmap extension | done | Add the post-publication roadmap for reliable autonomous feature delivery, OSS adoption, and commercial readiness |
 | STEP-022A | UI-first execution roadmap update | done | Make full from-scratch UI-driven operation an explicit Phase 2 product requirement |
-| STEP-023 | Patch-based editing engine | planned | Add diff/patch editing alongside whole-file writes for safer repo mutation |
+| STEP-023 | Patch-based editing engine | done | Add diff/patch editing alongside whole-file writes for safer repo mutation |
 | STEP-024 | Branch and commit automation | planned | Create target-repo branches, checkpoint commits, and commit-on-green policies |
 | STEP-025 | Validation-driven repair loop | planned | Retry failed implementations with structured failure context until green or escalated |
 | STEP-026 | Diff approval workflow | planned | Add explicit diff approval, rejection, and rerun controls across CLI and UI |

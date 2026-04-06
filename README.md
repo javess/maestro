@@ -17,6 +17,7 @@ machine. The baseline includes:
 - CLI, eval harness, tests, CI, container support, and a Material UI dashboard shell
 - provider fallback routing and structured output repair paths
 - repo mutation through coder-produced file operations applied into the target repo workspace
+- anchored patch editing for safer in-place mutation of existing repo files
 - git-backed ticket execution in isolated per-ticket workspaces under `<target-repo>/.maestro/worktrees/`
 - bounded parallel execution for dependency-safe ready ticket batches when policy allows it
 - migration-aware evidence bundles and standalone migration plan artifacts for schema-sensitive work
@@ -65,6 +66,8 @@ under `.maestro/worktrees/`, syncing approved changes back into the repo root on
 and policy gates pass.
 Repo-local workspaces now also maintain `.maestro/maestro.db` as a SQLite run index for fast run
 and artifact metadata queries while keeping JSON files canonical.
+Existing files can now be updated through anchored patch hunks as well as whole-file writes, which
+reduces blast radius for localized repo edits.
 
 ## Install as a global CLI
 

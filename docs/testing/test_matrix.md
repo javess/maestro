@@ -222,3 +222,12 @@
   guidance when present.
 - Reran targeted agent/prompt tests plus the full backend suite and eval CLI after the prompt
   refinement pass.
+
+## STEP-023 Note
+
+- Updated `tests/test_workspace.py` to cover anchored patch-hunk success and explicit
+  missing-anchor failures.
+- Updated `tests/test_engine.py` to assert patch operations are applied inside isolated workspaces
+  and synced back into the target repo.
+- Reran targeted workspace/engine tests plus `ruff` and `ty` after introducing patch mutation
+  support.
