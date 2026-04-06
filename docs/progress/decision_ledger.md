@@ -223,3 +223,9 @@
 - Rationale: adding MkDocs introduced a legitimate `uv.lock` update and a generated `site/`
   directory; publishing should happen from a clean repo with lockfile changes captured and build
   artifacts ignored.
+
+- Decision: extend the roadmap after `STEP-021` with a second phase focused on real autonomous
+  feature delivery, OSS adoption, and commercial readiness.
+- Rationale: the published repo is now a strong framework baseline, but the highest-value next work
+  is execution reliability, git output, operator trust, UI supervision, benchmarks, and a clearer
+  OSS/commercial split.

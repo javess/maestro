@@ -52,6 +52,17 @@
 | STEP-020 | Documentation publishing and onboarding polish | done | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
 | STEP-020A | Documentation artifact cleanup | done | Tiny prerequisite to record the docs lockfile update and ignore generated `site/` output before publication |
 | STEP-021 | Public GitHub publication | done | Publish the finished repo to the user’s GitHub account as a public repository |
+| STEP-022 | Phase 2 roadmap extension | done | Add the post-publication roadmap for reliable autonomous feature delivery, OSS adoption, and commercial readiness |
+| STEP-023 | Patch-based editing engine | planned | Add diff/patch editing alongside whole-file writes for safer repo mutation |
+| STEP-024 | Branch and commit automation | planned | Create target-repo branches, checkpoint commits, and commit-on-green policies |
+| STEP-025 | Validation-driven repair loop | planned | Retry failed implementations with structured failure context until green or escalated |
+| STEP-026 | Diff approval workflow | planned | Add explicit diff approval, rejection, and rerun controls across CLI and UI |
+| STEP-027 | Repo support tiers and readiness scoring | planned | Classify repos as supported, experimental, or planning-only with concrete diagnostics |
+| STEP-028 | Interactive run console UI | planned | Turn the UI into a real run console for artifacts, diffs, approvals, and logs |
+| STEP-029 | Multi-run scheduler and worker pools | planned | Support queued runs, concurrency limits, cancellation, and background workers |
+| STEP-030 | Benchmark repos and execution scoring | planned | Measure end-to-end delivery quality across real fixture repos and providers |
+| STEP-031 | OSS adoption kit | planned | Add contribution guides, benchmark demos, issue templates, and positioning docs |
+| STEP-032 | Commercial control-plane foundation | planned | Define hosted/shared services for teams: org policies, managed secrets, analytics, and governance |
 
 ## Step Sequencing
 
@@ -100,3 +111,165 @@ Docs:
 
 - storage architecture note
 - migration runbook
+
+## Phase 2: Autonomous Delivery Roadmap
+
+The original roadmap established `maestro` as a deterministic orchestration framework with repo
+execution, evals, docs, and publication. The next phase focuses on making it a genuinely useful
+autonomous delivery product.
+
+### STEP-023 — Patch-based editing engine
+
+Objective:
+Replace the current whole-file-first mutation strategy with a safer diff and patch engine.
+
+Minimum scope:
+
+- add patch operations to the code-change contract
+- support hunk-based edits and targeted insert/replace flows
+- preserve existing formatting and nearby code when possible
+- retain whole-file writes as a fallback
+
+Acceptance:
+
+- target repos can be edited through structured patches instead of only full rewrites
+- patch failures are surfaced explicitly and recoverably
+
+### STEP-024 — Branch and commit automation
+
+Objective:
+Make target-repo git output a first-class product behavior.
+
+Minimum scope:
+
+- create feature branches in target repos
+- support commit modes such as `no_commit`, `commit_on_green`, and `checkpoint_commits`
+- emit commit metadata into artifacts and evidence bundles
+
+Acceptance:
+
+- successful runs can leave behind a validated feature branch with local commits
+- commit behavior is policy-driven and resumable
+
+### STEP-025 — Validation-driven repair loop
+
+Objective:
+Teach the execution path to recover from failed checks, not just stop or escalate immediately.
+
+Minimum scope:
+
+- capture failing command output into structured repair context
+- re-invoke implementation with bounded retry policies
+- persist each repair attempt and failure cause
+
+Acceptance:
+
+- failed tests and lint checks can trigger a deterministic repair loop
+- repair retries remain visible and bounded
+
+### STEP-026 — Diff approval workflow
+
+Objective:
+Add operator trust and supervision around generated repo changes.
+
+Minimum scope:
+
+- persist structured diffs for each attempt
+- allow approve, reject, rerun, and edit-request flows
+- expose approvals in CLI and UI surfaces
+
+Acceptance:
+
+- users can inspect and approve/reject diffs before target-repo commits finalize
+
+### STEP-027 — Repo support tiers and readiness scoring
+
+Objective:
+Set realistic expectations about where `maestro` is reliable.
+
+Minimum scope:
+
+- classify repos into support tiers
+- add a readiness score based on toolchain, testability, repo structure, and policy fit
+- expose concrete blockers and recommendations
+
+Acceptance:
+
+- `maestro doctor` and onboarding flows can say what is supported well versus experimental
+
+### STEP-028 — Interactive run console UI
+
+Objective:
+Turn the UI from a shell into an operator-facing run console.
+
+Minimum scope:
+
+- runs list, run detail view, ticket state, diffs, approvals, evidence, and logs
+- artifact browsing and replay/resume support
+- progress visibility for multi-ticket runs
+
+Acceptance:
+
+- a user can supervise a run from the UI without reading raw JSON files
+
+### STEP-029 — Multi-run scheduler and worker pools
+
+Objective:
+Allow multiple repo runs to execute safely in parallel.
+
+Minimum scope:
+
+- queued runs
+- worker concurrency controls
+- cancellation and retry controls
+- persistence and UI visibility for active versus pending runs
+
+Acceptance:
+
+- multiple runs can execute concurrently with deterministic limits and visibility
+
+### STEP-030 — Benchmark repos and execution scoring
+
+Objective:
+Measure whether `maestro` is actually getting better at full delivery.
+
+Minimum scope:
+
+- add benchmark repos and benchmark briefs
+- score applies-cleanly, tests-pass, retries, diff quality, and review quality
+- compare provider performance
+
+Acceptance:
+
+- releases can be evaluated against meaningful end-to-end execution metrics
+
+### STEP-031 — OSS adoption kit
+
+Objective:
+Make the project easier to understand, evaluate, and contribute to from outside the core team.
+
+Minimum scope:
+
+- contributor guide
+- issue templates
+- benchmark demo repos
+- positioning docs explaining deterministic orchestration versus agent chat loops
+
+Acceptance:
+
+- a new OSS contributor can evaluate, run, and contribute without private context
+
+### STEP-032 — Commercial control-plane foundation
+
+Objective:
+Outline and begin separating the OSS core from a possible hosted team product.
+
+Minimum scope:
+
+- define shared run history, org policy packs, managed secrets, analytics, and governance surfaces
+- keep the OSS local engine viable on its own
+- document cloud-only versus OSS boundaries clearly
+
+Acceptance:
+
+- the repo has a concrete commercial path without weakening the OSS core proposition
