@@ -51,7 +51,7 @@
 | STEP-019 | Prompt refinement and role guidance | done | Strengthen agent prompts and skills with design, implementation, and review guidance |
 | STEP-020 | Documentation publishing and onboarding polish | done | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
 | STEP-020A | Documentation artifact cleanup | done | Tiny prerequisite to record the docs lockfile update and ignore generated `site/` output before publication |
-| STEP-021 | Public GitHub publication | planned | Publish the finished repo to the user’s GitHub account as a public repository |
+| STEP-021 | Public GitHub publication | done | Publish the finished repo to the user’s GitHub account as a public repository |
 
 ## Step Sequencing
 

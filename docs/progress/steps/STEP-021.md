@@ -1,0 +1,48 @@
+# STEP-021
+
+- Step id: `STEP-021`
+- Title: Public GitHub publication
+- Status: done
+- Objective:
+  - Publish the finished repository to the user’s GitHub account as a public repository.
+- Scope:
+  - Verify a clean local worktree.
+  - Create the public GitHub repository.
+  - Push the local `main` branch.
+  - Record the published URL in progress metadata.
+- Non-goals:
+  - No new product changes.
+- Prerequisites:
+  - `STEP-020A` complete.
+- Implementation plan:
+  - Verify `git status` is clean and GitHub auth is ready.
+  - Check whether the target repo already exists.
+  - Create the public repo and push.
+  - Record the publication details.
+- Files changed:
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/steps/STEP-021.md`
+- Tests added or updated:
+  - None.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `git status --short && git remote -v`
+  - `gh auth status`
+  - `gh repo view javess/maestro --json nameWithOwner,visibility,defaultBranchRef,url`
+  - `gh repo create javess/maestro --public --source=. --remote=origin --push`
+- Results:
+  - Public repository created at `https://github.com/javess/maestro`
+  - Local `main` now tracks `origin/main`
+- Docs updated:
+  - Updated roadmap and progress tracking with the public repository publication result.
+- Decisions made:
+  - Use the straightforward repo name `javess/maestro` because it was available.
+- Known limitations:
+  - GitHub Pages deployment will activate once the Actions workflow runs on the remote repository.
+- Next recommended step:
+  - Roadmap complete.
+- Commit hash:
+  - pending

@@ -41,7 +41,7 @@
 | STEP-019 | Prompt refinement and role guidance | done | 2026-04-06 00:30 UTC | [STEP-019](steps/STEP-019.md) | pending post-commit recording | targeted agent/prompt pass; `ruff` pass; `ty` pass; full `pytest` pass (`123 passed`); `eval` pass (`8/8`) | `STEP-020` |
 | STEP-020 | Documentation publishing and onboarding polish | done | 2026-04-06 00:30 UTC | [STEP-020](steps/STEP-020.md) | pending post-commit recording | `mkdocs build --strict` pass; `ruff` pass; `ty` pass | `STEP-021` |
 | STEP-020A | Documentation artifact cleanup | done | 2026-04-06 00:30 UTC | [STEP-020A](steps/STEP-020A.md) | pending post-commit recording | `git diff --check` pass | `STEP-021` |
-| STEP-021 | Public GitHub publication | planned | 2026-04-06 00:55 UTC | - | - | - | Wait for `STEP-020` |
+| STEP-021 | Public GitHub publication | done | 2026-04-06 00:30 UTC | [STEP-021](steps/STEP-021.md) | pending post-commit recording | `gh repo create ... --public --push` pass | Roadmap complete |
 
 ## Baseline
 
