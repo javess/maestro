@@ -101,6 +101,7 @@ uv run pyinstaller -m maestro.cli.main
 - format: `uv run ruff format .`
 - type check: `uv run ty check`
 - tests: `uv run pytest`
+- docs: `uv run --group docs mkdocs build --strict`
 - progress logs: `uv run maestro -v ...` or `uv run maestro --log-level DEBUG ...`
 
 Parallel batch execution is controlled by `max_parallel_tickets` in the active policy pack.

@@ -1,3 +1,5 @@
+"""Configuration loading with repo-local `.env` support."""
+
 from __future__ import annotations
 
 import logging

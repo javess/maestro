@@ -1,0 +1,69 @@
+# STEP-020
+
+- Step id: `STEP-020`
+- Title: Documentation publishing and onboarding polish
+- Status: done
+- Objective:
+  - Prepare the repo for public consumption with a usable docs site and clearer onboarding.
+- Scope:
+  - Add MkDocs configuration and site navigation.
+  - Add high-level landing pages for getting started, examples, CLI reference, and developer onboarding.
+  - Add GitHub Pages-ready docs workflows.
+  - Add a light docstring pass on high-value modules.
+- Non-goals:
+  - No new orchestration behavior.
+  - No API reference generation plugin integration yet.
+- Prerequisites:
+  - `STEP-019` complete.
+- Implementation plan:
+  - Add MkDocs configuration and docs dependency group.
+  - Add landing pages and navigation.
+  - Add docs CI and Pages workflows.
+  - Update README and usage docs.
+  - Validate docs build, lint, and type checks.
+- Files changed:
+  - `mkdocs.yml`
+  - `.github/workflows/ci.yml`
+  - `.github/workflows/docs.yml`
+  - `pyproject.toml`
+  - `README.md`
+  - `docs/index.md`
+  - `docs/getting_started.md`
+  - `docs/examples.md`
+  - `docs/developer_guide.md`
+  - `docs/reference/cli.md`
+  - `docs/usage.md`
+  - `src/maestro/config.py`
+  - `src/maestro/credentials.py`
+  - `src/maestro/storage/sqlite.py`
+  - `src/maestro/core/engine.py`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-020.md`
+- Tests added or updated:
+  - No code tests added; the step is documentation and publishing focused.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - `uv run --group docs mkdocs build --strict`
+  - `uv run ruff check .`
+  - `uv run ty check`
+- Results:
+  - The repo now has an MkDocs site with navigation-oriented landing pages.
+  - CI now validates docs builds, and GitHub Pages deployment is wired for `main`.
+  - High-value modules now have clearer top-level docstrings for new contributors.
+- Docs updated:
+  - Added the MkDocs site structure, onboarding pages, and CLI/docs reference pages.
+  - Updated README and usage docs to expose the docs workflow.
+- Decisions made:
+  - Keep the site static and markdown-first for now instead of adding a heavier API-doc plugin stack.
+- Known limitations:
+  - The site currently links to existing architecture notes and progress artifacts rather than
+    generating an auto-summarized API reference.
+  - Existing absolute local file links in some architecture notes are preserved for desktop
+    workflow compatibility.
+- Next recommended step:
+  - `STEP-021`
+- Commit hash:
+  - pending

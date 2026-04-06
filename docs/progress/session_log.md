@@ -417,6 +417,49 @@
 - Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
 - Next recommended step: `STEP-020`
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: polish the repository for publication with MkDocs, onboarding pages, and docs workflows
+- Selected step: `STEP-020`
+- Files changed:
+  - `mkdocs.yml`
+  - `.github/workflows/ci.yml`
+  - `.github/workflows/docs.yml`
+  - `pyproject.toml`
+  - `README.md`
+  - `docs/index.md`
+  - `docs/getting_started.md`
+  - `docs/examples.md`
+  - `docs/developer_guide.md`
+  - `docs/reference/cli.md`
+  - `docs/usage.md`
+  - `src/maestro/config.py`
+  - `src/maestro/credentials.py`
+  - `src/maestro/storage/sqlite.py`
+  - `src/maestro/core/engine.py`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-020.md`
+- Commands run:
+  - `find docs -maxdepth 2 -type f | sort`
+  - `find src/maestro -maxdepth 2 -type f | sort | head -120`
+  - `sed -n '1,240p' README.md`
+  - `find .github -maxdepth 3 -type f ...`
+  - `uv run --group docs mkdocs build --strict`
+  - `uv run ruff check .`
+  - `uv run ty check`
+- Tests run:
+  - `uv run ruff check .` passed
+  - `uv run ty check` passed
+- Evals run:
+  - none; not applicable for this docs-and-publishing step
+- Outcome: completed `STEP-020`; the repo now has an MkDocs site, developer onboarding pages, and GitHub Pages-ready docs workflows
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-021`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score

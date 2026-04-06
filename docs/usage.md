@@ -89,6 +89,13 @@ npm install
 npm run dev
 ```
 
+## Documentation site
+
+```bash
+uv run --group docs mkdocs build --strict
+uv run --group docs mkdocs serve
+```
+
 ## Containerized
 
 ```bash

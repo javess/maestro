@@ -1,0 +1,58 @@
+site_name: maestro
+site_description: Deterministic multi-agent software delivery orchestration
+site_url: https://github.com/javiersierra/maestro
+repo_url: https://github.com/javiersierra/maestro
+repo_name: javiersierra/maestro
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Examples: examples.md
+  - CLI Reference: reference/cli.md
+  - Developer Guide: developer_guide.md
+  - Architecture:
+      - Overview: architecture.md
+      - Notes: architecture/README.md
+      - Run Graph Model: architecture/run_graph_model.md
+      - Run Graph Persistence: architecture/run_graph_persistence.md
+      - Evidence Bundles: architecture/evidence_bundle_model.md
+      - Risk Model: architecture/risk_model.md
+      - Approval Gates: architecture/approval_gates.md
+      - Product Model: architecture/product_model.md
+      - Assumptions: architecture/assumption_model.md
+      - Architecture Artifacts: architecture/architecture_artifact_reference.md
+      - Architecture Synthesis: architecture/architecture_synthesis.md
+      - Backlog Graph: architecture/backlog_graph.md
+      - Impact Analysis: architecture/impact_analysis.md
+      - Preview Abstraction: architecture/preview_abstraction.md
+      - Worktree Isolation: architecture/worktree_isolation.md
+      - Parallel Execution: architecture/parallel_execution.md
+      - Provider Runtime Adapters: architecture/provider_runtime_adapters.md
+      - Migration Planner: architecture/migration_planner.md
+      - Observation Loop: architecture/observation_loop.md
+      - Archetype Packs: architecture/archetype_packs.md
+      - Eval Reporting: architecture/eval_reporting.md
+      - Prompt Strategy: architecture/prompt_strategy.md
+      - Repo-local Workspace: architecture/repo_local_workspace.md
+      - SQLite Persistence: architecture/sqlite_persistence.md
+  - Runbooks:
+      - Usage: usage.md
+      - Resume Workflow: runbooks/resume_workflow.md
+      - Hello World OpenAI: runbooks/hello_world_openai.md
+      - Provider Credentials: runbooks/provider_credentials.md
+      - Prompt Tuning: runbooks/prompt_tuning.md
+      - Preview Environments: runbooks/preview_environments.md
+      - SQLite Persistence: runbooks/sqlite_persistence.md
+  - Testing:
+      - Test Matrix: testing/test_matrix.md
+      - Eval Matrix: evals/eval_matrix.md
+  - Roadmap: roadmap/design_to_execution_roadmap.md

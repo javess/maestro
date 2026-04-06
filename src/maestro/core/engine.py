@@ -1,3 +1,5 @@
+"""Deterministic orchestrator engine for planning, execution, validation, and review."""
+
 from __future__ import annotations
 
 import logging

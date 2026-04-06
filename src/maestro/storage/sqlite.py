@@ -1,3 +1,5 @@
+"""SQLite-backed metadata indexing for canonical JSON run storage."""
+
 from __future__ import annotations
 
 import sqlite3

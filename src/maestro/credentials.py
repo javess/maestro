@@ -1,3 +1,5 @@
+"""Local provider credential resolution and keychain integration."""
+
 from __future__ import annotations
 
 import importlib

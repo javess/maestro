@@ -39,7 +39,7 @@
 | STEP-018 | Local SQL persistence backend | done | 2026-04-06 00:30 UTC | [STEP-018](steps/STEP-018.md) | pending post-commit recording | targeted storage/engine pass; `ruff` pass; `ty` pass; full `pytest` pass (`117 passed`); `eval` pass (`8/8`) | `STEP-018A` |
 | STEP-018A | Secure credential storage | done | 2026-04-06 00:30 UTC | [STEP-018A](steps/STEP-018A.md) | pending post-commit recording | targeted credential/config/provider pass; `ruff` pass; `ty` pass; full `pytest` pass (`121 passed`); `eval` pass (`8/8`) | `STEP-019` |
 | STEP-019 | Prompt refinement and role guidance | done | 2026-04-06 00:30 UTC | [STEP-019](steps/STEP-019.md) | pending post-commit recording | targeted agent/prompt pass; `ruff` pass; `ty` pass; full `pytest` pass (`123 passed`); `eval` pass (`8/8`) | `STEP-020` |
-| STEP-020 | Documentation publishing and onboarding polish | planned | 2026-04-06 00:50 UTC | - | - | - | Wait for `STEP-019` |
+| STEP-020 | Documentation publishing and onboarding polish | done | 2026-04-06 00:30 UTC | [STEP-020](steps/STEP-020.md) | pending post-commit recording | `mkdocs build --strict` pass; `ruff` pass; `ty` pass | `STEP-021` |
 | STEP-021 | Public GitHub publication | planned | 2026-04-06 00:55 UTC | - | - | - | Wait for `STEP-020` |
 
 ## Baseline
