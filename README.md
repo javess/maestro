@@ -24,6 +24,7 @@ machine. The baseline includes:
 - configurable archetype packs so planning can start from SaaS or API-service defaults
 - typed eval reports with summary metrics and optional JSON export
 - SQLite-backed run indexing alongside canonical JSON state and artifact storage
+- layered prompt plus `SKILL.md` guidance for each specialized agent role
 
 ## Quick start
 

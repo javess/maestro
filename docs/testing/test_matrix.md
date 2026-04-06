@@ -215,3 +215,10 @@
 - Updated `tests/test_providers.py` to confirm the provider factory resolves secrets from the
   keychain when environment variables are absent.
 - Reran targeted credential/config/provider tests plus the full backend suite and eval CLI.
+
+## STEP-019 Note
+
+- Added `tests/test_agents.py` to confirm runtime role prompts now include the matching `SKILL.md`
+  guidance when present.
+- Reran targeted agent/prompt tests plus the full backend suite and eval CLI after the prompt
+  refinement pass.

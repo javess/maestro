@@ -369,6 +369,54 @@
 - Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
 - Next recommended step: `STEP-019`
 
+## 2026-04-06 00:30 UTC
+
+- Session goal: refine runtime role prompts and skills so product design, planning, coding, and review guidance is materially stronger
+- Selected step: `STEP-019`
+- Files changed:
+  - `src/maestro/agents/roles.py`
+  - `prompts/product_designer.md`
+  - `prompts/ceremony_master.md`
+  - `prompts/coder.md`
+  - `prompts/reviewer.md`
+  - `skills/product_designer/SKILL.md`
+  - `skills/ceremony_master/SKILL.md`
+  - `skills/coder/SKILL.md`
+  - `skills/reviewer/SKILL.md`
+  - `tests/test_agents.py`
+  - `README.md`
+  - `docs/architecture/prompt_strategy.md`
+  - `docs/runbooks/prompt_tuning.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-019.md`
+- Commands run:
+  - `sed -n '1,220p' prompts/product_designer.md`
+  - `sed -n '1,240p' prompts/ceremony_master.md`
+  - `sed -n '1,240p' prompts/coder.md`
+  - `sed -n '1,240p' prompts/reviewer.md`
+  - `sed -n '1,220p' src/maestro/agents/roles.py`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_agents.py tests/test_fake_provider.py`
+  - `uv run ruff check src/maestro/agents/roles.py tests/test_agents.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Tests run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_agents.py tests/test_fake_provider.py` passed (`4 passed`)
+  - `uv run ruff check src/maestro/agents/roles.py tests/test_agents.py` passed
+  - `uv run ty check` passed
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp` passed (`123 passed`)
+- Evals run:
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json ...` passed (`8 scenarios, 0 failed`)
+- Outcome: completed `STEP-019`; runtime role prompts now include stronger per-role guidance and consume the matching `SKILL.md` files automatically
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved batch boundary toward `STEP-021`
+- Next recommended step: `STEP-020`
+
 ## 2026-04-05 13:00 UTC
 
 - Session goal: add deterministic approval gates driven by policy mode and risk score

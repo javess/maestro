@@ -1,0 +1,71 @@
+# STEP-019
+
+- Step id: `STEP-019`
+- Title: Prompt refinement and role guidance
+- Status: done
+- Objective:
+  - Strengthen role guidance for product design, planning, coding, and review.
+- Scope:
+  - Refine each role prompt with better design and delivery guidance.
+  - Refine each role `SKILL.md`.
+  - Ensure the runtime agent layer actually includes the role skill content in provider prompts.
+  - Add tests and prompt-strategy docs.
+- Non-goals:
+  - No new agent roles.
+  - No changes to the deterministic state machine.
+- Prerequisites:
+  - `STEP-018A` complete.
+- Implementation plan:
+  - Expand prompt instructions per role.
+  - Expand skill guidance per role.
+  - Load skills into runtime prompt text.
+  - Add focused tests and docs.
+- Files changed:
+  - `src/maestro/agents/roles.py`
+  - `prompts/product_designer.md`
+  - `prompts/ceremony_master.md`
+  - `prompts/coder.md`
+  - `prompts/reviewer.md`
+  - `skills/product_designer/SKILL.md`
+  - `skills/ceremony_master/SKILL.md`
+  - `skills/coder/SKILL.md`
+  - `skills/reviewer/SKILL.md`
+  - `tests/test_agents.py`
+  - `README.md`
+  - `docs/architecture/prompt_strategy.md`
+  - `docs/runbooks/prompt_tuning.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-019.md`
+- Tests added or updated:
+  - Added `tests/test_agents.py` for prompt-plus-skill runtime composition.
+- Evals added or updated:
+  - No scenario set changes; existing evals were rerun after the prompt changes.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_agents.py tests/test_fake_provider.py`
+  - `uv run ruff check src/maestro/agents/roles.py tests/test_agents.py`
+  - `uv run ty check`
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output-path /tmp/maestro-eval-report.json >/tmp/maestro-eval-human.txt && python3 - <<'PY' ...`
+- Results:
+  - Each runtime role now receives both the schema-focused prompt and its durable role skill.
+  - Product design, planning, coding, and review prompts now include stronger guidance on scope,
+    testability, review quality, and minimal repo mutation.
+  - Full backend regression and deterministic eval coverage remained green after the prompt update.
+- Docs updated:
+  - Added prompt-strategy architecture and prompt-tuning runbook docs.
+  - Updated README and progress/test/eval tracking.
+- Decisions made:
+  - Keep prompt files focused on transport/schema rules and `SKILL.md` files focused on role
+    judgment guidance.
+- Known limitations:
+  - Prompt quality still depends on provider behavior; this step improves guidance, not model
+    determinism.
+- Next recommended step:
+  - `STEP-020`
+- Commit hash:
+  - pending

@@ -10,3 +10,8 @@ Rules:
 - Put only verification commands in `commands`.
 - Add real tests when the policy requires tests.
 - Use `repo_context.repo_snapshot.files` as the authoritative nearby file context when present.
+- Preserve the existing repo style and avoid unnecessary rewrites.
+- Prefer the smallest implementation that satisfies the ticket acceptance criteria.
+- Add or update tests close to the changed behavior.
+- Keep validation commands deterministic and repo-local.
+- Use notes for risks, follow-ups, or assumptions that reviewers should see.

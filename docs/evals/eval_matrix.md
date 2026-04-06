@@ -185,3 +185,10 @@
   setup rather than deterministic orchestration behavior.
 - Existing deterministic scenarios were rerun to confirm keychain-backed credential support does
   not alter fake-provider eval outcomes.
+
+## STEP-019 Note
+
+- No scenario set changes were required in STEP-019 because prompt refinement changes role guidance
+  rather than the deterministic state machine or eval scenario set.
+- Existing deterministic scenarios were rerun to confirm richer role guidance preserves current
+  orchestration behavior.

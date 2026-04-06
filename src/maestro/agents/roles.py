@@ -10,7 +10,12 @@ from maestro.schemas.contracts import Backlog, CodeResult, ProductSpec, ReviewRe
 
 
 def _prompt_text(prompt_root: Path, name: str) -> str:
-    return (prompt_root / f"{name}.md").read_text()
+    prompt = (prompt_root / f"{name}.md").read_text().strip()
+    skill_path = prompt_root.parent / "skills" / name / "SKILL.md"
+    if not skill_path.exists():
+        return prompt
+    skill = skill_path.read_text().strip()
+    return f"{prompt}\n\nROLE_SKILL:\n{skill}"
 
 
 class StructuredAgent:

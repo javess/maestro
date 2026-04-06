@@ -208,3 +208,8 @@
   shell env vars as fallback paths.
 - Rationale: this adds a materially safer local secret path without forcing a new remote secret
   manager dependency or rewriting provider setup.
+
+- Decision: make `STEP-019` runtime-effective by concatenating each role prompt with its matching
+  `SKILL.md` content.
+- Rationale: prompt refinement should actually reach providers at runtime instead of only updating
+  parallel documentation files that the agent layer never reads.

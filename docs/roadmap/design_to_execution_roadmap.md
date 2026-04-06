@@ -48,7 +48,7 @@
 | STEP-017 | Scenario eval library expansion | done | Expand eval matrix for new roadmap coverage |
 | STEP-018 | Local SQL persistence backend | planned | Add SQLite-first persistence backend with JSON compatibility; consider PostgreSQL later if justified |
 | STEP-018A | Secure credential storage | planned | Add keyring-backed provider credentials alongside env-file support |
-| STEP-019 | Prompt refinement and role guidance | planned | Strengthen agent prompts and skills with design, implementation, and review guidance |
+| STEP-019 | Prompt refinement and role guidance | done | Strengthen agent prompts and skills with design, implementation, and review guidance |
 | STEP-020 | Documentation publishing and onboarding polish | planned | Add MkDocs, navigation, API/operator docs, examples, and developer onboarding polish |
 | STEP-021 | Public GitHub publication | planned | Publish the finished repo to the user’s GitHub account as a public repository |
 
