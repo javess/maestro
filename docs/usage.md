@@ -33,6 +33,9 @@ ticket workspace under `.maestro/worktrees/` and sync back to the repo root only
 Independent ready tickets can also execute in bounded parallel batches when the active policy sets
 `max_parallel_tickets` above `1`.
 
+Migration-sensitive tickets now emit a dedicated migration plan artifact as part of the run
+artifacts and evidence bundle set.
+
 ## Preview a local target repo
 
 ```bash

@@ -9,7 +9,14 @@ from maestro.core.engine import OrchestratorEngine, build_engine_deps
 from maestro.core.models import OrchestratorState
 from maestro.evals.harness import EvalScenario, build_eval_engine
 from maestro.providers.fake import FakeProvider
-from maestro.schemas.contracts import Backlog, CodeResult, FileOperation, ReviewResult, Ticket
+from maestro.schemas.contracts import (
+    Backlog,
+    CodeChange,
+    CodeResult,
+    FileOperation,
+    ReviewResult,
+    Ticket,
+)
 
 
 def test_run_plan_completes(tmp_path: Path) -> None:
@@ -411,3 +418,49 @@ def test_run_plan_executes_ready_tickets_in_parallel_when_policy_allows(tmp_path
     assert provider.max_inflight >= 2
     assert (repo / "src" / "ticket-1.py").read_text() == "print('ticket-1')\n"
     assert (repo / "src" / "ticket-2.py").read_text() == "print('ticket-2')\n"
+
+
+def test_run_plan_persists_migration_plan_artifact(tmp_path: Path) -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    scenario = EvalScenario(
+        name="migration-artifact",
+        provider=FakeProvider(
+            {
+                "Backlog": Backlog(
+                    tickets=[
+                        Ticket(
+                            id="TICKET-1",
+                            title="Add migration",
+                            description="Update schema",
+                            acceptance_criteria=["schema updated"],
+                        )
+                    ]
+                ),
+                "CodeResult": CodeResult(
+                    ticket_id="TICKET-1",
+                    summary="Add migration",
+                    changed_files=[
+                        CodeChange(
+                            path="migrations/001_add_table.sql",
+                            summary="migration",
+                        )
+                    ],
+                    commands=["uv run pytest"],
+                    tests_added=[],
+                ),
+                "ReviewResult": ReviewResult(
+                    ticket_id="TICKET-1",
+                    approved=True,
+                    summary="approved",
+                    issues=[],
+                ),
+            }
+        ),
+        expected_final_state=OrchestratorState.DONE,
+        expected_status="done",
+    )
+    engine = build_eval_engine(project_root, scenario)
+    state = engine.run_plan(project_root, project_root / "examples" / "brief.md")
+
+    artifact_names = {artifact.name for artifact in state.artifacts.artifacts}
+    assert "TICKET-1_migration_plan_1" in artifact_names

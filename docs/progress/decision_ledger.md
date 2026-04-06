@@ -171,3 +171,8 @@
   one shared provider interface for the engine.
 - Rationale: OpenAI, Gemini, and Claude expose materially different structured-output capabilities,
   so the adapter boundary is the correct place to absorb those differences.
+
+- Decision: represent migration handling as deterministic planning artifacts instead of executing
+  framework-specific migration commands in this step.
+- Rationale: first-class migration artifacts satisfy auditability and risk requirements while
+  keeping the planner generic across repos and stacks.

@@ -42,7 +42,7 @@
 | STEP-013IA | Worktree isolation | done | Execute tickets in isolated git worktrees and sync approved changes back to the target repo |
 | STEP-013IB | Parallel ticket execution | done | Execute dependency-safe ready tickets concurrently when configured |
 | STEP-013J | Multi-provider runtime adapters | done | Wire Gemini and Claude runtime adapters with the same structured/fallback contract style as OpenAI |
-| STEP-014 | Migration planner | planned | Migration artifacts and sensitivity handling |
+| STEP-014 | Migration planner | done | Migration artifacts and sensitivity handling |
 | STEP-015 | Observation-to-backlog loop | planned | Convert observations into follow-up work |
 | STEP-016 | Archetype pack system | planned | Configurable application archetypes |
 | STEP-017 | Scenario eval library expansion | planned | Expand eval matrix for new roadmap coverage |

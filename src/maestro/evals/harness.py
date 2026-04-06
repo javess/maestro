@@ -156,4 +156,25 @@ def default_scenarios() -> list[EvalScenario]:
             expected_final_state=OrchestratorState.DONE,
             expected_status="done",
         ),
+        EvalScenario(
+            name="migration-sensitive-flow",
+            provider=FakeProvider(
+                {
+                    "CodeResult": {
+                        "ticket_id": "TICKET-1",
+                        "summary": "Add migration",
+                        "changed_files": [
+                            {
+                                "path": "migrations/001_add_table.sql",
+                                "summary": "migration",
+                            }
+                        ],
+                        "commands": ["uv run pytest"],
+                        "tests_added": ["tests/test_migration_flow.py"],
+                    }
+                }
+            ),
+            expected_final_state=OrchestratorState.DONE,
+            expected_status="done",
+        ),
     ]

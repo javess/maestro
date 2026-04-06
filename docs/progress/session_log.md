@@ -1204,6 +1204,7 @@
   - `uv run ty check`
   - `uv run ruff check src tests`
   - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
 - Tests run:
   - targeted backlog-graph and engine tests passed
   - `uv run ruff check src/maestro/core/backlog_graph.py src/maestro/core/engine.py src/maestro/schemas/contracts.py tests/test_backlog_graph.py tests/test_engine.py` passed
@@ -1259,3 +1260,49 @@
 - Commit hash: none yet
 - Stop reason: continuing through the user-approved remaining batch
 - Next recommended step: `STEP-014`
+
+## 2026-04-05 23:43 UTC
+
+- Session goal: add migration planning artifacts and wire them into evidence and eval coverage
+- Selected step: `STEP-014`
+- Files changed:
+  - `src/maestro/schemas/migration.py`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/migration.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_migration.py`
+  - `tests/test_schemas.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/migration_planner.md`
+  - `docs/runbooks/migration_planning.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-014.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_migration.py tests/test_evidence.py tests/test_engine.py tests/test_schemas.py tests/test_risk.py`
+  - `uv run ruff check src/maestro/core/migration.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/schemas/migration.py src/maestro/schemas/contracts.py src/maestro/evals/harness.py tests/test_migration.py tests/test_evidence.py tests/test_engine.py tests/test_schemas.py tests/test_risk.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+- Tests run:
+  - targeted migration/evidence/engine/schema/risk tests passed
+  - `uv run ruff check ...` passed
+  - `uv run ty check` passed
+  - full `uv run pytest --basetemp=...` passed
+- Evals run:
+  - Added `migration-sensitive-flow` to the deterministic eval scenario set.
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output` passed after updating the fixture to add
+    migration-sensitive test coverage.
+- Outcome: completed `STEP-014`
+- Commit hash: none yet
+- Stop reason: continuing through the user-approved remaining batch
+- Next recommended step: `STEP-015`

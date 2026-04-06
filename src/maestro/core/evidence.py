@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from maestro.core.approval import build_approval_request
+from maestro.core.migration import build_migration_plan
 from maestro.core.policy import enforce_code_policy, enforce_review_policy
 from maestro.core.risk import compute_risk_score
 from maestro.schemas.contracts import (
@@ -99,6 +100,7 @@ def build_evidence_bundle(
     approval_request: ApprovalRequest | None = None,
 ) -> EvidenceBundle:
     changed_files = [change.path for change in code_result.changed_files]
+    migration_plan = code_result.migration_plan or build_migration_plan(ticket, code_result)
     rollback_steps: list[str] = []
     if changed_files:
         rollback_steps.append(f"Revert changed files: {', '.join(changed_files)}")
@@ -129,6 +131,7 @@ def build_evidence_bundle(
         ),
         checks=checks,
         policy_findings=policy_findings,
+        migration_plan=migration_plan,
         rollback_notes=rollback_notes,
         review_result=review,
         risk_score=risk_score,

@@ -147,3 +147,9 @@
   `FakeProvider`.
 - Existing deterministic coverage continues to validate provider routing and fallback behavior,
   while mocked adapter tests cover the new real-provider runtime paths.
+
+## STEP-014 Note
+
+- Added `migration-sensitive-flow` to keep migration planning visible in deterministic eval runs.
+- Existing scenarios continue to validate completion, escalation, approval-hold, fallback, graph
+  ordering, and now migration-sensitive artifact generation.

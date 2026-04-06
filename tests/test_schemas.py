@@ -12,6 +12,7 @@ from maestro.schemas.contracts import (
     RollbackNote,
     Ticket,
 )
+from maestro.schemas.migration import MigrationPlan
 
 
 def test_product_spec_round_trip() -> None:
@@ -85,8 +86,10 @@ def test_evidence_bundle_supports_placeholder_sections() -> None:
         run_id="run-1",
         diff_summary=DiffSummary(changed_files=["src/x.py"], file_count=1, summary="one file"),
         policy_findings=[PolicyFinding(rule="require_tests", outcome="warn", detail="placeholder")],
+        migration_plan=MigrationPlan(summary="schema rollout"),
         rollback_notes=[RollbackNote(summary="manual rollback", steps=["revert commit"])],
     )
     assert bundle.diff_summary.file_count == 1
     assert bundle.policy_findings[0].rule == "require_tests"
+    assert bundle.migration_plan is not None
     assert bundle.rollback_notes[0].summary == "manual rollback"

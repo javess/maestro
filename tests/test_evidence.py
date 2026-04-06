@@ -101,5 +101,38 @@ def test_build_evidence_bundle_includes_review_and_rollback_guidance() -> None:
     assert bundle.review_result is not None
     assert bundle.risk_score is not None
     assert bundle.approval_request is None
+    assert bundle.migration_plan is None
     assert bundle.metadata["violations"] == ["checks_failed", "review_rejected"]
     assert bundle.rollback_notes[0].steps[0].startswith("Revert changed files:")
+
+
+def test_build_evidence_bundle_includes_migration_plan_when_paths_require_it() -> None:
+    ticket = Ticket(
+        id="T-2",
+        title="Add migration",
+        description="Update schema",
+        acceptance_criteria=["schema updated"],
+    )
+    code_result = CodeResult(
+        ticket_id="T-2",
+        summary="Add migration",
+        changed_files=[CodeChange(path="migrations/001_add_table.sql", summary="migration")],
+        commands=["uv run pytest"],
+    )
+    review = ReviewResult(ticket_id="T-2", approved=True, summary="Approved")
+
+    bundle = build_evidence_bundle(
+        run_id="run-2",
+        ticket=ticket,
+        review_cycle=1,
+        code_result=code_result,
+        checks=[],
+        review=review,
+        repo_info=RepoInfo(root=Path("."), repo_type="python", risky_paths=["migrations/"]),
+        violations=[],
+        policy_findings=[],
+        policy=PolicyPack(name="default"),
+    )
+
+    assert bundle.migration_plan is not None
+    assert bundle.migration_plan.changed_paths == ["migrations/001_add_table.sql"]

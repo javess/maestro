@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from maestro.schemas.architecture import ArchitectureArtifacts
 from maestro.schemas.backlog_graph import BacklogGraph
 from maestro.schemas.impact import ImpactAnalysis
+from maestro.schemas.migration import MigrationPlan
 from maestro.schemas.run_graph import RunGraph
 
 
@@ -132,6 +133,7 @@ class CodeResult(BaseModel):
     summary: str
     changed_files: list[CodeChange] = Field(default_factory=list)
     file_operations: list[FileOperation] = Field(default_factory=list)
+    migration_plan: MigrationPlan | None = None
     commands: list[str] = Field(default_factory=list)
     tests_added: list[str] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
@@ -263,6 +265,7 @@ class EvidenceBundle(BaseModel):
     diff_summary: DiffSummary = Field(default_factory=DiffSummary)
     checks: list[CheckResult] = Field(default_factory=list)
     policy_findings: list[PolicyFinding] = Field(default_factory=list)
+    migration_plan: MigrationPlan | None = None
     rollback_notes: list[RollbackNote] = Field(default_factory=list)
     review_result: ReviewResult | None = None
     risk_score: RiskScore | None = None

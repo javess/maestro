@@ -516,6 +516,12 @@ class OrchestratorEngine:
             approval_request=approval_request,
         )
         self.deps.artifact_store.write_evidence_bundle(state.artifacts, bundle)
+        if bundle.migration_plan is not None:
+            self.deps.artifact_store.write_json(
+                state.artifacts,
+                f"{ticket.id}_migration_plan_{review_cycle}",
+                bundle.migration_plan.model_dump(mode="json"),
+            )
         state.approval_request = approval_request
         self.deps.state_store.save(state)
         logger.info(

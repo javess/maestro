@@ -1,0 +1,73 @@
+# STEP-014
+
+- Step id: `STEP-014`
+- Title: Migration planner
+- Status: done
+- Objective:
+  - Handle schema and data changes as first-class planned artifacts.
+- Scope:
+  - Add typed migration plan contracts.
+  - Build deterministic migration plan generation heuristics.
+  - Persist migration plans into evidence and standalone artifacts.
+  - Extend tests, eval coverage, and docs.
+- Non-goals:
+  - No framework-specific migration execution.
+  - No secure credential changes.
+- Prerequisites:
+  - `STEP-013J` complete.
+- Implementation plan:
+  - Add migration plan schema types.
+  - Generate migration plans from ticket text and changed paths.
+  - Persist migration plans in evidence bundles and artifact storage.
+  - Update tests, evals, and docs.
+- Files changed:
+  - `src/maestro/schemas/migration.py`
+  - `src/maestro/schemas/contracts.py`
+  - `src/maestro/core/migration.py`
+  - `src/maestro/core/evidence.py`
+  - `src/maestro/core/engine.py`
+  - `src/maestro/evals/harness.py`
+  - `tests/test_migration.py`
+  - `tests/test_schemas.py`
+  - `tests/test_evidence.py`
+  - `tests/test_engine.py`
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/architecture/migration_planner.md`
+  - `docs/runbooks/migration_planning.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-014.md`
+- Tests added or updated:
+  - Added `tests/test_migration.py` for migration-plan detection and non-migration exclusion.
+  - Updated schema, evidence, engine, and risk-facing tests for persisted migration artifacts.
+- Evals added or updated:
+  - Added the deterministic `migration-sensitive-flow` eval scenario.
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_migration.py tests/test_evidence.py tests/test_engine.py tests/test_schemas.py tests/test_risk.py`
+  - `uv run ruff check src/maestro/core/migration.py src/maestro/core/evidence.py src/maestro/core/engine.py src/maestro/schemas/migration.py src/maestro/schemas/contracts.py src/maestro/evals/harness.py tests/test_migration.py tests/test_evidence.py tests/test_engine.py tests/test_schemas.py tests/test_risk.py`
+  - `uv run ty check`
+  - `uv run ruff check src tests`
+  - `TMPDIR=/var/tmp uv run pytest --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp`
+  - `TMPDIR=/var/tmp uv run maestro eval --json-output`
+- Results:
+  - Migration-sensitive tickets now produce typed migration plans.
+  - Evidence bundles include migration planning details.
+  - Standalone migration plan artifacts are persisted for schema-sensitive work.
+- Docs updated:
+  - Added architecture and runbook docs for migration planning.
+  - Updated README, usage docs, and progress tracking.
+- Decisions made:
+  - Keep migration planning generic and heuristic-based for now.
+  - Persist migration plans both inside evidence bundles and as standalone artifacts.
+- Known limitations:
+  - Migration plans are advisory artifacts, not executed migrations.
+  - The planner does not yet infer framework-specific migration command sequences.
+- Next recommended step:
+  - `STEP-015`
+- Commit hash:
+  - pending

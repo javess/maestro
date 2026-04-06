@@ -171,3 +171,10 @@
 - Updated `tests/test_providers.py` to verify API key env overrides flow through the provider
   factory.
 - Reran targeted provider/router tests plus the full backend test suite.
+
+## STEP-014 Note
+
+- Added `tests/test_migration.py` for deterministic migration-plan generation.
+- Updated `tests/test_evidence.py`, `tests/test_engine.py`, and `tests/test_schemas.py` for
+  migration-plan persistence in evidence bundles and run artifacts.
+- Added the migration-sensitive eval scenario and reran the full backend test suite.
