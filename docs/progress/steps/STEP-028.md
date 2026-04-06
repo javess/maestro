@@ -1,0 +1,59 @@
+# STEP-028
+
+- Step id: `STEP-028`
+- Title: Interactive run console UI
+- Status: done
+- Objective:
+  - Turn the UI into a real run console that can start runs, inspect progress, and control diff approvals.
+- Scope:
+  - Add a local FastAPI control surface.
+  - Replace the static UI shell with a polling operator console.
+  - Support doctor, run creation, run inspection, and diff approval actions.
+- Non-goals:
+  - Shared multi-user hosting.
+  - Background queueing or worker pools beyond local background threads.
+- Prerequisites:
+  - `STEP-026`
+  - `STEP-027`
+- Implementation plan:
+  - Add a thin local API for doctor, run list/detail, start plan, and diff actions.
+  - Update `maestro ui` to start the API and frontend together.
+  - Replace the static Material UI page with a polling operator console.
+- Files changed:
+  - `pyproject.toml`
+  - `uv.lock`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_server.py`
+  - `ui/src/main.tsx`
+  - `ui/src/vite-env.d.ts`
+  - `README.md`
+  - `docs/architecture/ui_run_console.md`
+  - `docs/runbooks/ui_run_console.md`
+  - progress and roadmap files
+- Tests added or updated:
+  - Added `tests/test_server.py`.
+  - Validated the frontend with `npm run build`.
+- Evals added or updated:
+  - None.
+- Commands run:
+  - server pytest
+  - `ruff`
+  - `ty`
+  - `npm run build`
+- Results:
+  - The UI can now start runs from repo/brief/config paths, inspect repo readiness, poll run state,
+    and act on diff approvals.
+- Docs updated:
+  - `README.md`
+  - `docs/architecture/ui_run_console.md`
+  - `docs/runbooks/ui_run_console.md`
+  - test/eval matrix and progress docs
+- Decisions made:
+  - Use a thin local FastAPI layer as the UI control surface.
+- Known limitations:
+  - Run execution still uses local background threads rather than a persistent scheduler.
+- Next recommended step:
+  - `STEP-029`
+- Commit hash:
+  - pending

@@ -195,6 +195,45 @@
 - Stop reason: continue into the remaining Phase 2 execution steps requested by the user
 - Next recommended step: `STEP-028`
 
+## 2026-04-06 08:29 UTC
+
+- Session goal: turn the static dashboard into a real UI run console backed by a local API
+- Selected step: `STEP-028`
+- Files changed:
+  - `pyproject.toml`
+  - `uv.lock`
+  - `src/maestro/cli/main.py`
+  - `src/maestro/server/app.py`
+  - `tests/test_server.py`
+  - `ui/src/main.tsx`
+  - `ui/src/vite-env.d.ts`
+  - `README.md`
+  - `docs/architecture/ui_run_console.md`
+  - `docs/runbooks/ui_run_console.md`
+  - `docs/testing/test_matrix.md`
+  - `docs/evals/eval_matrix.md`
+  - `docs/roadmap/design_to_execution_roadmap.md`
+  - `docs/progress/status.md`
+  - `docs/progress/session_log.md`
+  - `docs/progress/decision_ledger.md`
+  - `docs/progress/steps/STEP-028.md`
+- Commands run:
+  - `TMPDIR=/var/tmp uv run pytest --no-cov --basetemp=/Users/javiersierra/dev/maestro/.maestro/pytest-temp tests/test_server.py`
+  - `uv run ruff check src/maestro/server/app.py src/maestro/cli/main.py tests/test_server.py`
+  - `uv run ty check`
+  - `cd ui && npm run build`
+- Tests run:
+  - server API tests passed
+  - `ruff` passed
+  - `ty` passed
+  - UI build passed
+- Evals run:
+  - none; UI/API are operator surfaces over existing orchestration
+- Outcome: completed `STEP-028`
+- Commit hash: none yet
+- Stop reason: continue into the remaining Phase 2 execution steps requested by the user
+- Next recommended step: `STEP-029`
+
 ## 2026-04-05 10:14 UTC
 
 - Session goal: bootstrap the durable workflow control-plane required by the design-to-execution roadmap process

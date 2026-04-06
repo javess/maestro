@@ -11,10 +11,12 @@ requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "OpenAI Codex" }]
 dependencies = [
+  "fastapi>=0.116.0",
   "pydantic>=2.11.0",
   "pyyaml>=6.0.2",
   "typer>=0.16.0",
   "rich>=14.0.0",
+  "uvicorn>=0.35.0",
 ]
 
 [project.optional-dependencies]

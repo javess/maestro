@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -474,8 +475,29 @@ def preview(
 
 @app.command()
 def ui() -> None:
-    subprocess.run(["npm", "install"], cwd=_project_root() / "ui", check=False)
-    subprocess.run(["npm", "run", "dev"], cwd=_project_root() / "ui", check=False)
+    ui_root = _project_root() / "ui"
+    env = os.environ.copy()
+    env.setdefault("VITE_MAESTRO_API_URL", "http://127.0.0.1:8765")
+    backend = subprocess.Popen(
+        [
+            "uv",
+            "run",
+            "uvicorn",
+            "maestro.server.app:create_app",
+            "--factory",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8765",
+        ],
+        cwd=_project_root(),
+        env=env,
+    )
+    try:
+        subprocess.run(["npm", "install"], cwd=ui_root, check=False, env=env)
+        subprocess.run(["npm", "run", "dev"], cwd=ui_root, check=False, env=env)
+    finally:
+        backend.terminate()
 
 
 if __name__ == "__main__":

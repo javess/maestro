@@ -30,6 +30,7 @@ machine. The baseline includes:
 - structured repair loops that feed failing checks and reviewer issues back into bounded retries
 - optional diff-approval gates with CLI approve/reject/rerun controls before repo finalization
 - deterministic repo readiness scoring and support tiers exposed through `maestro doctor`
+- a local Material UI run console that can start runs, inspect progress, and act on diff approvals
 
 ## Quick start
 
@@ -112,6 +113,7 @@ uv run pyinstaller -m maestro.cli.main
 - tests: `uv run pytest`
 - docs: `uv run --group docs mkdocs build --strict`
 - progress logs: `uv run maestro -v ...` or `uv run maestro --log-level DEBUG ...`
+- UI console: `uv run maestro ui`
 
 Parallel batch execution is controlled by `max_parallel_tickets` in the active policy pack.
 Shipped policies stay conservative by default except `prototype`, which currently allows `2`.

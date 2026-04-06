@@ -224,3 +224,8 @@
 
 - No eval scenario set changes were required in STEP-027 because readiness scoring enriches doctor
   and discovery outputs without changing orchestration transitions.
+
+## STEP-028 Note
+
+- No eval scenario set changes were required in STEP-028 because the UI console and local API are
+  operator surfaces over existing orchestration behavior.

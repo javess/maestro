@@ -257,3 +257,8 @@
 - Decision: keep readiness scoring heuristic and fully local in the first implementation.
 - Rationale: repo support tiers need to be deterministic, explainable, and safe to run without
   external services or expensive semantic analysis.
+
+- Decision: implement the UI console on top of a thin local FastAPI layer rather than calling the
+  CLI through shell subprocesses from the browser.
+- Rationale: a typed local API gives the UI a stable control surface and is easier to extend into
+  later scheduling and shared-control-plane work.

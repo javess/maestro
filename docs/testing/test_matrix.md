@@ -257,3 +257,9 @@
 
 - Added `tests/test_readiness.py` for support-tier classification and scoring.
 - Reran readiness, repo-discovery, and engine discovery coverage plus `ruff` and `ty`.
+
+## STEP-028 Note
+
+- Added `tests/test_server.py` for the local API doctor and run-start endpoints.
+- Validated the Material UI console with `npm run build`.
+- Reran focused server tests plus `ruff` and `ty`.
